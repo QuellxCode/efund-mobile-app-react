@@ -4,6 +4,7 @@ import { createStackNavigator } from "react-navigation-stack";
 import LoginScreen from "../screens/Auth/LoginScreen";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import DashboardScreen from "../screens/MainFlow/DashboardScreen";
+import ProjectList from "../screens/MainFlow/RequestPaymentFlow/ProjectList";
 import RequestPaymentScreen from '../screens/MainFlow/RequestPaymentFlow/RequestPaymentScreen';
 import GenerateBillScreen from '../screens/MainFlow/RequestPaymentFlow/GenerateBillScreen';
 import ClaimPaymentScreen from '../screens/MainFlow/ClaimPaymentScreen';
@@ -27,11 +28,12 @@ const AppNavigator = createSwitchNavigator({
     mainFlow: createDrawerNavigator({
         Home: DashboardScreen,
         requestPaymentFlow: createStackNavigator({
+            Projects: ProjectList,
             RequestPayment: RequestPaymentScreen,
             GenerateBill: GenerateBillScreen
         },
         {
-            initialRouteName: 'RequestPayment',
+            initialRouteName: 'Projects',
             defaultNavigationOptions: {
                 headerShown: false
             }

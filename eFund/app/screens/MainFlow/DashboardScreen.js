@@ -40,7 +40,7 @@ class DashboardScreen extends Component {
 
     render() {
         console.log(this.state.User.roles)
-        if(this.state.User.roles == "purchaser" || this.state.User.roles == "Supervisor"){
+        if(this.state.User.roles == "Purchaser" || this.state.User.roles == "Supervisor"){
         return (
             <View>
                 <Header />

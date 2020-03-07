@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, AsyncStorage } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { withNavigation } from 'react-navigation';
 
@@ -42,7 +42,14 @@ const MenuDrawer = ({ navigation }) => {
 
             <TouchableOpacity
                 style={styles.listContainerStyles}
-                onPress={() => navigation.navigate('loginFlow')}
+                onPress={
+                    async() => {
+                        await AsyncStorage.removeItem('User').then(() => {
+                          navigation.navigate('loginFlow')
+                        })
+                    }
+                    // () => navigation.navigate('loginFlow')
+                }
             >
                 <View style={{ flex: 1 }}>
                     <Image source={require('../images/Logout.png')} />

@@ -16,20 +16,20 @@ class LoginScreen extends Component {
         };
     }
 
-    // componentDidMount(){
-    //     this.checkStorge();
-    //   }
+    componentDidMount(){
+        this.checkStorge();
+      }
     
-    //   checkStorge = async () => {
-    //       try {
-    //         const value = await AsyncStorage.getItem('User');
-    //         if (value !== null) {
-    //           this.props.navigation.navigate("mainFlow")
-    //         }
-    //       } catch (error) {
-    //         console.log('error getting data')
-    //       }
-    //     };
+      checkStorge = async () => {
+          try {
+            const value = await AsyncStorage.getItem('User');
+            if (value !== null) {
+              this.props.navigation.navigate("mainFlow")
+            }
+          } catch (error) {
+            console.log('error getting data')
+          }
+        };
 
     getdata(){
         fetch("http://efundapp.herokuapp.com/api/user/login",{
