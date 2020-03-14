@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, Dimensions, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions, FlatList, AsyncStorage } from 'react-native';
 import Header from '../../components/Header';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -35,6 +35,50 @@ class ReportsScreen extends Component {
                 { date: 'Jan 01, 2020', bNumber: '04', status: 'Pending' }
             ]
         };
+    }
+
+    componentDidMount(){
+        this.checkStorge();
+      }
+    
+      checkStorge = async () => {
+          try {
+            const value = await AsyncStorage.getItem('User');
+            if (value !== null) {
+              this.props.navigation.navigate("mainFlow")
+            }
+          } catch (error) {
+            console.log('error getting data')
+          }
+        };
+
+    getdata(){
+        fetch("http://efundapp.herokuapp.com/api/user/login",{
+        method:"POST",
+          headers: {
+           'Content-Type': 'application/json'
+         },
+         body:JSON.stringify({
+           "email":this.state.email,
+           "password":this.state.password
+         })
+        })
+    .then(response => response.json())
+    .then(async (responseJson)=> {
+          await AsyncStorage.setItem('User', JSON.stringify(responseJson));
+          //await AsyncStorage.setItem('User', responseJson.user);
+          this.setState({
+            loading: false,
+           })
+      if(responseJson.message == 'login successfull'){
+        ToastAndroid.show(responseJson.message, ToastAndroid.SHORT);
+        this.props.navigation.navigate("mainFlow")}
+      else{
+        ToastAndroid.show('Incorrect Credentials!', ToastAndroid.SHORT);
+      }
+      })
+    .catch(error=>ToastAndroid.show('Incorrect Credentials!', ToastAndroid.SHORT)
+    )
     }
 
     render() {
@@ -84,7 +128,7 @@ class ReportsScreen extends Component {
                     </TouchableOpacity>
 
                     <FlatList
-                        style={{ maxHeight: height * 0.8 }}
+                        style={{ maxHeight: height * 0.75 }}
                         data={this.state.selectedDaily ? this.state.dailyBills : this.state.selectedWeekly ? this.state.weeklyBills : this.state.monthlyBills}
                         keyExtractor={(item, index) => index.toString()}
                         showsVerticalScrollIndicator={false}
