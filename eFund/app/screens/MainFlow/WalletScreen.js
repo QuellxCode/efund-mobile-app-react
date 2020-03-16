@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Dimensions, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Dimensions, FlatList, StyleSheet, Image, TouchableOpacity, AsyncStorage, ToastAndroid, ScrollView, RefreshControl } from 'react-native';
 import Header from '../../components/Header';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
 import { Button, Input } from 'react-native-elements';
@@ -11,13 +11,18 @@ import {
   } from 'react-native-responsive-dimensions';
 
 const {width, height} = Dimensions.get('window');
+console.disableYellowBox = true;
 
 class Wallet extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isVisible: false,
-            
+            User:[],
+            amount:0,
+            showAmount:0,
+            state: false,
+            refreshing: false,
             wallet: [
                 { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '500.00' },
                 { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '500.00' },
@@ -44,39 +49,127 @@ class Wallet extends Component {
         };
     }
 
+    _onRefresh = () => {
+      this.setState({refreshing: true});
+      this._getCash();
+    }  
+
+    componentDidUpdate(){
+      if(this.state.state === true){
+        this._getCash();
+        this.setState({state: false});
+      }
+    }
+
+    componentDidMount() {
+      this._retrieveData();
+    }
+    _retrieveData = async () => {
+      try {
+        const value = await AsyncStorage.getItem('User');
+        const val = JSON.parse(value)
+        if (val !== null) {
+          this.setState({
+            User: val,
+           })
+           this._getCash();
+        }
+      } catch (error) {
+        console.log('error getting data')
+      }
+    };
+
+  _addCash(){
+      fetch("http://efundapp.herokuapp.com/api/wallet/add-cash",{
+    method:"POST",
+      headers: {
+        'Accept': 'application/json',
+       'Content-Type': 'application/json',
+       'X-Auth-Token': this.state.User.token,
+     },
+     body:JSON.stringify({
+      "amount":this.state.amount,
+    })
+    })
+.then(response => response.json())
+.then((responseJson)=> {
+  if(responseJson.message == 'Funds added Successfully'){
+    ToastAndroid.show(responseJson.message, ToastAndroid.SHORT);
+    this.setState({
+      isVisible: false,
+      state: true
+    })
+  }
+  else{
+    ToastAndroid.show('Enter Correct Amount!', ToastAndroid.SHORT);
+    this.setState({
+      isVisible: false,
+    })
+  }
+  })
+.catch(error=>ToastAndroid.show('Enter Correct Amount!', ToastAndroid.SHORT, this.setState({
+  isVisible: false,
+}))
+)
+}
+
+_getCash(){
+  fetch("http://efundapp.herokuapp.com/api/wallet/get-amount",{
+method:"GET",
+  headers: {
+    'Accept': 'application/json',
+   'Content-Type': 'application/json',
+   'X-Auth-Token': this.state.User.token,
+ },
+})
+.then(response => response.json())
+.then((responseJson)=> {
+  this.setState({
+    showAmount: responseJson.wallet.amount,
+    refreshing: false,
+   })
+   console.log(this.state.showAmount)
+  })
+ .catch(error=>console.log(error))
+   }
+
     render() {
         return (
+          <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this._onRefresh}
+          />
+        }
+      >
             <View style={{ flex: 1 }}>
                 <Header />
                 <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
                 <CustomModal isVisible={this.state.isVisible}>
                 <View style={{ flex: 1 }}>
-                  <View style={styles.modalMainContainer}>
-                    <View style={styles.modalImageContainer}>
+                <View style={{marginVertical:70}}/>
+                  <View style={styles.modalMainContainer}> 
                     <Input
                         label='Add Cash'
                         placeholder='Enter Cash'
+                        onChangeText={amount => this.setState({amount})}
+                        textContentType='creditCardNumber'
                     />
-                    </View>
-                    <View style={styles.modalTextContainer}>
-                      <Text style={styles.modalTextStyle}>
-                        {'Your order is received! '}
-                      </Text>
-                    </View>
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      onPress={() => {
-                        this.setState({ isVisible: false });
-                        // this.props.navigation.navigate('TrackOrder');
-                      }}>
-                      <Text style={styles.modalDecTextStyle}>
-                        You can track the delivery in the{' '}
-                        <Text style={{ color: '#393b82' }}>"Track Order"</Text>{' '}
-                        section
-                      </Text>
-                    </TouchableOpacity>
                     <Button
-                      title="Continue Eating"
+                      title="ADD"
+                      onPress={() => {
+                        this._addCash();
+                      }}
+                      titleStyle={styles.buttonTitleStyle}
+                      buttonStyle={[
+                        styles.buttonStyle,
+                        { borderRadius: responsiveWidth(10) },
+                      ]}
+                      containerStyle={styles.modalButtonContainer}
+                    />
+                    <Button
+                      title="Cancel"
                       onPress={() => {
                         this.setState({ isVisible: false });
                       }}
@@ -90,10 +183,10 @@ class Wallet extends Component {
                   </View>
                 </View>
               </CustomModal>
-                    <View style={[MainFlowStyles.cardStyle, { paddingBottom: 10, marginBottom: 10 }]}>
+                    <View style={[MainFlowStyles.cardStyle, { paddingBottom: 10, marginBottom: 8, marginTop: -25 }]}>
                         <View style={{ backgroundColor: '#FF3301', borderTopLeftRadius: 10, borderTopRightRadius: 10, padding: 40, borderBottomColor: 'black', borderBottomWidth: 2 }}>
                             <Text style={{ fontSize: 30, fontWeight: 'bold', alignSelf: 'center', color: 'white' }}>Wallet</Text>
-                            <Text style={{ fontSize: 30, fontWeight: 'bold', alignSelf: 'center', color: 'white' }}>Rs. 20,000</Text>
+                            <Text style={{ fontSize: 30, fontWeight: 'bold', alignSelf: 'center', color: 'white' }}>RS {this.state.showAmount}</Text>
                         </View>
 
                         <View style={{ flexDirection: 'row', paddingBottom: 10, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth: 1 }}>
@@ -140,6 +233,7 @@ class Wallet extends Component {
                 
                 </View>
             </View>
+            </ScrollView>
         );
     }
 }
@@ -217,7 +311,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   modalMainContainer: {
-    height: responsiveHeight(20),
+    height: responsiveHeight(40),
     width: responsiveWidth(85),
     alignSelf: 'center',
     backgroundColor: 'white',
@@ -225,18 +319,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     padding: responsiveWidth(4),
-  },
-  modalImageContainer: {
-    height: responsiveHeight(10),
-    width: '80%',
-    alignSelf: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalImageStyle: {
-    height: '90%',
-    width: '90%',
-    resizeMode: 'contain',
   },
   modalTextContainer: {
     height: responsiveHeight(10),

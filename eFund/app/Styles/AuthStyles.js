@@ -3,7 +3,7 @@ const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     imageBackgroundStyle: {
-        height: height / 2
+        height: 300
     },
     logoTextStyle: {
         color: '#FF3301',

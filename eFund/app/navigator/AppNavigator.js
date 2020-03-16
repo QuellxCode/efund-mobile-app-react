@@ -33,7 +33,7 @@ const AppNavigator = createSwitchNavigator({
             GenerateBill: GenerateBillScreen
         },
         {
-            initialRouteName: 'Projects',
+            initialRouteName: 'RequestPayment',
             defaultNavigationOptions: {
                 headerShown: false
             }

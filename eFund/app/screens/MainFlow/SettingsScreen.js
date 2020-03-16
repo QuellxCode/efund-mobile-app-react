@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, AsyncStorage } from 'react-native';
 import Header from '../../components/Header';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -23,16 +23,53 @@ class Settings extends Component {
         };
     }
 
+    componentDidMount() {
+        this._retrieveData();
+      }
+      _retrieveData = async () => {
+        try {
+          const value = await AsyncStorage.getItem('User');
+          const val = JSON.parse(value)
+          if (val !== null) {
+            this.setState({
+              User: val,
+             })
+             //this._getCash();
+          }
+        } catch (error) {
+          console.log('error getting data')
+        }
+      };
+      _getCash(){
+        fetch("http://efundapp.herokuapp.com/api/wallet/get-amount",{
+      method:"GET",
+        headers: {
+          'Accept': 'application/json',
+         'Content-Type': 'application/json',
+         'X-Auth-Token': this.state.User.token,
+       },
+      })
+      .then(response => response.json())
+      .then((responseJson)=> {
+        this.setState({
+          showAmount: responseJson.wallet.amount,
+          refreshing: false,
+         })
+         console.log(this.state.showAmount)
+        })
+       .catch(error=>console.log(error))
+         }
+
     render() {
         console.log(this.state);
         return (
             <View>
                 <Header />
                 <ScrollView style={{ marginBottom: 40 }}>
-                    <View style={{ margin: 20 }}>
+                    <View style={{ margin: 20, marginTop: -1 }}>
                         <Text style={MainFlowStyles.headerTextStyle}>Settings</Text>
 
-                        <View style={[MainFlowStyles.cardStyle, { paddingHorizontal: 10 }]}>
+                        <View style={[MainFlowStyles.cardStyle, { paddingHorizontal: 10, marginTop: -13 }]}>
                             <View style={{ width: 80, height: 80, borderRadius: 80 / 2, backgroundColor: '#FF3301', alignItems: 'center', justifyContent: 'center', alignSelf: 'center', marginVertical: 20 }}>
                                 <Ionicons name='md-person' size={30} color='white' />
                             </View>

@@ -29,7 +29,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: '#FF3301',
         justifyContent: 'space-between',
-        padding: 10
+        padding: 10,
+        marginTop: 24
     },
     logoStyle: {
         color: 'white',

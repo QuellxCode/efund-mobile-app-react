@@ -66,7 +66,7 @@ class LoginScreen extends Component {
             <KeyboardAvoidingView behavior="position">
             <StatusBar translucent backgroundColor='#8E0438' barStyle="light-content" />
             <ScrollView>
-                <View style={{ marginBottom: 20 }}>
+                <View style={{ marginBottom: 20, marginTop: 24 }}>
                     <ImageBackground
                         source={require('../../images/SigninTop.jpg')}
                         style={styles.imageBackgroundStyle}
@@ -75,7 +75,7 @@ class LoginScreen extends Component {
                         <Text style={styles.logoTextStyle}>E-Fund</Text>
                     </ImageBackground>
                 </View>
-                <View style={styles.formStyle}>
+                <View style={styles.formStyle, {marginTop: -10}}>
                     <Text style={styles.headerStyle}>Sign In</Text>
                     <Input
                         placeholder='abc@gmail.com'
