@@ -12,6 +12,8 @@ class Settings extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            User: [],
+            state: false,
             name: 'Abdul Aziz',
             editName: false,
             email: 'aziz@gmail.com',
@@ -23,6 +25,13 @@ class Settings extends Component {
         };
     }
 
+    componentDidUpdate(){
+        if(this.state.state === true){
+            this._retrieveData();
+          this.setState({state: false});
+        }
+      }
+
     componentDidMount() {
         this._retrieveData();
       }
@@ -33,35 +42,42 @@ class Settings extends Component {
           if (val !== null) {
             this.setState({
               User: val,
+              name: val.name,
+              phone: val.phone
              })
-             //this._getCash();
           }
         } catch (error) {
           console.log('error getting data')
         }
       };
       _getCash(){
-        fetch("http://efundapp.herokuapp.com/api/wallet/get-amount",{
-      method:"GET",
+        fetch("http://efundapp.herokuapp.com/api/user/profile",{
+      method:"PATCH",
         headers: {
           'Accept': 'application/json',
          'Content-Type': 'application/json',
          'X-Auth-Token': this.state.User.token,
        },
+       body:JSON.stringify({
+        "name": this.state.name,
+        "phone": this.state.phone,
+        "cnic": this.state.User.cnic,
+        "email": this.state.User.email
+      })
       })
       .then(response => response.json())
-      .then((responseJson)=> {
+      .then(async (responseJson)=> {
+        await AsyncStorage.setItem('User', JSON.stringify(responseJson));
+        console.log(responseJson)
         this.setState({
-          showAmount: responseJson.wallet.amount,
-          refreshing: false,
+          state: true
          })
-         console.log(this.state.showAmount)
         })
        .catch(error=>console.log(error))
          }
 
     render() {
-        console.log(this.state);
+       // console.log(this.state);
         return (
             <View>
                 <Header />
@@ -73,8 +89,8 @@ class Settings extends Component {
                             <View style={{ width: 80, height: 80, borderRadius: 80 / 2, backgroundColor: '#FF3301', alignItems: 'center', justifyContent: 'center', alignSelf: 'center', marginVertical: 20 }}>
                                 <Ionicons name='md-person' size={30} color='white' />
                             </View>
-                            <Text style={{ fontSize: 20, fontWeight: 'bold', alignSelf: 'center', marginBottom: 2 }}>Abdul Aziz</Text>
-                            <Text style={{ alignSelf: 'center', marginBottom: 20 }}>Purchaser</Text>
+                                <Text style={{ fontSize: 20, fontWeight: 'bold', alignSelf: 'center', marginBottom: 2 }}>{this.state.User.name}</Text>
+                                <Text style={{ alignSelf: 'center', marginBottom: 20 }}>{this.state.User.roles}</Text>
 
                             <Input
                                 editable={this.state.editName}
@@ -96,6 +112,7 @@ class Settings extends Component {
                             />
 
                             <Input
+                                editable={this.state.editPassword}
                                 placeholder='abc@gmail.com'
                                 autoCapitalize='none'
                                 autoCorrect={false}
@@ -106,14 +123,12 @@ class Settings extends Component {
                                 containerStyle={{ marginBottom: 20 }}
                                 leftIcon={ <MaterialCommunityIcons name='email' size={22} color='#FF3301' /> }
                                 leftIconContainerStyle={{ marginLeft: 0 }}
-                                value={this.state.email}
-                                onChangeText={(value) => this.setState({ email: value })}
+                                value={this.state.User.email}
                             />
 
                             <Input
                                 editable={this.state.editPassword}
-                                secureTextEntry={true}
-                                placeholder='********'
+                                placeholder='421XX-XXXXXX-X'
                                 autoCapitalize='none'
                                 autoCorrect={false}
                                 autoCompleteType='off'
@@ -123,13 +138,7 @@ class Settings extends Component {
                                 containerStyle={{ marginBottom: 20 }}
                                 leftIcon={ <MaterialCommunityIcons name='lock' size={22} color='#FF3301' /> }
                                 leftIconContainerStyle={{ marginLeft: 0 }}
-                                rightIcon={
-                                    <TouchableOpacity onPress={() => this.setState({ editPassword: true })}>
-                                        <FontAwesome5 name='pen' size={18} color='#FF3301' />
-                                    </TouchableOpacity>
-                                }
-                                value={this.state.password}
-                                onChangeText={(value) => this.setState({ password: value })}
+                                value={JSON.stringify(this.state.User.cnic)}
                             />
 
                             <Input
@@ -184,6 +193,7 @@ class Settings extends Component {
                                             editPhone: false,
                                             originalProfile: { name, email, password, phone }
                                         })
+                                        this._getCash();
                                     }}
                                 />
                             </View>

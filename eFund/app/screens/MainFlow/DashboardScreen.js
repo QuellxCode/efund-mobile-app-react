@@ -16,7 +16,7 @@ class DashboardScreen extends Component {
                 {id: 3, name: 'Director', select: false},
                 {id: 4, name: 'Accountant', select: false}
             ],
-            User: []
+            User: [],
         };
     }
 

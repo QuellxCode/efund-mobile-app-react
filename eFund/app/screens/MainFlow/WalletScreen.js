@@ -67,10 +67,10 @@ class Wallet extends Component {
     _retrieveData = async () => {
       try {
         const value = await AsyncStorage.getItem('User');
-        const val = JSON.parse(value)
-        if (val !== null) {
-          this.setState({
-            User: val,
+         const val = JSON.parse(value)
+         if (val !== null) {
+           this.setState({
+             User: val,
            })
            this._getCash();
         }
@@ -93,7 +93,9 @@ class Wallet extends Component {
     })
 .then(response => response.json())
 .then((responseJson)=> {
-  if(responseJson.message == 'Funds added Successfully'){
+  if(this.state.amount < 1){ToastAndroid.show("Please Enter Some Amount", ToastAndroid.SHORT);}
+  else{
+  if(responseJson.message === 'Funds added Successfully'){
     ToastAndroid.show(responseJson.message, ToastAndroid.SHORT);
     this.setState({
       isVisible: false,
@@ -105,7 +107,7 @@ class Wallet extends Component {
     this.setState({
       isVisible: false,
     })
-  }
+  }}
   })
 .catch(error=>ToastAndroid.show('Enter Correct Amount!', ToastAndroid.SHORT, this.setState({
   isVisible: false,
@@ -127,6 +129,7 @@ method:"GET",
   this.setState({
     showAmount: responseJson.wallet.amount,
     refreshing: false,
+    amount: 0
    })
    console.log(this.state.showAmount)
   })
@@ -154,7 +157,7 @@ method:"GET",
                         label='Add Cash'
                         placeholder='Enter Cash'
                         onChangeText={amount => this.setState({amount})}
-                        textContentType='creditCardNumber'
+                        keyboardType='number-pad'
                     />
                     <Button
                       title="ADD"

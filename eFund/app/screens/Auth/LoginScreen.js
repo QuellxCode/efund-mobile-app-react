@@ -45,10 +45,10 @@ class LoginScreen extends Component {
     .then(response => response.json())
     .then(async (responseJson)=> {
           await AsyncStorage.setItem('User', JSON.stringify(responseJson));
-          //await AsyncStorage.setItem('User', responseJson.user);
           this.setState({
             loading: false,
            })
+           console.log(responseJson)
       if(responseJson.message == 'login successfull'){
         ToastAndroid.show(responseJson.message, ToastAndroid.SHORT);
         this.props.navigation.navigate("mainFlow")}

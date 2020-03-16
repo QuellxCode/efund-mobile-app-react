@@ -32,7 +32,7 @@ const TwoColumnCard = ({ navigation }) => {
 
             <View style={{ flexDirection: 'row', marginBottom: 20 }}>
                 <TouchableOpacity
-                    style={[MainFlowStyles.cardStyle, { flex: 1,padding: 30, paddingVertical: 50, alignItems: 'center', justifyContent: 'center' }]}
+                    style={[MainFlowStyles.cardStyle, { flex: 1,padding: 30, paddingVertical: 50, alignItems: 'center', justifyContent: 'center', marginRight: 20 }]}
                     onPress={() => navigation.navigate('Reports')}
                 >
                     <Image
