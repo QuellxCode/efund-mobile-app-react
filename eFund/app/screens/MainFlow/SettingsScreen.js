@@ -45,12 +45,14 @@ class Settings extends Component {
               name: val.name,
               phone: val.phone
              })
+             //console.log(this.state.User)
           }
         } catch (error) {
           console.log('error getting data')
         }
       };
       _getCash(){
+        var New = this.state.User;
         fetch("http://efundapp.herokuapp.com/api/user/profile",{
       method:"PATCH",
         headers: {
@@ -67,8 +69,11 @@ class Settings extends Component {
       })
       .then(response => response.json())
       .then(async (responseJson)=> {
-        await AsyncStorage.setItem('User', JSON.stringify(responseJson));
-        console.log(responseJson)
+        New.name = responseJson.name;
+        New.phone = responseJson.phone;
+        console.log('hello')
+        console.log(New);
+       await AsyncStorage.setItem('User', JSON.stringify(New));
         this.setState({
           state: true
          })
