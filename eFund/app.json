@@ -1,9 +1,9 @@
 {
   "expo": {
    "name": "E-Fund",
-   "icon": "./path/to/your/app-icon.png",
+   "icon": "./assets/Total192x192.png",
    "splash": {
-    "image": "./assets/splash.png",
+    "image": "./assets/Total-Splash.png",
     "resizeMode": "contain",
     "backgroundColor": "#ffffff"
   },

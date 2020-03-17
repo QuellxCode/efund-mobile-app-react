@@ -21,7 +21,7 @@ const MenuDrawer = ({ navigation }) => {
     }
 
     return (
-        <View>
+        <View style={{marginTop:24}}>
             <View style={styles.avatarContainerStyles}>
                 <View style={styles.avatarIconContainerStyle}>
                     <MaterialCommunityIcons name='account' color='white' size={40} />
