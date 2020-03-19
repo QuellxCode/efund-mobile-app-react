@@ -4,6 +4,8 @@ import Header from '../../../components/Header';
 import CustomButton from '../../../components/CustomButton';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Bill from '../../../components/Bill';
+import RNPickerSelect from 'react-native-picker-select';
+import ModalDropdown from 'react-native-modal-dropdown';
 
 class RequestPayment extends Component {
     constructor(props) {
@@ -12,7 +14,10 @@ class RequestPayment extends Component {
             bills: [],
             projects:[],
             User:[],
-            item:[]
+            item:[],
+            listq: '',
+            selectedProject: '',
+            show: false
         };
         this.list = React.createRef();
     }
@@ -35,40 +40,64 @@ class RequestPayment extends Component {
         }
       };
 
-    _getProjects(){
-        fetch("http://efundapp.herokuapp.com/api/project/",{
-      method:"GET",
-        headers: {
-          'Accept': 'application/json',
-         'Content-Type': 'application/json',
-         'X-Auth-Token': this.state.User.token,
-       },
-      })
-  .then(response => response.json())
-  .then((responseJson)=> {
-    this.setState({
-     projects: responseJson.project,
-    })
-   })
-  .catch(error=>console.log(error))
+      set(){
+        this.setState({show: true})
+        // this.getAmount();
     }
 
+    _getProjects(){
+      fetch("http://efundapp.herokuapp.com/api/project/",{
+        method:"GET",
+          headers: {
+            'Accept': 'application/json',
+           'Content-Type': 'application/json',
+           'X-Auth-Token': this.state.User.token,
+         },
+        })
+        .then(response => response.json())
+        .then((responseJson)=> {
+          this.setState({
+              projects: responseJson.project
+           })
+           this.set();
+          })
+         .catch(error=>console.log(error))
+           }
+
+    _sendBill(){
+      
+    }
+
+    loadProjects() {
+      return this.state.projects.map(project => (
+         <Picker.Item label={project.project} value={project._id} />
+      ))
+    }
+
+    onValueChange (value: string) {
+      this.setState({
+          selectedProject : value
+      });
+      console.log(this.state.selectedProject)
+  }  
+
     render() {
-        console.log(this.state.projects[0])
-        console.log(this.state.item)
+        if(this.state.show === false){
+          return(
+            <View/>
+          )
+        }
+        else{
         return (
             <View style={{ flex: 1 }}>
                 <Header />
                 <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
                 <Picker
-                    selectedValue={this.state.project}
-                    style={{height: 50, width: 300}}
-                    onValueChange={(itemValue, itemIndex) => this.setState({item: itemValue})}
-                >
-                    <Picker.Item label={this.state.projects[0]} value={this.state.projects} />
-                    <Picker.Item label={this.state.projects[1]} value={this.state.projects} />
+                    selectedValue={this.state.projects}
+                    onValueChange={this.onValueChange.bind(this)}>
+                    <Picker.Item label='Select a bank' value='' />
+                    {this.loadProjects()}
                 </Picker>
-                
                     <FlatList
                         ref={this.list}
                         style={{ flexGrow: 0 }}
@@ -97,7 +126,7 @@ class RequestPayment extends Component {
                     />
                 </View>
             </View>
-        );
+        );}
     }
 }
 

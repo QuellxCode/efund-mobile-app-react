@@ -13,6 +13,8 @@ class ReportsScreen extends Component {
             selectedDaily: true,
             selectedWeekly: false,
             selectedMonthly: false,
+            User: [],
+            daily: [],
             dailyBills: [
                 { date: 'Jan 01, 2020', bNumber: '01', status: 'Approved' },
                 { date: 'Jan 01, 2020', bNumber: '02', status: 'Rejected' },
@@ -44,42 +46,37 @@ class ReportsScreen extends Component {
       checkStorge = async () => {
           try {
             const value = await AsyncStorage.getItem('User');
+            const val = JSON.parse(value)
             if (value !== null) {
-              this.props.navigation.navigate("mainFlow")
+              this.setState({
+                  User: val,
+              })
+              this._getCash();
             }
           } catch (error) {
             console.log('error getting data')
           }
         };
 
-    getdata(){
-        fetch("http://efundapp.herokuapp.com/api/user/login",{
-        method:"POST",
-          headers: {
-           'Content-Type': 'application/json'
-         },
-         body:JSON.stringify({
-           "email":this.state.email,
-           "password":this.state.password
-         })
-        })
-    .then(response => response.json())
-    .then(async (responseJson)=> {
-          await AsyncStorage.setItem('User', JSON.stringify(responseJson));
-          //await AsyncStorage.setItem('User', responseJson.user);
-          this.setState({
-            loading: false,
-           })
-      if(responseJson.message == 'login successfull'){
-        ToastAndroid.show(responseJson.message, ToastAndroid.SHORT);
-        this.props.navigation.navigate("mainFlow")}
-      else{
-        ToastAndroid.show('Incorrect Credentials!', ToastAndroid.SHORT);
-      }
-      })
-    .catch(error=>ToastAndroid.show('Incorrect Credentials!', ToastAndroid.SHORT)
-    )
-    }
+        _getCash(){
+            fetch("http://efundapp.herokuapp.com/api/reports/daily",{
+          method:"POST",
+            headers: {
+              'Accept': 'application/json',
+             'Content-Type': 'application/json',
+             'X-Auth-Token': this.state.User.token,
+           },
+          })
+          .then(response => response.json())
+          .then((responseJson)=> {
+            this.setState({
+              //refreshing: false,
+              daily: responseJson.report,
+             })
+             console.log(this.state.daily)
+            })
+           .catch(error=>console.log(error))
+             }
 
     render() {
         return (
