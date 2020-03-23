@@ -10,13 +10,11 @@ class GenerateBillScreen extends Component {
         super(props);
         this.state = {
             data_:this.props.navigation.state.params.data1,
-            datap:this.props.navigation.state.params.data2,
+            data_project:this.props.navigation.state.params.data2,
             visible: false,
             response_:'',
             User:[],
-            orders: [{ id: 0, itemName: 'Item 01', price: '00.00', quantity: '1'}]
         }
-        console.log(this.props.navigation.state.params.data2);
     }
 
     componentDidMount() {
@@ -39,23 +37,26 @@ class GenerateBillScreen extends Component {
       };
 
     handlePress = async () => {
+        this.setState({visible: true})
+    console.log("data"+this.state.data_)
+    console.log("datap"+this.state.data_project)
+
         fetch('http://efundapp.herokuapp.com/api/purchase/send-notification', {
             method: 'Post',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type':'application/json',
-                'X-Auth-Token': this.state.User.token,
+                'X-Auth-Token':this.state.User.token,
             },
             body: JSON.stringify({
                  "details":this.state.data_
-                ,"project": this.state.datap
+                ,"project": this.state.data_project
             })
         })
             .then(response => response.json())
             .then(json => {
                // console.log(json)
-                this.setState({response_:json,
-                    visible: true})
+                this.setState({response_:json})
                 alert(JSON.stringify(this.state.response_))
 
             })
@@ -111,7 +112,7 @@ class GenerateBillScreen extends Component {
                         title='Forward Request'
                         buttonStyle={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10 }}
                         containerStyle={{ marginHorizontal: 10 }}
-                        onPress={() => {this.handlePress()}}
+                        onPress={() => {this.handlePress(),{visible:true}}}
                     />
                 </View>
                 <Modal animationType='fade' transparent={true} visible={this.state.visible}>

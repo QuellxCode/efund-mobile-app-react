@@ -13,6 +13,7 @@ import ReportsScreen from '../screens/MainFlow/ReportsScreen';
 import WalletScreen from '../screens/MainFlow/WalletScreen';
 import NotificationScreen from '../screens/MainFlow/NotificationScreen';
 import SettingsScreen from '../screens/MainFlow/SettingsScreen';
+import ClaimDropDown from "../screens/MainFlow/ClaimDropDown";
 import MenuDrawer from "../components/MenuDrawer";
 
 const AppNavigator = createSwitchNavigator({
@@ -38,7 +39,16 @@ const AppNavigator = createSwitchNavigator({
                 headerShown: false
             }
         }),
-        ClaimPayment: ClaimPaymentScreen,
+        claim: createStackNavigator({
+            ClaimDropDown: ClaimDropDown,
+            ClaimPayment: ClaimPaymentScreen,
+        },
+        {
+            initialRouteName: 'ClaimDropDown',
+            defaultNavigationOptions: {
+                headerShown: false
+            }
+        }),
         GeneratePayOrder: GeneratePayOrderScreen,
         Reports: ReportsScreen,
         Wallet: WalletScreen,

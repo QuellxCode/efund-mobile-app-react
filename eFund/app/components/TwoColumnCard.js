@@ -20,7 +20,8 @@ const TwoColumnCard = ({ navigation }) => {
 
                 <TouchableOpacity
                     style={[MainFlowStyles.cardStyle, { flex: 1,padding: 30, paddingVertical: 50, alignItems: 'center', justifyContent: 'center' }]}
-                    onPress={() => navigation.navigate('ClaimPayment')}
+                    //onPress={() => navigation.navigate('ClaimPayment')}
+                    onPress={() => navigation.navigate('ClaimDropDown')}
                 >
                     <Image
                         source={require('../images/ClaimPaymentBig.png')}

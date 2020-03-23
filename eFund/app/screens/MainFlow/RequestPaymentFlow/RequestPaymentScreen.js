@@ -28,14 +28,10 @@ class RequestPayment extends Component {
         };
         this.list = React.createRef();
     }
-    // componentDidMount() {
-         //console.log("projectID:" + this.state.dataa_)
-    // }
     componentDidMount() {
         this.ref.focus();
         this.retrieveData();
     }
-
     retrieveData = async () => {
         try {
           const value = await AsyncStorage.getItem('User');
@@ -103,8 +99,8 @@ class RequestPayment extends Component {
                 .then(json => {
                     //console.log(json)
                     this.setState({ response_: json })
-                    //alert(JSON.stringify(this.state.response_))
-                    alert(this.state.selectedValue)
+                    alert(JSON.stringify(this.state.response_))
+                    //alert(this.state.selectedValue)
                 })
                 .catch(error => {
                     console.error(error);
@@ -143,20 +139,6 @@ class RequestPayment extends Component {
                     ></TextInput>
                     <View style={{ marginBottom: 2 }} />
                 </View>
-                {/* <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <TextInput style={{ fontSize: 16 }}
-                            placeholder='ctg'
-                            onChangeText={(cat) => this.setState({ cat })}
-                            ref={ref => this.ref = ref}
-
-                        ></TextInput>
-                        <View style={{ justifyContent: 'flex-end', marginBottom: 2 }}>
-                            <FontAwesome name='chevron-down' size={10} color='#FF3301' />
-                        </View>
-                    </View>
-                    <View style={{ marginBottom: 2 }} />
-                </View> */}
                 <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
                     <TextInput style={{ fontSize: 16 }}
                         placeholder='Pkr'
@@ -233,20 +215,6 @@ class RequestPayment extends Component {
                     ></TextInput>
                     <View style={{ marginBottom: 2 }} />
                 </View>
-                {/* <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <TextInput style={{ fontSize: 16 }}
-                            placeholder='ctg'
-                            onChangeText={(cat) => this.setState({ cat })}
-                            ref={ref => this.ref = ref}
-
-                        ></TextInput>
-                        <View style={{ justifyContent: 'flex-end', marginBottom: 2 }}>
-                            <FontAwesome name='chevron-down' size={10} color='#FF3301' />
-                        </View>
-                    </View>
-                    <View style={{ marginBottom: 2 }} />
-                </View> */}
                 <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
                     <TextInput style={{ fontSize: 16 }}
                         placeholder='Pkr'
@@ -279,7 +247,7 @@ class RequestPayment extends Component {
                             var ae = this.state.pkr;
                             var project = this.state.selectedValue;
                             let b = this.state.bills;
-                            if(aa.length<3 &&ad.length<3){
+                            if(aa.length<3){
                                 {alert("Minmime 3 chacter is valid")}
                             }
                                 var data = {
@@ -290,7 +258,6 @@ class RequestPayment extends Component {
                                             "item_name": aa,
                                             "item_quantity": ab,
                                             "item_price": ac,
-                                            
                                             "total_price": ae
                                         }
                                     ]
@@ -313,7 +280,7 @@ class RequestPayment extends Component {
                         text='Generate Bill'
                         routeName='GenerateBill'
                         data={this.state.bills}
-                        datap={this.state.selectedValue}
+                        data1={this.state.selectedValue}
                     />
                 </View>
             </View>
