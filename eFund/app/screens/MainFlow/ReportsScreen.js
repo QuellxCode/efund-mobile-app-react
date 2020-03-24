@@ -71,7 +71,7 @@ class ReportsScreen extends Component {
           .then((responseJson)=> {
             this.setState({
               //refreshing: false,
-              daily: responseJson.report,
+              daily: responseJson.msg,
              })
              console.log(this.state.daily)
             })

@@ -25,7 +25,8 @@ class GeneratePayOrderScreen extends Component {
             state: false,
             accounts: [],
             id:'',
-            account_no: ''
+            account_no: '',
+            resf:false
         };
     }
 
@@ -34,6 +35,12 @@ class GeneratePayOrderScreen extends Component {
             this._sendFunds();
         this.setState({state: false});
         }
+        if(this.state.resf === true){
+      this.setState({
+        show: true,
+        resf: false
+      });
+      }
     }
 
     componentDidMount() {
@@ -78,26 +85,28 @@ class GeneratePayOrderScreen extends Component {
       })
   .then(response => response.json())
   .then((responseJson)=> {
-    // if(responseJson.message === 'Funds added Successfully'){
-    //   ToastAndroid.show(responseJson.message, ToastAndroid.SHORT);
-    //   this.setState({
-        
-    //   })
-    // }
-    // else{
-    //   ToastAndroid.show('Enter Correct Amount!', ToastAndroid.SHORT);
-    //   this.setState({
-        
-    //   })
-    // }
     console.log(responseJson)
+    var msg = responseJson.message
+    if(msg == "Funds added successfully"){
+      ToastAndroid.show(responseJson.message, ToastAndroid.SHORT);
+      this.setState({
+        resf: true,
+        show:false
+      })
+    }
+    else{
+      ToastAndroid.show('Unsuccessfull!', ToastAndroid.SHORT);
+      this.setState({
+        
+      })
+    }
     })
-  .catch(error=>ToastAndroid.show('Catch!', ToastAndroid.SHORT,))
+  .catch(error=>ToastAndroid.show('Unsuccessfull!', ToastAndroid.SHORT,))
   }
 
   set(){
     this.setState({show: true})
-    this.getAmount();
+    //this.getAmount();
 }
 
       _getBanks(){
