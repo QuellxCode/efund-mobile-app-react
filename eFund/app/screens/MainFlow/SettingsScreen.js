@@ -21,7 +21,7 @@ class Settings extends Component {
             editPassword: false,
             phone: '+92-335-5199903',
             editPhone: false,
-            originalProfile: { name: 'Abdul Aziz', email: 'aziz@gmail.com', password: 'password', phone: '+92-335-5199903' }
+            originalProfile: []
         };
     }
 
@@ -42,6 +42,7 @@ class Settings extends Component {
           if (val !== null) {
             this.setState({
               User: val,
+              originalProfile: val,
               name: val.name,
               phone: val.phone
              })
