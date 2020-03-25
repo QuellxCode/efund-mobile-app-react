@@ -11,35 +11,38 @@ export default class Notification extends Component {
         this.state = {
             visible: false,
             response_: '',
-            User: '',
+            User: [],
             data: [],
         }
         this.list = React.createRef();
     }
     componentDidMount() {
-        this.get_notification();
-    }
-    async get_notification() {
+        this._retrieveData();
+      }
+   
+     _retrieveData = async () => {
         try {
             const value = await AsyncStorage.getItem('User');
             const val = JSON.parse(value)
             if (val !== null) {
                 this.setState({
-                    User: val.token,
+                    User: val,
                 })
-                // console.log("///"+)
+                this.get_notification();
+                //console.log(this.state.User)
             }
         } catch (error) {
             console.log('error getting data')
         }
-        var token = JSON.stringify(this.state.User)
-        //console.log(token)
+    }
+    
+    get_notification(){
         fetch('http://efundapp.herokuapp.com/api/notification', {
             method: 'Get',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
-                'X-Auth-Token': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTRiY2ZkODA3YTNjNzJjZDBhYTZkYjMiLCJyb2xlcyI6IlN1cGVydmlzb3IiLCJpYXQiOjE1ODQxNTMxNDd9.Fl1kmsa4wsXik-QsEuRDCJe9l2G_o9FpauJOV-CdhyY"
+                'X-Auth-Token': this.state.User.token
             }
         })
             .then(response => response.json())
@@ -51,6 +54,7 @@ export default class Notification extends Component {
                 console.error(error);
             });
     }
+
     render() {
         return (
             <View style={{ flex: 1 }}>
