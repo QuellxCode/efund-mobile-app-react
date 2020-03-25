@@ -15,6 +15,7 @@ import NotificationScreen from '../screens/MainFlow/NotificationScreen';
 import SettingsScreen from '../screens/MainFlow/SettingsScreen';
 import ClaimDropDown from "../screens/MainFlow/ClaimDropDown";
 import MenuDrawer from "../components/MenuDrawer";
+import Notification from "../screens/MainFlow/Notification"
 
 const AppNavigator = createSwitchNavigator({
     loginFlow: createStackNavigator({
@@ -31,7 +32,8 @@ const AppNavigator = createSwitchNavigator({
         requestPaymentFlow: createStackNavigator({
             Projects: ProjectList,
             RequestPayment: RequestPaymentScreen,
-            GenerateBill: GenerateBillScreen
+            GenerateBill: GenerateBillScreen,
+           
         },
         {
             initialRouteName: 'RequestPayment',
@@ -49,6 +51,7 @@ const AppNavigator = createSwitchNavigator({
                 headerShown: false
             }
         }),
+        Notification: Notification,
         GeneratePayOrder: GeneratePayOrderScreen,
         Reports: ReportsScreen,
         Wallet: WalletScreen,

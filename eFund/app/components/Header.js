@@ -1,6 +1,6 @@
 import React from 'react';
 import { withNavigation } from 'react-navigation';
-import { View, TouchableOpacity, Text, StyleSheet, Image } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, Image,Modal } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Header = ({ navigation }) => {
@@ -17,7 +17,9 @@ const Header = ({ navigation }) => {
 
             <Text style={styles.logoStyle}>E-Fund</Text>
 
-            <TouchableOpacity>
+            <TouchableOpacity
+            onPress={()=>navigation.navigate("Notification")}
+            >
                 <MaterialCommunityIcons name='bell' color='white' size={30} />
             </TouchableOpacity>
         </View>

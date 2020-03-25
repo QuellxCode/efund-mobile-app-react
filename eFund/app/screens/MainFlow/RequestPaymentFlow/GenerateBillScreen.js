@@ -9,8 +9,8 @@ class GenerateBillScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data_:this.props.navigation.state.params.data1,
-            data_project:this.props.navigation.state.params.data2,
+            data_:this.props.navigation.state.params.bill,
+            data_project:this.props.navigation.state.params.project,
             visible: false,
             response_:'',
             User:[],

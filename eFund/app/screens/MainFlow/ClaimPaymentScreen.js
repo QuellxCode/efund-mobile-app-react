@@ -15,6 +15,7 @@ class ClaimPaymentScreen extends Component {
         this.state = {
             data_: this.props.navigation.state.params.data1,
             Selected_Proj: this.props.navigation.state.params.data2,
+            data_ctg:this.props.navigation.state.params.data3,
             chek: false,
             User: '',
             response_: '',
@@ -34,16 +35,17 @@ class ClaimPaymentScreen extends Component {
         // console.log(token)
         
     componentDidMount() {
+        console.log("kkkk'''"+this.state.data_ctg)
         //this.getPermissionAsync();
-        this.retrieveData()
+        //this.retrieveData()
     }
     retrieveData = async () => {
         try {
             const value = await AsyncStorage.getItem('User');
             const val = JSON.parse(value)
-            //console.log("kkkk"+JSON.stringify(val))
+            console.log("kkkk"+JSON.stringify(val))
 
-            //    console.log("kkkk"+val.token)
+            // console.log("kkkk"+va)
             if (val !== null) {
                 this.setState({
                     User: val.token, Username: val.name
