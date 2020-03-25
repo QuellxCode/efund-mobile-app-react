@@ -29,7 +29,7 @@ export default class Notification extends Component {
                     User: val,
                 })
                 this.get_notification();
-                console.log(this.state.User)
+                //console.log(this.state.User)
             }
         } catch (error) {
             console.log('error getting data')
