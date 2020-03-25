@@ -21,7 +21,6 @@ class ClaimPaymentScreen extends Component {
             response_: '',
             Username: '',
             visible: false,
-
         }
     }
          //var array2=[{"details[item_name]":"Aaa","details[item_quantity]":"5","details[item_price]":"55","details[total_price]":"55"}]
