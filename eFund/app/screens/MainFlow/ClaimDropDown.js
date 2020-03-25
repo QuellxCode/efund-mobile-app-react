@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Dimensions, FlatList, TextInput, ScrollView, TouchableOpacity, Modal, KeyboardAvoidingView, Picker } from 'react-native';
+import { View, Text, Dimensions, FlatList, TextInput, ScrollView, TouchableOpacity, Modal, KeyboardAvoidingView, Picker, AsyncStorage } from 'react-native';
 import Header from '../../components/Header';
 import { Button } from 'react-native-elements';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
@@ -30,11 +30,7 @@ export default class ClaimDropDown extends Component {
     }
     this.list = React.createRef();
   }
-  componentDidMount() {
-    this.retrieveData();
-    this.Api_call()
-  }
-  retrieveData = async () => {
+  async componentDidMount() {
     try {
       const value = await AsyncStorage.getItem('User');
       const val = JSON.parse(value)
@@ -42,23 +38,18 @@ export default class ClaimDropDown extends Component {
         this.setState({
           User: val,
         })
-        //  console.log(this.state.User)
-        this.getProjects();
+        console.log(this.state.User)
       }
     } catch (error) {
       console.log('error getting data')
     }
-  };
-  Api_call() {
-    let a = 0;
-    var that = this;
-    let thisdata = []
-    fetch('http://efundapp.herokuapp.com/api/project/', {
+    var thisdata = []
+    fetch('http://efundapp.herokuapp.com/api/project/mobile', {
       method: 'Get',
       headers: {
-        Accept: 'application/json',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'x-auth-token': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTRiY2ZkODA3YTNjNzJjZDBhYTZkYjMiLCJyb2xlcyI6IlN1cGVydmlzb3IiLCJpYXQiOjE1ODQxNTMxNDd9.Fl1kmsa4wsXik-QsEuRDCJe9l2G_o9FpauJOV-CdhyY"
+        'X-Auth-Token': this.state.User.token,
       },
     })
       .then(response => response.json())
@@ -71,13 +62,13 @@ export default class ClaimDropDown extends Component {
             });
           }
           this.setState({ Category: thisdata })
-          //console.log(this.state.Category)  
         });
       })
 
       .catch(error => {
         console.error(error);
       });
+
   }
   render_1 = () =>
     (<KeyboardAvoidingView >
@@ -231,9 +222,9 @@ export default class ClaimDropDown extends Component {
             <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
               <Text style={{ fontSize: 16 }}
               >
-                 {
-                          this.state.price* this.state.qty
-                      }
+                {
+                  this.state.price * this.state.qty
+                }
               </Text>
               <View style={{ marginBottom: 2 }} />
             </View>
