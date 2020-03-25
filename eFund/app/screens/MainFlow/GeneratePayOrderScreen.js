@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, AsyncStorage, ToastAndroid, Picker } from 'react-native';
+import { View, Text, ScrollView, AsyncStorage, ToastAndroid, Picker, StyleSheet } from 'react-native';
 import Header from '../../components/Header';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -8,6 +8,12 @@ import AntDeisgn from 'react-native-vector-icons/AntDesign';
 import { Input, Button } from 'react-native-elements';
 import Entypo from 'react-native-vector-icons/Entypo';
 import DatePicker from 'react-native-datepicker';
+import CustomModal from '../../components/CustomModal';
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from 'react-native-responsive-dimensions';
 
 class GeneratePayOrderScreen extends Component {
     constructor(props) {
@@ -25,7 +31,9 @@ class GeneratePayOrderScreen extends Component {
             state: false,
             accounts: [],
             id:'',
-            account_no: ''
+            account_no: '',
+            resf:false,
+            isVisible:false
         };
     }
 
@@ -34,6 +42,12 @@ class GeneratePayOrderScreen extends Component {
             this._sendFunds();
         this.setState({state: false});
         }
+        if(this.state.resf === true){
+      this.setState({
+        show: true,
+        resf: false
+      });
+      }
     }
 
     componentDidMount() {
@@ -78,26 +92,29 @@ class GeneratePayOrderScreen extends Component {
       })
   .then(response => response.json())
   .then((responseJson)=> {
-    // if(responseJson.message === 'Funds added Successfully'){
-    //   ToastAndroid.show(responseJson.message, ToastAndroid.SHORT);
-    //   this.setState({
-        
-    //   })
-    // }
-    // else{
-    //   ToastAndroid.show('Enter Correct Amount!', ToastAndroid.SHORT);
-    //   this.setState({
-        
-    //   })
-    // }
     console.log(responseJson)
+    var msg = responseJson.message
+    if(msg == "Funds added successfully"){
+      ToastAndroid.show('Pay Order Generated Successfully And Sent To Accountant', ToastAndroid.SHORT);
+      this.setState({
+        resf: true,
+        show:false,
+        isVisible:true
+      })
+    }
+    else{
+      ToastAndroid.show('Unsuccessfull!', ToastAndroid.SHORT);
+      this.setState({
+        
+      })
+    }
     })
-  .catch(error=>ToastAndroid.show('Catch!', ToastAndroid.SHORT,))
+  .catch(error=>ToastAndroid.show('Unsuccessfull!', ToastAndroid.SHORT,))
   }
 
   set(){
     this.setState({show: true})
-    this.getAmount();
+    //this.getAmount();
 }
 
       _getBanks(){
@@ -160,6 +177,26 @@ class GeneratePayOrderScreen extends Component {
             <View style={{ flex: 1 }}>
                 <Header />
                 <ScrollView>
+                <CustomModal isVisible={this.state.isVisible}>
+                <View style={{ flex: 1 }}>
+                <View style={{marginVertical:70}}/>
+                  <View style={styles.modalMainContainer}> 
+                    <Text>Pay Order Generated Successfully And Sent To Accountant</Text>
+                    <Button
+                      title="OK"
+                      onPress={() => {
+                        this.setState({ isVisible: false });
+                      }}
+                      titleStyle={styles.buttonTitleStyle}
+                      buttonStyle={[
+                        styles.buttonStyle,
+                        { borderRadius: responsiveWidth(10) },
+                      ]}
+                      containerStyle={styles.modalButtonContainer}
+                    />
+                  </View>
+                </View>
+              </CustomModal>
                     <View style={MainFlowStyles.containerStyle}>
                         {/* <Text style={MainFlowStyles.headerTextStyle}>Pay Orders</Text> */}
                         <View style={[MainFlowStyles.cardStyle]}>
@@ -274,3 +311,111 @@ class GeneratePayOrderScreen extends Component {
 }
 
 export default GeneratePayOrderScreen;
+
+const blueBG = '#393b82';
+const red = '#eb3f3f';
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+
+  headerContainer: {
+    height: responsiveHeight(10),
+    width: responsiveWidth(100),
+    backgroundColor: '#f6f6f6',
+    // backgroundColor: 'red',
+    flexDirection: 'row',
+    alignItems: 'center',
+    // alignSelf:'flex-end'
+  },
+  headerleftContainer: {
+    height: '100%',
+    width: '80%',
+    // backgroundColor: 'green',
+    justifyContent: 'center',
+    // alignItems: 'center'
+  },
+  headerImageStyle: {
+    marginTop: responsiveHeight(0.7),
+    height: '80%',
+    width: '20%',
+    resizeMode: 'contain',
+  },
+  titleContainer: {
+    height: responsiveHeight(10),
+    width: responsiveWidth(90),
+    // backgroundColor: 'red',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  titleTextStyle: {
+    fontSize: responsiveFontSize(4),
+    fontWeight: 'bold',
+    color: blueBG,
+  },
+  inputContainer: {
+    height: responsiveHeight(9),
+    width: responsiveWidth(90),
+    alignSelf: 'center',
+    // backgroundColor: 'green',
+    justifyContent: 'center',
+  },
+  buttonContainer: {
+    height: responsiveHeight(8),
+    width: responsiveWidth(80),
+    alignSelf: 'center',
+    // backgroundColor:red,
+    //  backgroundColor: 'red',
+    padding: 0,
+  },
+  buttonStyle: {
+    height: '100%',
+    width: '100%',
+    // backgroundColor: '#303f88',
+    backgroundColor: red,
+    borderRadius: responsiveWidth(2),
+  },
+  buttonTitleStyle: {
+    fontSize: responsiveFontSize(2.2),
+    fontWeight: '900',
+    color: 'white',
+  },
+  modalMainContainer: {
+    height: responsiveHeight(40),
+    width: responsiveWidth(85),
+    alignSelf: 'center',
+    backgroundColor: 'white',
+    borderRadius: responsiveWidth(3),
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    padding: responsiveWidth(4),
+  },
+  modalTextContainer: {
+    height: responsiveHeight(10),
+    width: '90%',
+    alignItems: 'center',
+    // backgroundColor: 'red'
+  },
+  modalTextStyle: {
+    fontSize: responsiveFontSize(2.5),
+    fontWeight: 'bold',
+    color: '#e12c2c',
+    textAlign: 'center',
+  },
+  modalDecTextStyle: {
+    fontSize: responsiveFontSize(2.2),
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalButtonContainer: {
+    height: responsiveHeight(8),
+    width: responsiveWidth(70),
+    alignSelf: 'center',
+    borderRadius: responsiveWidth(10),
+    // backgroundColor:red,
+    //  backgroundColor: 'red',
+    padding: 0,
+  },
+});
