@@ -26,61 +26,50 @@ class RequestPayment extends Component {
             selectedValue: "",
             selectedProject: "",
             pkkr: '',
-            User: [],
+            User:'',
         };
         this.list = React.createRef();
     }
-    componentDidMount() {
-        this.ref.focus();
-        this.retrieveData();
-    }
-    retrieveData = async () => {
-        try {
-            const value = await AsyncStorage.getItem('User');
-            const val = JSON.parse(value)
-            if (val !== null) {
-                this.setState({
-                    User: val,
-                })
-                //  console.log(this.state.User)
-                this.getProjects();
-            }
-        } catch (error) {
-            console.log('error getting data')
-        }
-    };
-
-    getProjects() {
-        let a = 0;
-        var that = this;
-        let thisdata = []
-        fetch('http://efundapp.herokuapp.com/api/project/', {
-            method: 'Get',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'X-Auth-Token': this.state.User.token,
-            },
-        })
-            .then(response => response.json())
-            .then(json => {
-                json.project.map(dataItem => {
-                    if (dataItem.project != null) {
-                        thisdata.push({
-                            project_name: dataItem.project,
-                            project_id: dataItem._id,
-                        });
-                    }
-                    this.setState({ Category: thisdata })
-                    //console.log(this.state.Category)  
-                });
+   async componentDidMount() {
+       try {
+        const value = await AsyncStorage.getItem('User');
+        const val = JSON.parse(value)
+        if (val !== null) {
+            this.setState({
+                User: val,
             })
-
-            .catch(error => {
-                console.error(error);
-            });
+              console.log(this.state.User)
+        }
+    } catch (error) {
+        console.log('error getting data')
     }
+    var thisdata =[]
+    fetch('http://efundapp.herokuapp.com/api/project/mobile', {
+        method: 'Get',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-Auth-Token': this.state.User.token,
+        },
+    })
+        .then(response => response.json())
+        .then(json => {
+            json.project.map(dataItem => {
+                if (dataItem.project != null) {
+                    thisdata.push({
+                        project_name: dataItem.project,
+                        project_id: dataItem._id,
+                    });
+                }
+                this.setState({ Category: thisdata })
+            });
+        })
 
+        .catch(error => {
+            console.error(error);
+        });
+      
+}
     handlePress = async () => {
         //console.log(data)
         var aa = this.state.title;
@@ -265,7 +254,7 @@ class RequestPayment extends Component {
                             var ab = this.state.qty;
                             var ac = this.state.price;
                             var ae = this.state.pkr;
-                            //this.handlePress(data)
+                            this.handlePress()
                         
                             //this.setState({ pkr: r })
                             var result=ac*ab

@@ -36,7 +36,7 @@ class ClaimPaymentScreen extends Component {
     componentDidMount() {
         console.log("kkkk'''"+this.state.data_ctg)
         //this.getPermissionAsync();
-        //this.retrieveData()
+        this.retrieveData()
     }
     retrieveData = async () => {
         try {
