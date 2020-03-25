@@ -29,20 +29,20 @@ export default class Notification extends Component {
                     User: val,
                 })
                 this.get_notification();
-                //console.log(this.state.User)
+                console.log(this.state.User)
             }
         } catch (error) {
             console.log('error getting data')
         }
     }
-    
+
     get_notification(){
         fetch('http://efundapp.herokuapp.com/api/notification', {
             method: 'Get',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
-                'X-Auth-Token': this.state.User.token
+                'X-Auth-Token': this.state.User.token,
             }
         })
             .then(response => response.json())
@@ -56,6 +56,7 @@ export default class Notification extends Component {
     }
 
     render() {
+        if(this.state.User.roles == "Supervisor"){
         return (
             <View style={{ flex: 1 }}>
                 <Header />
@@ -76,6 +77,29 @@ export default class Notification extends Component {
                 </View>
             </View>
         );
+    }
+    else{
+        return (
+            <View style={{ flex: 1 }}>
+                <Header />
+                <Text style ={{fontSize:20,color:"red",alignSelf:"center"}}>Notifications</Text>
+                <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
+                    <FlatList
+                        data={this.state.data}
+                        ItemSeparatorComponent={this.ListViewItemSeparator}
+                        keyExtractor={(a, b, ) => b.toString()}
+                        renderItem={({ item }) => (
+                            <View style={{ backgroundColor: 'white', padding: 20 }}>
+                                <Text style={{ fontSize: 10, color: "red", marginLeft: "3%" }}>Message: {item.message}</Text>
+                                <Text style={{ fontSize: 10, color: "red", marginLeft: "3%" }}>From:{item.from}</Text>
+                                <Text style={{ fontSize: 10, color: "red", marginLeft: "3%" }}>Status:{item.status}</Text>
+                            </View>
+                        )}
+                    />
+                </View>
+            </View>
+        );
+    }
     }
 }
 
