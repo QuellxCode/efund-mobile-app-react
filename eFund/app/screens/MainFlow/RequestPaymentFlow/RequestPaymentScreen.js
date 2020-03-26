@@ -75,7 +75,6 @@ class RequestPayment extends Component {
         var aa = this.state.title;
         var ab = this.state.qty;
         var ac = this.state.price;
-        var ae = this.state.pkr;
         var project = this.state.selectedValue;
         var r = this.state.price * this.state.qty
         var data = {
@@ -106,7 +105,7 @@ class RequestPayment extends Component {
             })
                 .then(response => response.json())
                 .then(json => {
-                    //console.log(json)
+                    console.log(json)
                     this.setState({ response_: json })
                     alert(JSON.stringify(this.state.response_))
                     //alert(this.state.selectedValue)
