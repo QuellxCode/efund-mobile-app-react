@@ -14,6 +14,7 @@ export default class Notification extends Component {
             response_: '',
             User: [],
             data: [],
+            dada:[],
         }
         this.list = React.createRef();
     }
@@ -38,6 +39,7 @@ export default class Notification extends Component {
     }
 
     get_notification() {
+        var arr=[];
         fetch('http://efundapp.herokuapp.com/api/notification', {
             method: 'Get',
             headers: {
@@ -50,6 +52,16 @@ export default class Notification extends Component {
             .then(json => {
                 //console.log(JSON.stringify(this.state.User.token))
                 this.setState({ data: json.notification })
+               // 
+               var v=this.state.data.length
+                 for(let i=0;i<v;i++){
+                   //console.log('v:'+v)
+                    
+                    this.setState({ dada: notification[i].message })
+                 }
+                 console.log("dada"+this.state.dada)
+               //console.log("++"+(json.notification[].message))
+                //console.log("++"+JSON.stringify(json.notification[6].message))
             })
             .catch(error => {
                 console.error(error);
