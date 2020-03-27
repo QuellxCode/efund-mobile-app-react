@@ -23,29 +23,7 @@ class Wallet extends Component {
             showAmount:0,
             state: false,
             refreshing: false,
-            wallet: [
-                { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '500.00' },
-                { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '500.00' },
-                { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '500.00' },
-                { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '500.00' },
-                { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '500.00' },
-                { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '500.00' },
-                { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '500.00' },
-                { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '500.00' },
-                { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '500.00' },
-                { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '500.00' },
-                { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '500.00' },
-                { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '500.00' },
-                { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '500.00' },
-                { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '500.00' },
-                { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '500.00' },
-                { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '500.00' },
-                { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '500.00' },
-                { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '500.00' },
-                { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '500.00' },
-                { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '500.00' },
-                { date: '23/1/2020', transaction: 'Cash out via ATM', amount: '400.00' },
-            ]
+            wallet: [],
         };
     }
 
@@ -73,6 +51,7 @@ class Wallet extends Component {
              User: val,
            })
            this._getCash();
+           this._getTransaction();
         }
       } catch (error) {
         console.log('error getting data')
@@ -115,6 +94,25 @@ class Wallet extends Component {
 )
 }
 
+_getTransaction(){
+  fetch("http://efundapp.herokuapp.com/api/wallet/transaction",{
+method:"GET",
+  headers: {
+    'Accept': 'application/json',
+   'Content-Type': 'application/json',
+   'X-Auth-Token': this.state.User.token,
+ },
+})
+.then(response => response.json())
+.then((responseJson)=> {
+  this.setState({
+    wallet: responseJson.transactions,
+   })
+   console.log(this.state.wallet)
+  })
+ .catch(error=>console.log(error))
+   }
+
 _getCash(){
   fetch("http://efundapp.herokuapp.com/api/wallet/get-amount",{
 method:"GET",
@@ -137,6 +135,7 @@ method:"GET",
    }
 
     render() {
+      if(this.state.wallet == null ){
         return (
           <ScrollView
         refreshControl={
@@ -238,6 +237,110 @@ method:"GET",
             </View>
             </ScrollView>
         );
+      }
+        else{
+          return (
+            <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh}
+            />
+          }
+        >
+              <View style={{ flex: 1 }}>
+                  <Header />
+                  <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
+                  <CustomModal isVisible={this.state.isVisible}>
+                  <View style={{ flex: 1 }}>
+                  <View style={{marginVertical:70}}/>
+                    <View style={styles.modalMainContainer}> 
+                      <Input
+                          label='Add Cash'
+                          placeholder='Enter Cash'
+                          onChangeText={amount => this.setState({amount})}
+                          keyboardType='number-pad'
+                      />
+                      <Button
+                        title="ADD"
+                        onPress={() => {
+                          this._addCash();
+                        }}
+                        titleStyle={styles.buttonTitleStyle}
+                        buttonStyle={[
+                          styles.buttonStyle,
+                          { borderRadius: responsiveWidth(10) },
+                        ]}
+                        containerStyle={styles.modalButtonContainer}
+                      />
+                      <Button
+                        title="Cancel"
+                        onPress={() => {
+                          this.setState({ isVisible: false });
+                        }}
+                        titleStyle={styles.buttonTitleStyle}
+                        buttonStyle={[
+                          styles.buttonStyle,
+                          { borderRadius: responsiveWidth(10) },
+                        ]}
+                        containerStyle={styles.modalButtonContainer}
+                      />
+                    </View>
+                  </View>
+                </CustomModal>
+                      <View style={[MainFlowStyles.cardStyle, { paddingBottom: 10, marginBottom: 8, marginTop: -25 }]}>
+                          <View style={{ backgroundColor: '#FF3301', borderTopLeftRadius: 10, borderTopRightRadius: 10, padding: 40, borderBottomColor: 'black', borderBottomWidth: 2 }}>
+                              <Text style={{ fontSize: 30, fontWeight: 'bold', alignSelf: 'center', color: 'white' }}>Wallet</Text>
+                              <Text style={{ fontSize: 30, fontWeight: 'bold', alignSelf: 'center', color: 'white' }}>RS {this.state.showAmount}</Text>
+                          </View>
+  
+                          <View style={{ flexDirection: 'row', paddingBottom: 10, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth: 1 }}>
+                              <View style={{ width: (width - 40) / 3 }}>
+                                  <Text style={{ fontSize: 18, marginLeft: 10 }}>Date</Text>
+                              </View>
+                              <View style={{ width: (width - 40) / 3 }}>
+                                  <Text style={{ fontSize: 18 }}>Transaction</Text>
+                              </View>
+                              <View style={{ width: (width - 40) / 3, alignItems: 'flex-end' }}>
+                                  <Text style={{ fontSize: 18, marginRight: 10 }}>Amount</Text>
+                              </View>
+                          </View>
+                          
+                          <FlatList
+                              style={{ maxHeight: height * 0.4 }}
+                              data={this.state.wallet}
+                              keyExtractor={(item, index) => index.toString()}
+                              showsVerticalScrollIndicator={false}
+                              renderItem={({ item }) => {
+                                  return (
+                                      <View style={{ flexDirection: 'row', paddingBottom: 5, marginTop: 5, borderBottomColor: '#FFC1B2', borderBottomWidth: 1 }}>
+                                          <View style={{ width: (width - 40) / 3, justifyContent: 'center' }}>
+                                              <Text style={{ fontSize: 12, marginLeft: 10 }}>{item.date}</Text>
+                                          </View>
+                                          <View style={{ width: (width - 40) / 3, justifyContent: 'center' }}>
+                                              <Text style={{ fontSize: 12 }}>{item.transaction}</Text>
+                                          </View>
+                                          <View style={{ width: (width - 40) / 3, alignItems: 'center', justifyContent: 'center' }}>
+                                              <Text style={{ fontSize: 12 }}>{item.amount}</Text>
+                                          </View>
+                                      </View>
+                                  );
+                              }}
+                          />
+                      </View>
+                  
+                      <Button
+                      title="Add Cash"
+                      buttonStyle={{backgroundColor: '#FF3301', padding: 14, borderRadius: 10}}
+                      containerStyle={[{ marginHorizontal: 10 }]}
+                      onPress={() => this.setState({ isVisible: true })}
+                      />
+                  
+                  </View>
+              </View>
+              </ScrollView>
+          );
+        }
     }
 }
 
