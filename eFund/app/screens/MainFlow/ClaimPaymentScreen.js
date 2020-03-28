@@ -42,7 +42,7 @@ class ClaimPaymentScreen extends Component {
         try {
             const value = await AsyncStorage.getItem('User');
             const val = JSON.parse(value)
-            console.log("kkkk"+JSON.stringify(val))
+            //console.log("kkkk"+JSON.stringify(val))
 
             // console.log("kkkk"+va)
             if (val !== null) {

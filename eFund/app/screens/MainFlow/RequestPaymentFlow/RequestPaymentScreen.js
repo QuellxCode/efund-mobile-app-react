@@ -7,6 +7,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MainFlowStyles from '../../../Styles/MainFlowStyles'
 var n = 1;
+var value=0;
 const rs = 0;
 class RequestPayment extends Component {
     constructor(props) {
@@ -23,55 +24,58 @@ class RequestPayment extends Component {
             project_name: '',
             project_id: '',
             Category: [],
-            selectedValue: "",
+            selectedValue: null,
             selectedProject: "",
             pkkr: '',
-            User:'',
+            User: '',
+            data: '',
         };
         this.list = React.createRef();
     }
-   async componentDidMount() {
-       try {
-        const value = await AsyncStorage.getItem('User');
-        const val = JSON.parse(value)
-        if (val !== null) {
-            this.setState({
-                User: val,
-            })
-              console.log(this.state.User)
+    async componentDidMount() {
+        try {
+            const value = await AsyncStorage.getItem('User');
+            const val = JSON.parse(value)
+            if (val !== null) {
+                this.setState({
+                    User: val,
+                })
+                console.log(this.state.User)
+            }
+        } catch (error) {
+            console.log('error getting data')
         }
-    } catch (error) {
-        console.log('error getting data')
-    }
-    var thisdata =[]
-    fetch('http://efundapp.herokuapp.com/api/project/mobile', {
-        method: 'Get',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'X-Auth-Token': this.state.User.token,
-        },
-    })
-        .then(response => response.json())
-        .then(json => {
-            json.project.map(dataItem => {
-                if (dataItem.project != null) {
+        var thisdata = []
+        var arr = []
+        fetch('http://efundapp.herokuapp.com/api/project/', {
+            method: 'Get',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-Auth-Token': this.state.User.token,
+            },
+        })
+            .then(response => response.json())
+            .then(json => {
+                this.setState({ data: json.project })
+                var v = this.state.data.length
+                for (let i = 0; i < v; i++) {
+                    console.log('v:' + json.project[i].project_name)
                     thisdata.push({
-                        project_name: dataItem.project,
-                        project_id: dataItem._id,
+                        project_name: json.project[i].project_name,
+                        project_id: json.project[i]._id,
                     });
                 }
                 this.setState({ Category: thisdata })
-            });
-        })
+                //console.log("aaa" + JSON.stringify(this.state.Category));
+            })
 
-        .catch(error => {
-            console.error(error);
-        });
-      
-}
+            .catch(error => {
+                console.error(error);
+            });
+
+    }
     handlePress = async () => {
-        //console.log(data)
         var aa = this.state.title;
         var ab = this.state.qty;
         var ac = this.state.price;
@@ -107,7 +111,7 @@ class RequestPayment extends Component {
                 .then(json => {
                     console.log(json)
                     this.setState({ response_: json })
-                    alert(JSON.stringify(this.state.response_))
+                    //alert(JSON.stringify(this.state.response_))
                     //alert(this.state.selectedValue)
                 })
                 .catch(error => {
@@ -149,18 +153,18 @@ class RequestPayment extends Component {
                 </View>
                 <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
                     <Text style={{ fontSize: 16 }}>
-                      {
-                          this.state.price* this.state.qty
-                      }
+                        {
+                            item.pkr
+                        }
                     </Text>
                     <View style={{ marginBottom: 2 }} />
                 </View>
             </View>
         </KeyboardAvoidingView>
         )
-        functiion(){
+    functiion() {
 
-        }
+    }
     render() {
         const PickerItems = this.state.Category.map((element, index) => (
             <Picker.Item
@@ -181,18 +185,19 @@ class RequestPayment extends Component {
                         height: 60,
                         alignSelf: 'flex-end', zIndex: 5,
                         marginTop: 1,
-                        borderWidth: 1,
-                        //flexDirection: "row-reverse",
-                        // color: "#000",
+                        borderWidth: 2,
+                        // flexDirection: "row-reverse",
+                        borderColor: 'red',
+                        color: "red",
                         fontSize: 12
                     }}
                     onValueChange={(itemValue, itemIndex) => {
-                        this.setState({ selectedValue: itemValue, })
-                        this.setState({ selectedProject: itemValue, })
+                        this.setState({ selectedValue: itemValue })
                         console.log("selected:val" + this.state.selectedValue)
+
                     }}
                 >
-                    <Picker.Item label='Select a Project' value='' />
+                    {/* <Picker.Item label='   Select Project' value='' /> */}
                     {PickerItems}
                 </Picker>
                 <View style={[MainFlowStyles.cardStyle, { padding: 10, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20, marginHorizontal: 20 }]}>
@@ -227,9 +232,9 @@ class RequestPayment extends Component {
                     </View>
                     <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
                         <Text style={{ fontSize: 16 }}>
-                        {
-                          this.state.price* this.state.qty
-                      }
+                            {
+                              value = this.state.price * this.state.qty
+                            }
                         </Text>
                         <View style={{ marginBottom: 2 }} />
                     </View>
@@ -245,27 +250,44 @@ class RequestPayment extends Component {
                         //renderItem={({ item }) => <Bill item={item} />}
                         renderItem={this.render_1}
                     />
-                    <TouchableOpacity
-                        style={{ alignSelf: 'center' }}
-                        onPress={() => {
-                            let b = this.state.bills;
-                            var aa = this.state.title;
-                            var ab = this.state.qty;
-                            var ac = this.state.price;
-                            var ae = this.state.pkr;
-                            this.handlePress()
-                        
-                            //this.setState({ pkr: r })
-                            var result=ac*ab
-                            b.push({ number: n, item: aa, price: ac, qty: ab, pkr: result });
-                            n = n + 1;
-                            this.setState({ bills: b })
-                            console.log(this.state.bills)
-                        }
-                        }
-                    >
-                        <AntDesign name='pluscircle' size={20} color='#FF3301' />
-                    </TouchableOpacity>
+                    <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                        {/* <TouchableOpacity
+                            style={{ alignSelf: 'center', alignContent: 'center', backgroundColor: '#FF3301', height: 40, width: 100, borderRadius: 20, justifyContent: "center" }}
+                            onPress={() => {
+                                this.handlePress()
+                                this.state.title=null;
+                               //this.state.qty=null;
+                                //this.state.price=null;
+                                this.state.pkr=null;
+                                 //var result = ac * ab
+                                //b.push({ item: aa, price: ac, qty: ab, pkr: result });
+                               //this.setState({ bills: b })
+                            }
+                            }
+                        >
+                            <Text style={{ alignSelf: 'center', color: '#FFF', alignContent: 'center', justifyContent: "center" }}>Add Item</Text>
+                        </TouchableOpacity> */}
+                        <TouchableOpacity
+                            //style={{ alignSelf: 'center' }}
+                            style={{ alignSelf: 'center', alignContent: 'center', backgroundColor: '#FF3301', height: 40, width: 100, borderRadius: 20, justifyContent: "center" }}
+                            onPress={() => {
+                                let b = this.state.bills;
+                                var aa = this.state.title;
+                                var ab = this.state.qty;
+                                var ac = this.state.price;
+                                var ae = this.state.pkr;
+                                var result = ac * ab
+                                b.push({ item: aa, price: ac, qty: ab, pkr: result });
+                                this.setState({ bills: b })
+                                console.log(this.state.bills)
+                            }
+                            }
+                        >
+                            <Text style={{ alignSelf: 'center', color: '#FFF', alignContent: 'center', justifyContent: "center" }}>New Row</Text>
+
+                            {/* <AntDesign name='pluscircle' size={20} color='#FF3301' /> */}
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 <View style={{ marginHorizontal: 15, marginBottom: 20, marginTop: 10 }}>
                     {/* <CustomButton
@@ -278,13 +300,17 @@ class RequestPayment extends Component {
                         style={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10 }}
                         onPress={() => {
                             let b = this.state.bills;
-                            var rr = this.state.price * this.state.qty
-                            b.push({ number: '9', item: this.state.title, price: this.state.price, qty: this.state.qty, pkr: rr });
-                            this.setState({ bills: b }),
-                                this.props.navigation.navigate('GenerateBill', {
-                                    bill: this.state.bills,
-                                    project: this.state.selectedProject
-                                })
+                            var aa = this.state.title;
+                            var ab = this.state.qty;
+                            var ac = this.state.price;
+                            var ae = this.state.pkr;
+                            var result = ac * ab
+                            b.push({ item: aa, price: ac, qty: ab, pkr: result });
+                            this.setState({ bills: b })
+                            this.props.navigation.navigate('GenerateBill', {
+                                bill: this.state.bills,
+                                project: this.state.selectedProject
+                            })
                         }}
                     >
                         <Text

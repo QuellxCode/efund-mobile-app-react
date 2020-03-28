@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Dimensions, FlatList, TouchableOpacity, TextInput, Modal, AsyncStorage } from 'react-native';
+import { View, Text, Dimensions, FlatList, TouchableOpacity, TouchableWithoutFeedback, TextInput, Modal, AsyncStorage } from 'react-native';
 import Header from '../../components/Header';
 import { Button } from 'react-native-elements';
 import MainFlowStyles from "../../Styles/MainFlowStyles"
@@ -10,18 +10,21 @@ export default class Notification extends Component {
         super(props);
         this.state = {
             visible: false,
-            Requestvisible:false,
+            Requestvisible: false,
             response_: '',
             User: [],
             data: [],
-            dada:[],
+            dada: [],
+            project_data:[],
+            project:"",
+            Msg: '',
+            items:''
         }
         this.list = React.createRef();
     }
     componentDidMount() {
         this._retrieveData();
     }
-
     _retrieveData = async () => {
         try {
             const value = await AsyncStorage.getItem('User');
@@ -37,9 +40,9 @@ export default class Notification extends Component {
             console.log('error getting data')
         }
     }
-
     get_notification() {
-        var arr=[];
+        var arr = [];
+        var arry=[];
         fetch('http://efundapp.herokuapp.com/api/notification', {
             method: 'Get',
             headers: {
@@ -50,59 +53,115 @@ export default class Notification extends Component {
         })
             .then(response => response.json())
             .then(json => {
-                //console.log(JSON.stringify(this.state.User.token))
                 this.setState({ data: json.notification })
-               // 
-               var v=this.state.data.length
-                 for(let i=0;i<v;i++){
-                   //console.log('v:'+v)
-                    
-                    this.setState({ dada: notification[i].message })
-                 }
-                 console.log("dada"+this.state.dada)
-               //console.log("++"+(json.notification[].message))
-                //console.log("++"+JSON.stringify(json.notification[6].message))
+                console.log(JSON.stringify(json.notification))
+                // var v = this.state.data.length
+                // for (let i = 0; i < v; i++) {
+                //     // arr.push(json.notification[i].message,json.notification[i].project
+                //     arry.push(json.notification[i].project)
+                //     arr.push(json.notification[i].message)
+                // }
+                // this.setState({ dada: arr })
+                // this.setState({ project_data: arry})
+
+                console.log("+///+" + this.state.dada)
+                console.log("+////???/+" + arry)
+
             })
             .catch(error => {
                 console.error(error);
             });
     }
-    accept()
-    {
-        this.setState({Requestvisible:true})
+    accept(item) {
+        this.setState({ Requestvisible: true })
+        // console.log("item::::"+item)
+        // console.log("itemssss::::"+this.state.project)
+        // console.log("accepted_item" + item)
+        fetch('http://efundapp.herokuapp.com/api/purchase/accept-notification', {
+            method: 'Post',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-Auth-Token': this.state.User.token,
+            },
+            body: JSON.stringify({
+                "details": item
+                , "project": this.state.project
+            })
+        })
+            .then(response => response.json())
+            .then(json => {
+                console.log("response:" + JSON.stringify(json))
+            })
+            .catch(error => {
+                console.error(error);
+            });
     }
-    reject() {
-        this.setState({ visible: true })
-        //alert("sss")
+    FlatListItemSeparator = () => {
+        return (
+          <View
+            style={{
+              height: 1,
+              width: "100%",
+              backgroundColor: "#000",
+            }}
+          />
+        );
+      }
+    reject_ok() {
+        // console.log("item::::"+this.state.items)
+        // console.log("itemssss::::"+this.state.project)
+        // console.log("msg"+this.state.Msg)
+        fetch('http://efundapp.herokuapp.com/api/purchase/reject-notification', {
+            method: 'Post',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-Auth-Token': this.state.User.token,
+            },
+            body: JSON.stringify({
+                "details":  this.state.items
+                , "project": this.state.project
+                , "message": this.state.Msg
+            })
+        })
+            .then(response => response.json())
+            .then(json => {
+                console.log("response:" + JSON.stringify(json))
+            })
+            .catch(error => {
+                console.error(error);
+            });
+          this.setState({ visible: false })
     }
     render() {
         if (this.state.User.roles == "Supervisor") {
             return (
                 <View style={{ flex: 1 }}>
                     <Header />
-                    <Text style={{ fontSize: 30, color: "red", alignSelf: "center" }}>Notifications</Text>
+                    <Text style={{ fontSize: 30, color: "red", alignSelf: "center" }}>Notification</Text>
                     <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
                         <FlatList
                             data={this.state.data}
-                            ItemSeparatorComponent={this.ListViewItemSeparator}
+                            ItemSeparatorComponent={this.FlatListItemSeparator}
                             keyExtractor={(a, b, ) => b.toString()}
-                            renderItem={({ item }) => (
+                            renderItem={({ item, index }) => (
                                 <View style={{ backgroundColor: 'white', padding: 20 }}>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Text style={{ fontSize: 20, color: "red", marginLeft: "1%", height: 50, width: 200 }}>Message: {item.message}</Text>
+                                    <View style={{ flexDirection: 'column' }}>
+                                        <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Request: {item.message}</Text>
+                                         <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Project Id: {item.project}</Text>  
+
+                                    </View>
+                                    <View style={{ flexDirection: 'row',justifyContent:'center' }}>
                                         <TouchableOpacity
-                                            style={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10, height: 50, width: 80 }}
-                                            onPress={() =>this.accept() }>
+                                            style={{ backgroundColor: '#FF3301', padding: 14, margin:10,borderRadius: 10, height: 50, width: 80 }}
+                                            onPress={() =>{this.setState({project:item.project  }), this.accept(item.message)}}>
                                             <Text style={{ fontSize: 15, color: '#fff', alignSelf: 'center' }}
                                             >Accept</Text>
                                         </TouchableOpacity>
-                                    </View>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Text style={{ fontSize: 20, color: "red", marginLeft: "1%", height: 50, width: 200 }}>From:{item.from}</Text>
-
                                         <TouchableOpacity
-                                            style={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10, height: 50, width: 80 }}
-                                            onPress={() => this.reject()}>
+                                            style={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10,margin:10,height: 50, width: 80 }}
+                                            onPress={() => { this.setState({ visible: true,items:item.message,project:item.project})}}>
                                             <Text style={{ fontSize: 15, color: '#fff', alignSelf: 'center' }}
                                             >Reject</Text>
                                         </TouchableOpacity>
@@ -115,7 +174,7 @@ export default class Notification extends Component {
                                                 </View>
                                                 <Text
                                                     style={{ alignSelf: 'center', fontSize: 16, fontWeight: 'bold', color: '#FF3301', paddingBottom: 40 }}>
-                                                        Best your approval is Accepted!
+                                                    Best your approval is Accepted!
                                                     </Text>
                                                 <Button
                                                     title='OK'
@@ -133,11 +192,12 @@ export default class Notification extends Component {
                                                 </View>
                                                 <TextInput
                                                     placeholder="Why you are rejected this approval"
+                                                    onChangeText={(Msg) => this.setState({ Msg })}
                                                     style={{ alignSelf: 'center', fontSize: 16, fontWeight: 'bold', color: '#FF3301', paddingBottom: 40 }}></TextInput>
                                                 <Button
                                                     title='OK'
                                                     buttonStyle={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 0, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, }}
-                                                    onPress={() => this.setState({ visible: false })}
+                                                    onPress={() => this.reject_ok()}
                                                 />
                                             </View>
                                         </View>

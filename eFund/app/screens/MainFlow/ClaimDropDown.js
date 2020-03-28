@@ -26,6 +26,7 @@ export default class ClaimDropDown extends Component {
       ctg: '',
       orderss: [],
       response_: '',
+      data: '',
 
     }
     this.list = React.createRef();
@@ -44,7 +45,7 @@ export default class ClaimDropDown extends Component {
       console.log('error getting data')
     }
     var thisdata = []
-    fetch('http://efundapp.herokuapp.com/api/project/mobile', {
+    fetch('http://efundapp.herokuapp.com/api/project', {
       method: 'Get',
       headers: {
         'Accept': 'application/json',
@@ -54,15 +55,17 @@ export default class ClaimDropDown extends Component {
     })
       .then(response => response.json())
       .then(json => {
-        json.project.map(dataItem => {
-          if (dataItem.project != null) {
-            thisdata.push({
-              project_name: dataItem.project,
-              project_id: dataItem._id,
-            });
-          }
-          this.setState({ Category: thisdata })
-        });
+        this.setState({ data: json.project })
+        var v = this.state.data.length
+        for (let i = 0; i < v; i++) {
+          console.log('v:' + json.project[i].project_name)
+          thisdata.push({
+            project_name: json.project[i].project_name,
+            project_id: json.project[i]._id,
+          });
+        }
+        this.setState({ Category: thisdata })
+        //console.log("aaa" + JSON.stringify(this.state.Category));
       })
 
       .catch(error => {
@@ -105,16 +108,18 @@ export default class ClaimDropDown extends Component {
         <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
           <View style={{ flexDirection: 'row' }}>
             <Picker
-              //selectedValue={this.state.language}
+              selectedValue={this.state.ctg}
               prompt="Select Category"
-              style={{ height: 20, width: 20 }}
-              onValueChange={(itemValue, itemIndex) =>
+              mode="dropdown"
+              style={{ height: 20, width: 30 }}
+              onValueChange={(itemValue, itemIndex) =>{
+                console.log("itemvali"+itemValue)
                 this.setState({ ctg: itemValue })
-              }
+              }}
             >
-              <Picker.Item label="Fouji cement" value="1" />
-              <Picker.Item label="Bestway cemment" value="2" />
-              <Picker.Item label="Kohat cement" value="3" />
+              <Picker.Item label="Fouji cement" value="Fouji cement" />
+              <Picker.Item label="Bestway cemment" value="Bestway cemment" />
+              <Picker.Item label="Kohat cement" value="Kohat cement" />
             </Picker>
             <View style={{ justifyContent: 'flex-end', marginBottom: 2 }}>
             </View>
@@ -165,7 +170,6 @@ export default class ClaimDropDown extends Component {
               console.log("selected:value of project" + this.state.selectedValue)
             }}
           >
-            <Picker.Item label='Select a Project' value='' />
             {PickerItems}
           </Picker>
           <View style={[MainFlowStyles.cardStyle, { padding: 10, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20, marginHorizontal: 20 }]}>
@@ -201,18 +205,20 @@ export default class ClaimDropDown extends Component {
             </View>
             <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
               <View style={{ flexDirection: 'row' }}>
-                <Picker
-                  //selectedValue={this.state.language}
-                  prompt="Select Category"
-                  style={{ height: 20, width: 20 }}
-                  onValueChange={(itemValue, itemIndex) =>
-                    this.setState({ ctg: itemValue })
-                  }
-                >
-                  <Picker.Item label="Fouji cement" value="1" />
-                  <Picker.Item label="Bestway cemment" value="2" />
-                  <Picker.Item label="Kohat cement" value="3" />
-                </Picker>
+              <Picker
+              selectedValue={this.state.ctg}
+              prompt="Select Category"
+              mode="dropdown"
+              style={{ height: 20, width: 20 }}
+              onValueChange={(itemValue, itemIndex) =>{
+                this.setState({ ctg: itemValue })
+              console.log("itemvali"+itemValue)
+              }}
+            >
+              <Picker.Item label="Fouji cement" value="Fouji cement" />
+              <Picker.Item label="Bestway cemment" value="Bestway cemment" />
+              <Picker.Item label="Kohat cement" value="Kohat cement" />
+            </Picker>
                 <View style={{ justifyContent: 'flex-end', marginBottom: 2 }}>
                 </View>
               </View>
