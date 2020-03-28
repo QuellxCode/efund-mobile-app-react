@@ -127,8 +127,7 @@ export default class ClaimDropDown extends Component {
           <View style={{ marginBottom: 2 }} />
         </View>
         <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-          <Text style={{ fontSize: 16 }}
-          >
+          <Text style={{ fontSize: 16 }}>
             {
               this.state.price * this.state.qty
             }

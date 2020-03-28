@@ -63,10 +63,8 @@ export default class Notification extends Component {
                 // }
                 // this.setState({ dada: arr })
                 // this.setState({ project_data: arry})
-
                 console.log("+///+" + this.state.dada)
                 console.log("+////???/+" + arry)
-
             })
             .catch(error => {
                 console.error(error);

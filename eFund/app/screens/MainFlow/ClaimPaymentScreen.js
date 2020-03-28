@@ -61,6 +61,7 @@ class ClaimPaymentScreen extends Component {
             formdata.append(arrey[i].item_quantity)
             formdata.append(arrey[i].item_price)
             formdata.append(arrey[i].total_price)
+            formdata.append(arrey[i].category)
         }
         formdata.append("purchaser", JSON.stringify(this.state.Username))
         formdata.append("payment", "30000")
@@ -97,9 +98,6 @@ class ClaimPaymentScreen extends Component {
                 alert('Sorry, we need camera roll permissions to make this work!');
             }
         }
-    }
-    submit() {
-        alert("Submit")
     }
     _pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
