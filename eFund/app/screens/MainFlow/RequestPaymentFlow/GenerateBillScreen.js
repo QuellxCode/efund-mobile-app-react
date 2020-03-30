@@ -38,7 +38,7 @@ class GenerateBillScreen extends Component {
 
     handlePress = async () => {
         this.setState({visible: true})
-    console.log("data"+this.state.data_)
+    console.log("data"+JSON.stringify(this.state.data_))
     console.log("datap"+this.state.data_project)
 
         fetch('http://efundapp.herokuapp.com/api/purchase/send-notification', {
@@ -55,9 +55,9 @@ class GenerateBillScreen extends Component {
         })
             .then(response => response.json())
             .then(json => {
-               // console.log(json)
+                console.log(JSON.stringify(json))
                 this.setState({response_:json})
-                alert(JSON.stringify(this.state.response_))
+               // alert(JSON.stringify(this.state.response_))
 
             })
             .catch(error => {

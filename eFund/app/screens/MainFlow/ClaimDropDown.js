@@ -73,10 +73,10 @@ export default class ClaimDropDown extends Component {
       });
 
   }
-  render_1 = () =>
+  render_1 = ({item}) =>
     (<KeyboardAvoidingView >
       <View style={[MainFlowStyles.cardStyle, { padding: 10, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20, marginHorizontal: 3 }]}>
-        <Text style={{ fontWeight: 'bold', fontSize: 16 }}></Text>
+        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.number}</Text>
         <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
           <TextInput style={{ fontSize: 16 }}
             placeholder='Item'
@@ -147,9 +147,11 @@ export default class ClaimDropDown extends Component {
       />
     ));
     return (
-      <ScrollView>
         <View style={{ flex: 1 }}>
           <Header />
+          <ScrollView>
+          <Text style={{ fontWeight: 'bold', fontSize: 30,alignSelf:'center',color:'#FF3301'}}>Select Project</Text>
+          <View style={{borderColor:'#FF3301',borderWidth:1, width: 300,height: 50,borderRadius:30,justifyContent:'center',alignSelf:'center',marginTop:10}}>
           <Picker
             selectedValue={this.state.selectedValue}
             prompt="Select Project"
@@ -160,7 +162,7 @@ export default class ClaimDropDown extends Component {
               marginTop: 1,
               borderWidth: 1,
               //flexDirection: "row-reverse",
-              // color: "#000",
+              color:'#FF3301',
               fontSize: 12
             }}
             onValueChange={(itemValue, itemIndex) => {
@@ -171,8 +173,9 @@ export default class ClaimDropDown extends Component {
           >
             {PickerItems}
           </Picker>
-          <View style={[MainFlowStyles.cardStyle, { padding: 10, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20, marginHorizontal: 20 }]}>
-            <Text style={{ fontWeight: 'bold', fontSize: 16 }}></Text>
+          </View>
+          <View style={[MainFlowStyles.cardStyle, { padding: 10, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20, marginHorizontal: 20,marginTop:10 }]}>
+            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>1</Text>
             <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
               <TextInput style={{ fontSize: 16 }}
                 placeholder='Item'
@@ -204,6 +207,7 @@ export default class ClaimDropDown extends Component {
             </View>
             <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
               <View style={{ flexDirection: 'row' }}>
+                
               <Picker
               selectedValue={this.state.ctg}
               prompt="Select Category"
@@ -255,8 +259,9 @@ export default class ClaimDropDown extends Component {
                 var project = this.state.selectedValue;
                 let b = this.state.bills;
                 var result = ac * ab
-                b.push({ "details[item_name]": aa, "details[item_quantity]": ab, "details[item_price]": ac, "details[total_price]": result });
+                var cat=this.state.ctg
                 n = n + 1;
+                b.push({number:n, "details[item_name]": aa, "details[item_quantity]": ab, "details[item_price]": ac, "details[total_price]": result,"details[category]":cat });
                 this.setState({ bills: b })
                 //console.log(this.state.bills)
 
@@ -275,8 +280,9 @@ export default class ClaimDropDown extends Component {
               data_ctg={this.state.ctg}
             />
           </View>
+          </ScrollView>
+
         </View>
-      </ScrollView>
     );
   }
 }

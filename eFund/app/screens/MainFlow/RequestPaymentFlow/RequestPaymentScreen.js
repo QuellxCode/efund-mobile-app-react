@@ -1,14 +1,15 @@
-import React, { Component } from 'react';
-import { View, TouchableOpacity, FlatList, Text, TouchableO, TextInput, KeyboardAvoidingView, Picker, AsyncStorage } from 'react-native';
-import Header from '../../../components/Header';
-import CustomButton from '../../../components/CustomButton';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-//import Bill from '../../../components/Bill';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import MainFlowStyles from '../../../Styles/MainFlowStyles'
+ import React, { Component } from 'react';
+ import { View, TouchableOpacity,StyleSheet, Button,Constants,FlatList, Text, TouchableO, TextInput, KeyboardAvoidingView, Picker, AsyncStorage } from 'react-native';
+ import Header from '../../../components/Header';
+ import CustomButton from '../../../components/CustomButton';
+ import AntDesign from 'react-native-vector-icons/AntDesign';
+ import Bill from '../../../components/Bill';
+ import FontAwesome from 'react-native-vector-icons/FontAwesome';
+ import MainFlowStyles from '../../../Styles/MainFlowStyles'
 var n = 1;
 var value=0;
 const rs = 0;
+
 class RequestPayment extends Component {
     constructor(props) {
         super(props);
@@ -29,6 +30,7 @@ class RequestPayment extends Component {
             pkkr: '',
             User: '',
             data: '',
+            check:true,
         };
         this.list = React.createRef();
     }
@@ -122,7 +124,7 @@ class RequestPayment extends Component {
     render_1 = ({ item }) =>
         (<KeyboardAvoidingView >
             <View style={[MainFlowStyles.cardStyle, { padding: 10, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20, marginHorizontal: 5 }]}>
-                <Text style={{ fontWeight: 'bold', fontSize: 16 }}></Text>
+        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.number}</Text>
                 <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
                     <TextInput style={{ fontSize: 16 }}
                         placeholder='Item'
@@ -154,7 +156,8 @@ class RequestPayment extends Component {
                 <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
                     <Text style={{ fontSize: 16 }}>
                         {
-                            item.pkr
+                         this.state.price * this.state.qty
+
                         }
                     </Text>
                     <View style={{ marginBottom: 2 }} />
@@ -162,9 +165,6 @@ class RequestPayment extends Component {
             </View>
         </KeyboardAvoidingView>
         )
-    functiion() {
-
-    }
     render() {
         const PickerItems = this.state.Category.map((element, index) => (
             <Picker.Item
@@ -177,19 +177,21 @@ class RequestPayment extends Component {
         return (
             <View style={{ flex: 1 }}>
                 <Header />
+                <Text style={{ fontWeight: 'bold', fontSize: 30,alignSelf:'center',color:'#FF3301'}}>Select Project</Text>
+               <View style={{borderColor:'#FF3301',borderWidth:1, width: 250,height: 50,borderRadius:30,justifyContent:'center',alignSelf:'center',marginTop:10}}>
                 <Picker
                     selectedValue={this.state.selectedValue}
                     prompt="Select Project"
                     style={{
-                        width: 250,
-                        height: 60,
-                        alignSelf: 'flex-end', zIndex: 5,
+                        width: 200,height: 50,
+                        alignSelf: 'center',
                         marginTop: 1,
-                        borderWidth: 2,
+                        borderWidth: 2
+                        ,color:'#FF3301',
+                        //alignSelf: 'flex-end',
                         // flexDirection: "row-reverse",
                         borderColor: 'red',
-                        color: "red",
-                        fontSize: 12
+                        fontSize: 30
                     }}
                     onValueChange={(itemValue, itemIndex) => {
                         this.setState({ selectedValue: itemValue })
@@ -200,8 +202,9 @@ class RequestPayment extends Component {
                     {/* <Picker.Item label='   Select Project' value='' /> */}
                     {PickerItems}
                 </Picker>
-                <View style={[MainFlowStyles.cardStyle, { padding: 10, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20, marginHorizontal: 20 }]}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 16 }}></Text>
+                </View>
+                <View style={[MainFlowStyles.cardStyle, { padding: 10, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20, marginHorizontal: 20,marginTop:10 }]}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 16 }}>1</Text>
                     <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
                         <TextInput style={{ fontSize: 16 }}
                             placeholder='Item'
@@ -233,13 +236,14 @@ class RequestPayment extends Component {
                     <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
                         <Text style={{ fontSize: 16 }}>
                             {
-                              value = this.state.price * this.state.qty
+                             this.state.price * this.state.qty
                             }
                         </Text>
                         <View style={{ marginBottom: 2 }} />
                     </View>
                 </View>
-                <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
+               
+                <View style={{ flex: 1, marginHorizontal: 20, marginTop: 5 }}>
                     <FlatList
                         ref={this.list}
                         style={{ flexGrow: 0 }}
@@ -251,24 +255,8 @@ class RequestPayment extends Component {
                         renderItem={this.render_1}
                     />
                     <View style={{ flexDirection: "row", justifyContent: "center" }}>
-                        {/* <TouchableOpacity
-                            style={{ alignSelf: 'center', alignContent: 'center', backgroundColor: '#FF3301', height: 40, width: 100, borderRadius: 20, justifyContent: "center" }}
-                            onPress={() => {
-                                this.handlePress()
-                                this.state.title=null;
-                               //this.state.qty=null;
-                                //this.state.price=null;
-                                this.state.pkr=null;
-                                 //var result = ac * ab
-                                //b.push({ item: aa, price: ac, qty: ab, pkr: result });
-                               //this.setState({ bills: b })
-                            }
-                            }
-                        >
-                            <Text style={{ alignSelf: 'center', color: '#FFF', alignContent: 'center', justifyContent: "center" }}>Add Item</Text>
-                        </TouchableOpacity> */}
+
                         <TouchableOpacity
-                            //style={{ alignSelf: 'center' }}
                             style={{ alignSelf: 'center', alignContent: 'center', backgroundColor: '#FF3301', height: 40, width: 100, borderRadius: 20, justifyContent: "center" }}
                             onPress={() => {
                                 let b = this.state.bills;
@@ -277,7 +265,9 @@ class RequestPayment extends Component {
                                 var ac = this.state.price;
                                 var ae = this.state.pkr;
                                 var result = ac * ab
-                                b.push({ item: aa, price: ac, qty: ab, pkr: result });
+                                this.handlePress();
+                                 n=n+1
+                                b.push({number:n, item: aa, price: ac, qty: ab, pkr: result });
                                 this.setState({ bills: b })
                                 console.log(this.state.bills)
                             }
@@ -299,6 +289,7 @@ class RequestPayment extends Component {
                     <TouchableOpacity
                         style={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10 }}
                         onPress={() => {
+                            if(this.state.check==true){
                             let b = this.state.bills;
                             var aa = this.state.title;
                             var ab = this.state.qty;
@@ -306,11 +297,18 @@ class RequestPayment extends Component {
                             var ae = this.state.pkr;
                             var result = ac * ab
                             b.push({ item: aa, price: ac, qty: ab, pkr: result });
-                            this.setState({ bills: b })
+                            this.setState({ bills: b,check:false })
                             this.props.navigation.navigate('GenerateBill', {
                                 bill: this.state.bills,
-                                project: this.state.selectedProject
+                                project: this.state.selectedValue
                             })
+                            }
+                            else{
+                            this.props.navigation.navigate('GenerateBill', {
+                                bill: this.state.bills,
+                                project: this.state.selectedValue
+                            })
+                        }
                         }}
                     >
                         <Text
