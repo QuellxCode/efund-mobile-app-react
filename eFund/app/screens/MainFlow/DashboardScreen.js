@@ -5,6 +5,7 @@ import Timeline from '../../components/Timeline';
 import TwoColumnCard from '../../components/TwoColumnCard';
 import ColumnCard from '../../components/ColumnCard';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 class DashboardScreen extends Component {
     constructor(props) {
@@ -50,7 +51,13 @@ class DashboardScreen extends Component {
                 >
                     <View style={{ marginHorizontal: 20 }}>
                         <Text style={styles.welcomeTextStyle}>Welcome!</Text>
-                        
+                        <TouchableOpacity
+                        onPress={()=>this.props.navigation.navigate("Notifications")}
+                        >
+                            <Text style={{fontSize:20,color:"blue"}}>
+                                Notifications
+                            </Text>
+                        </TouchableOpacity>
                         {/* TIMELINE */}
                         <View style={[MainFlowStyles.cardStyle, { paddingBottom: 10, marginBottom: 20 }]}>
                             <View style={styles.currentStatusContainer}>

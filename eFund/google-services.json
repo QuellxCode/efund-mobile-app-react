@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1021458055290",
+    "firebase_url": "https://efund-2b082.firebaseio.com",
+    "project_id": "efund-2b082",
+    "storage_bucket": "efund-2b082.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1021458055290:android:b944f3da0f3b6dc8b1fbc3",
+        "android_client_info": {
+          "package_name": "com.eFunf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1021458055290-6c1e3di3o1h7kib9k6t2k43miprfe3j5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdWNKn6R0wshnVbJyiXzyp4p3OkqlPa0A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1021458055290-6c1e3di3o1h7kib9k6t2k43miprfe3j5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

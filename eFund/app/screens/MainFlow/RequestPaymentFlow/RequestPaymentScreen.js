@@ -9,7 +9,7 @@
 var n = 1;
 var value=0;
 const rs = 0;
-
+const result=0;
 class RequestPayment extends Component {
     constructor(props) {
         super(props);
@@ -31,6 +31,7 @@ class RequestPayment extends Component {
             User: '',
             data: '',
             check:true,
+            results:'',
         };
         this.list = React.createRef();
     }
@@ -147,7 +148,7 @@ class RequestPayment extends Component {
                     <TextInput style={{ fontSize: 16 }}
                         placeholder='qty'
                         keyboardType={'numeric'}
-                        onChangeText={(qty) => this.setState({ qty })}
+                        onChangeText={(qty) => this.setState({ qty ,results:this.state.price*this.state.qty})}
                         ref={ref => this.ref = ref}
 
                     ></TextInput>
@@ -156,7 +157,7 @@ class RequestPayment extends Component {
                 <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
                     <Text style={{ fontSize: 16 }}>
                         {
-                         this.state.price * this.state.qty
+                         this.state.results
 
                         }
                     </Text>
@@ -236,7 +237,7 @@ class RequestPayment extends Component {
                     <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
                         <Text style={{ fontSize: 16 }}>
                             {
-                             this.state.price * this.state.qty
+                             //this.state.price * this.state.qty
                             }
                         </Text>
                         <View style={{ marginBottom: 2 }} />
@@ -265,7 +266,7 @@ class RequestPayment extends Component {
                                 var ac = this.state.price;
                                 var ae = this.state.pkr;
                                 var result = ac * ab
-                                this.handlePress();
+                                //this.handlePress();
                                  n=n+1
                                 b.push({number:n, item: aa, price: ac, qty: ab, pkr: result });
                                 this.setState({ bills: b })

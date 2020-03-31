@@ -54,7 +54,7 @@ export default class Notification extends Component {
             .then(response => response.json())
             .then(json => {
                 this.setState({ data: json.notification })
-                console.log(JSON.stringify(json.notification))
+                console.log(JSON.stringify(json))
                 // var v = this.state.data.length
                 // for (let i = 0; i < v; i++) {
                 //     // arr.push(json.notification[i].message,json.notification[i].project
@@ -142,11 +142,12 @@ export default class Notification extends Component {
                             ItemSeparatorComponent={this.FlatListItemSeparator}
                             keyExtractor={(a, b, ) => b.toString()}
                             renderItem={({ item, index }) => (
-                                <View style={{ backgroundColor: 'white', padding: 20 }}>
+                                <View style={{ backgroundColor: 'white', padding: 10 }}>
                                     <View style={{ flexDirection: 'column' }}>
                                         <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Request: {item.message}</Text>
-                                         <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Project Id: {item.project}</Text>  
-
+                                         <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Project Id: {item.project}</Text>
+                                         <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Purchaaser Name: {item.from}</Text>  
+  
                                     </View>
                                     <View style={{ flexDirection: 'row',justifyContent:'center' }}>
                                         <TouchableOpacity
@@ -229,4 +230,3 @@ export default class Notification extends Component {
         }
     }
 }
-
