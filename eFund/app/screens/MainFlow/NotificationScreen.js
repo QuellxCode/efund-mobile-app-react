@@ -22,7 +22,7 @@ export default class NotificationScreen extends React.Component {
     if (finalStatus !== 'granted') { return; }
     let token = await Notifications.getExpoPushTokenAsync();
     //let token="ExponentPushToken[LfHN3dM2tOTusrvwejW8Sj]"
-    ///let token="ExponentPushToken[Kp3Ty9Bz51NUsTpGOLwzZd]"
+    //let token="ExponentPushToken[Kp3Ty9Bz51NUsTpGOLwzZd]"
     this.setState({ token_: token })
     //console.log("token: ",token);
     this._notificationSubscription = Notifications.addListener(this._handleNotification);

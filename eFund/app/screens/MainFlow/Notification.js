@@ -15,10 +15,10 @@ export default class Notification extends Component {
             User: [],
             data: [],
             dada: [],
-            project_data:[],
-            project:"",
+            project_data: [],
+            project: "",
             Msg: '',
-            items:''
+            items: ''
         }
         this.list = React.createRef();
     }
@@ -42,7 +42,7 @@ export default class Notification extends Component {
     }
     get_notification() {
         var arr = [];
-        var arry=[];
+        var arry = [];
         fetch('http://efundapp.herokuapp.com/api/notification', {
             method: 'Get',
             headers: {
@@ -95,15 +95,15 @@ export default class Notification extends Component {
     }
     FlatListItemSeparator = () => {
         return (
-          <View
-            style={{
-              height: 1,
-              width: "100%",
-              backgroundColor: "#000",
-            }}
-          />
+            <View
+                style={{
+                    height: 1,
+                    width: "100%",
+                    backgroundColor: "#000",
+                }}
+            />
         );
-      }
+    }
     reject_ok() {
         // console.log("item::::"+this.state.items)
         // console.log("itemssss::::"+this.state.project)
@@ -116,9 +116,11 @@ export default class Notification extends Component {
                 'X-Auth-Token': this.state.User.token,
             },
             body: JSON.stringify({
-                "details":  this.state.items
+                "details": this.state.items
                 , "project": this.state.project
                 , "message": this.state.Msg
+                , "purchaserName": "Ahmad"
+                , "purchaserID": "5e7453d8b138f10017270a35"
             })
         })
             .then(response => response.json())
@@ -128,7 +130,7 @@ export default class Notification extends Component {
             .catch(error => {
                 console.error(error);
             });
-          this.setState({ visible: false })
+        this.setState({ visible: false })
     }
     render() {
         if (this.state.User.roles == "Supervisor") {
@@ -145,20 +147,19 @@ export default class Notification extends Component {
                                 <View style={{ backgroundColor: 'white', padding: 10 }}>
                                     <View style={{ flexDirection: 'column' }}>
                                         <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Request: {item.message}</Text>
-                                         <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Project Id: {item.project}</Text>
-                                         <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Purchaaser Name: {item.from}</Text>  
-  
+                                        <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Project Id: {item.project}</Text>
+                                        <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Purchaaser Name: {item.from}</Text>
                                     </View>
-                                    <View style={{ flexDirection: 'row',justifyContent:'center' }}>
+                                    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                                         <TouchableOpacity
-                                            style={{ backgroundColor: '#FF3301', padding: 14, margin:10,borderRadius: 10, height: 50, width: 80 }}
-                                            onPress={() =>{this.setState({project:item.project  }), this.accept(item.message)}}>
+                                            style={{ backgroundColor: '#FF3301', padding: 14, margin: 10, borderRadius: 10, height: 50, width: 80 }}
+                                            onPress={() => { this.setState({ project: item.project }), this.accept(item.message) }}>
                                             <Text style={{ fontSize: 15, color: '#fff', alignSelf: 'center' }}
                                             >Accept</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity
-                                            style={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10,margin:10,height: 50, width: 80 }}
-                                            onPress={() => { this.setState({ visible: true,items:item.message,project:item.project})}}>
+                                            style={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10, margin: 10, height: 50, width: 80 }}
+                                            onPress={() => { this.setState({ visible: true, items: item.message, project: item.project }) }}>
                                             <Text style={{ fontSize: 15, color: '#fff', alignSelf: 'center' }}
                                             >Reject</Text>
                                         </TouchableOpacity>
@@ -206,21 +207,95 @@ export default class Notification extends Component {
                 </View>
             );
         }
+        else if (this.state.User.roles == "Purchaser") {
+            return (
+                <View style={{ flex: 1 }}>
+                    <Header />
+                    <Text style={{ fontSize: 30, color: "red", alignSelf: "center" }}>Notification </Text>
+                    <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
+                        <FlatList
+                            data={this.state.data}
+                            ItemSeparatorComponent={this.FlatListItemSeparator}
+                            keyExtractor={(a, b, ) => b.toString()}
+                            renderItem={({ item, index }) => (
+                                <View style={{ backgroundColor: 'white', padding: 10 }}>
+                                    <View style={{ flexDirection: 'column' }}>
+                                        <Text style={{ fontSize: 30, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Reason:</Text>
+                                        <Text style={{ fontSize: 20, color: "red", marginLeft: "1%", height: 80, width: 300 }}>{item.message}</Text>
+                                    </View>
+                             </View>
+                            )}
+                        />
+                    </View>
+                </View>
+            );
+        }
         else {
             return (
                 <View style={{ flex: 1 }}>
                     <Header />
-                    <Text style={{ fontSize: 20, color: "red", alignSelf: "center" }}>Notifications</Text>
+                    <Text style={{ fontSize: 30, color: "red", alignSelf: "center" }}>Notification</Text>
                     <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
                         <FlatList
                             data={this.state.data}
-                            ItemSeparatorComponent={this.ListViewItemSeparator}
+                            ItemSeparatorComponent={this.FlatListItemSeparator}
                             keyExtractor={(a, b, ) => b.toString()}
-                            renderItem={({ item }) => (
-                                <View style={{ backgroundColor: 'white', padding: 20 }}>
-                                    <Text style={{ fontSize: 10, color: "red", marginLeft: "3%" }}>Message: {item.message}</Text>
-                                    <Text style={{ fontSize: 10, color: "red", marginLeft: "3%" }}>From:{item.from}</Text>
-                                    <Text style={{ fontSize: 10, color: "red", marginLeft: "3%" }}>Status:{item.status}</Text>
+                            renderItem={({ item, index }) => (
+                                <View style={{ backgroundColor: 'white', padding: 10 }}>
+                                    <View style={{ flexDirection: 'column' }}>
+                                        <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Request: {item.message}</Text>
+                                        <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Project Id: {item.project}</Text>
+                                    </View>
+                                    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                                        <TouchableOpacity
+                                            style={{ backgroundColor: '#FF3301', padding: 14, margin: 10, borderRadius: 10, height: 50, width: 80 }}
+                                            onPress={() => { this.setState({ project: item.project }), this.accept(item.message) }}>
+                                            <Text style={{ fontSize: 15, color: '#fff', alignSelf: 'center' }}
+                                            >Accept</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            style={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10, margin: 10, height: 50, width: 80 }}
+                                            onPress={() => { this.setState({ visible: true, items: item.message, project: item.project }) }}>
+                                            <Text style={{ fontSize: 15, color: '#fff', alignSelf: 'center' }}
+                                            >Reject</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    <Modal animationType='fade' transparent={true} visible={this.state.Requestvisible}>
+                                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.7)' }}>
+                                            <View style={{ backgroundColor: 'white', paddingTop: 10, borderRadius: 20, width: width * 0.8 }}>
+                                                <View style={{ alignSelf: 'center', padding: 20 }}>
+                                                    <FontAwesome name='send' color='#FF3301' size={50} />
+                                                </View>
+                                                <Text
+                                                    style={{ alignSelf: 'center', fontSize: 16, fontWeight: 'bold', color: '#FF3301', paddingBottom: 40 }}>
+                                                    Best your approval is Accepted!
+                                                                </Text>
+                                                <Button
+                                                    title='OK'
+                                                    buttonStyle={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 0, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, }}
+                                                    onPress={() => this.setState({ Requestvisible: false })}
+                                                />
+                                            </View>
+                                        </View>
+                                    </Modal>
+                                    <Modal animationType='fade' transparent={true} visible={this.state.visible}>
+                                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.7)' }}>
+                                            <View style={{ backgroundColor: 'white', paddingTop: 10, borderRadius: 20, width: width * 0.8 }}>
+                                                <View style={{ alignSelf: 'center', padding: 20 }}>
+                                                    <FontAwesome name='send' color='#FF3301' size={50} />
+                                                </View>
+                                                <TextInput
+                                                    placeholder="Why you are rejected this approval"
+                                                    onChangeText={(Msg) => this.setState({ Msg })}
+                                                    style={{ alignSelf: 'center', fontSize: 16, fontWeight: 'bold', color: '#FF3301', paddingBottom: 40 }}></TextInput>
+                                                <Button
+                                                    title='OK'
+                                                    buttonStyle={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 0, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, }}
+                                                    onPress={() => this.reject_ok()}
+                                                />
+                                            </View>
+                                        </View>
+                                    </Modal>
                                 </View>
                             )}
                         />
