@@ -18,7 +18,9 @@ export default class Notification extends Component {
             project_data: [],
             project: "",
             Msg: '',
-            items: ''
+            items: '',
+            purchaserID:"",
+            purchaserName:"",
         }
         this.list = React.createRef();
     }
@@ -55,6 +57,8 @@ export default class Notification extends Component {
             .then(json => {
                 this.setState({ data: json.notification })
                 console.log(JSON.stringify(json))
+                // console.log( "purchaserName"+this.state.data.notification.purchaserName)
+                // console.log("purchaserID"+this.state.data.notification.purchaserID)
                 // var v = this.state.data.length
                 // for (let i = 0; i < v; i++) {
                 //     // arr.push(json.notification[i].message,json.notification[i].project
@@ -63,6 +67,30 @@ export default class Notification extends Component {
                 // }
                 // this.setState({ dada: arr })
                 // this.setState({ project_data: arry})
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+    director_accept(){
+        fetch('http://efundapp.herokuapp.com/api/purchase/director-accept', {
+            method: 'Post',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-Auth-Token': this.state.User.token,
+            },
+            body: JSON.stringify({
+                "details": item,
+                "project": this.state.project,
+                "purchaserName": this.state.purchaserName,
+                "purchaserID": this.state.purchaserID,
+
+            })
+        })
+            .then(response => response.json())
+            .then(json => {
+                console.log("response:" + JSON.stringify(json))
             })
             .catch(error => {
                 console.error(error);
@@ -82,7 +110,9 @@ export default class Notification extends Component {
             },
             body: JSON.stringify({
                 "details": item
-                , "project": this.state.project
+                ,"project": this.state.project,
+                "purchaserName": this.state.purchaserName,
+                "purchaserID": this.state.purchaserID,
             })
         })
             .then(response => response.json())
@@ -119,8 +149,9 @@ export default class Notification extends Component {
                 "details": this.state.items
                 , "project": this.state.project
                 , "message": this.state.Msg
-                , "purchaserName": "Ahmad"
-                , "purchaserID": "5e7453d8b138f10017270a35"
+                ,"purchaserName": this.state.purchaserName,
+                "purchaserID": this.state.purchaserID,
+              
             })
         })
             .then(response => response.json())
@@ -147,19 +178,21 @@ export default class Notification extends Component {
                                 <View style={{ backgroundColor: 'white', padding: 10 }}>
                                     <View style={{ flexDirection: 'column' }}>
                                         <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Request: {item.message}</Text>
-                                        <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Project Id: {item.project}</Text>
-                                        <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Purchaaser Name: {item.from}</Text>
+                                        <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Purchaser Id:{item.purchaserID}</Text>
+                                        <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Project id:{item.project}</Text>
+                                        <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Purchaser Name:{item.purchaserName}</Text>
+
                                     </View>
                                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                                         <TouchableOpacity
                                             style={{ backgroundColor: '#FF3301', padding: 14, margin: 10, borderRadius: 10, height: 50, width: 80 }}
-                                            onPress={() => { this.setState({ project: item.project }), this.accept(item.message) }}>
+                                            onPress={() => { this.setState({ project: item.project,purchaserID:item.purchaserID,purchaserName:item.purchaserName }), this.accept(item.message) }}>
                                             <Text style={{ fontSize: 15, color: '#fff', alignSelf: 'center' }}
                                             >Accept</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity
                                             style={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10, margin: 10, height: 50, width: 80 }}
-                                            onPress={() => { this.setState({ visible: true, items: item.message, project: item.project }) }}>
+                                            onPress={() => { this.setState({ visible: true, items: item.message, project: item.project,purchaserID:item.purchaserID,purchaserName:item.purchaserName }) }}>
                                             <Text style={{ fontSize: 15, color: '#fff', alignSelf: 'center' }}
                                             >Reject</Text>
                                         </TouchableOpacity>
@@ -243,13 +276,15 @@ export default class Notification extends Component {
                             renderItem={({ item, index }) => (
                                 <View style={{ backgroundColor: 'white', padding: 10 }}>
                                     <View style={{ flexDirection: 'column' }}>
-                                        <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Request: {item.message}</Text>
-                                        <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Project Id: {item.project}</Text>
+                                    <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Request: {item.message}</Text>
+                                        <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Purchaser Id:{item.purchaserID}</Text>
+                                        <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Project id:{item.project}</Text>
+                                        <Text style={{ fontSize: 10, color: "blue", marginLeft: "1%", height: 50, width: 300 }}>Purchaser Name:{item.purchaserName}</Text>
                                     </View>
                                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                                         <TouchableOpacity
                                             style={{ backgroundColor: '#FF3301', padding: 14, margin: 10, borderRadius: 10, height: 50, width: 80 }}
-                                            onPress={() => { this.setState({ project: item.project }), this.accept(item.message) }}>
+                                            onPress={() => { this.setState({ project: item.project,purchaserID:item.purchaserID,purchaserName:item.purchaserName}), this.director_accept(item.message) }}>
                                             <Text style={{ fontSize: 15, color: '#fff', alignSelf: 'center' }}
                                             >Accept</Text>
                                         </TouchableOpacity>

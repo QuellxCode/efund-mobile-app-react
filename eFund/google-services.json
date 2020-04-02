@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "220215905944",
+    "firebase_url": "https://efund-b502e.firebaseio.com",
+    "project_id": "efund-b502e",
+    "storage_bucket": "efund-b502e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:220215905944:android:089c0e27fdf6cf63560aed",
+        "android_client_info": {
+          "package_name": "com.quellxcode.efund"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "220215905944-iortvkhfn7v0g4mvqg8ttqph0cqnutb3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB56hXi8qzKXMw6MHlNw9Qy4byzs1X9gQI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "220215905944-iortvkhfn7v0g4mvqg8ttqph0cqnutb3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

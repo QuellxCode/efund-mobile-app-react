@@ -114,8 +114,6 @@ class RequestPayment extends Component {
                 .then(json => {
                     console.log(json)
                     this.setState({ response_: json })
-                    //alert(JSON.stringify(this.state.response_))
-                    //alert(this.state.selectedValue)
                 })
                 .catch(error => {
                     console.error(error);

@@ -6,7 +6,8 @@ import TwoColumnCard from '../../components/TwoColumnCard';
 import ColumnCard from '../../components/ColumnCard';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
+import { Notifications } from 'expo';
+import * as Permissions from 'expo-permissions';
 class DashboardScreen extends Component {
     constructor(props) {
         super(props);
@@ -20,11 +21,33 @@ class DashboardScreen extends Component {
             User: [],
         };
     }
-
-    componentDidMount() {
+      async componentDidMount() {
         this._retrieveData();
+        const { status: existingStatus } = await Permissions.getAsync(
+          Permissions.NOTIFICATIONS
+        );
+        let finalStatus = existingStatus;
+        if (existingStatus !== 'granted') {
+          const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+          finalStatus = status;
+        }
+        if (finalStatus !== 'granted') { return; }
+        let token = await Notifications.getExpoPushTokenAsync();
+        fetch('http://efundapp.herokuapp.com/api/user/user-edit', {
+            method: 'PATCH',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              'X-Auth-Token': this.state.User.token,
+            },
+            body: JSON.stringify({
+                "mobile_token":token
+            }),
+          }).then((response) => response.json())
+            .then((responseJson) => {console.log(responseJson)
+                console.log(token) })
+            .catch((error) => { console.log(error) });
       }
-   
      _retrieveData = async () => {
        try {
          const value = await AsyncStorage.getItem('User');
