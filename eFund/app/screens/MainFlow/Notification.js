@@ -21,13 +21,12 @@ export default class Notification extends Component {
             items: '',
             purchaserID:"",
             purchaserName:"",
+            notification_id:"",
+            token:'',
         }
         this.list = React.createRef();
     }
-    componentDidMount() {
-        this._retrieveData();
-    }
-    _retrieveData = async () => {
+    async componentDidMount() {
         try {
             const value = await AsyncStorage.getItem('User');
             const val = JSON.parse(value)
@@ -56,7 +55,7 @@ export default class Notification extends Component {
             .then(response => response.json())
             .then(json => {
                 this.setState({ data: json.notification })
-                console.log(JSON.stringify(json))
+                //console.log(JSON.stringify(json))
                 // console.log( "purchaserName"+this.state.data.notification.purchaserName)
                 // console.log("purchaserID"+this.state.data.notification.purchaserID)
                 // var v = this.state.data.length
@@ -72,6 +71,30 @@ export default class Notification extends Component {
                 console.error(error);
             });
     }
+    push_notification(token) {
+        fetch('https://exp.host/--/api/v2/push/send', {
+             method: 'POST',
+             headers: {
+               Accept: 'application/json',
+               'Content-Type': 'application/json',
+               'accept-encoding': 'gzip, deflate',
+               'host': 'exp.host'
+             },
+             body: JSON.stringify({
+               to: token,
+               title: 'New Notification',
+               body: "Request Payment Notification",
+               priority: "high",
+               sound: "default",
+               channelId: "default",
+             }),
+           }).then((response) => response.json())
+             .then((responseJson) => { 
+                 console.log("noti"+JSON.stringify(responseJson))
+             })
+             .catch((error) => { console.log(error) });
+ 
+     }
     director_accept(){
         fetch('http://efundapp.herokuapp.com/api/purchase/director-accept', {
             method: 'Post',
@@ -96,8 +119,25 @@ export default class Notification extends Component {
                 console.error(error);
             });
     }
-    accept(item) {
-        this.setState({ Requestvisible: true })
+    director_notification(id){
+        fetch('http://efundapp.herokuapp.com/api/notification/'+id, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-Auth-Token': this.state.User.token,
+            },
+        })
+            .then(response => response.json())
+            .then(json => {
+                this.setState({ token: json.mobileToken })
+                this.push_notification(this.state.token)
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+    sup_accept(item) {
         // console.log("item::::"+item)
         // console.log("itemssss::::"+this.state.project)
         // console.log("accepted_item" + item)
@@ -117,7 +157,10 @@ export default class Notification extends Component {
         })
             .then(response => response.json())
             .then(json => {
-                console.log("response:" + JSON.stringify(json))
+                //console.log("responseSSSS:" + JSON.stringify(json))
+                this.setState({notification_id:json.notificationID ,Requestvisible: true})
+                this.director_notification(this.state.notification_id)
+                // console.log("new + +id"+JSON.stringify(json))
             })
             .catch(error => {
                 console.error(error);
@@ -186,7 +229,7 @@ export default class Notification extends Component {
                                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                                         <TouchableOpacity
                                             style={{ backgroundColor: '#FF3301', padding: 14, margin: 10, borderRadius: 10, height: 50, width: 80 }}
-                                            onPress={() => { this.setState({ project: item.project,purchaserID:item.purchaserID,purchaserName:item.purchaserName }), this.accept(item.message) }}>
+                                            onPress={() => { this.setState({ project: item.project,purchaserID:item.purchaserID,purchaserName:item.purchaserName }), this.sup_accept(item.message) }}>
                                             <Text style={{ fontSize: 15, color: '#fff', alignSelf: 'center' }}
                                             >Accept</Text>
                                         </TouchableOpacity>

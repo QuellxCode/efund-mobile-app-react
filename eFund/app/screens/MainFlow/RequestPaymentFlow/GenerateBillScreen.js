@@ -72,7 +72,7 @@ class GenerateBillScreen extends Component {
             body: JSON.stringify({
               to: this.state.token,
               title: 'New Notification',
-              body: "hello danyal",
+              body: "Request Payment Notification from purchaser",
               priority: "high",
               sound: "default",
               channelId: "default",
