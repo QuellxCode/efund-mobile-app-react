@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "1021458055290",
-    "firebase_url": "https://efund-2b082.firebaseio.com",
-    "project_id": "efund-2b082",
-    "storage_bucket": "efund-2b082.appspot.com"
+    "project_number": "220215905944",
+    "firebase_url": "https://efund-b502e.firebaseio.com",
+    "project_id": "efund-b502e",
+    "storage_bucket": "efund-b502e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1021458055290:android:b944f3da0f3b6dc8b1fbc3",
+        "mobilesdk_app_id": "1:220215905944:android:089c0e27fdf6cf63560aed",
         "android_client_info": {
-          "package_name": "com.eFunf"
+          "package_name": "com.quellxcode.efund"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1021458055290-6c1e3di3o1h7kib9k6t2k43miprfe3j5.apps.googleusercontent.com",
+          "client_id": "220215905944-iortvkhfn7v0g4mvqg8ttqph0cqnutb3.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDdWNKn6R0wshnVbJyiXzyp4p3OkqlPa0A"
+          "current_key": "AIzaSyB56hXi8qzKXMw6MHlNw9Qy4byzs1X9gQI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1021458055290-6c1e3di3o1h7kib9k6t2k43miprfe3j5.apps.googleusercontent.com",
+              "client_id": "220215905944-iortvkhfn7v0g4mvqg8ttqph0cqnutb3.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

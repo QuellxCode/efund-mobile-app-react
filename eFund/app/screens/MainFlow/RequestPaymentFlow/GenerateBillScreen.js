@@ -5,59 +5,128 @@ import { Button } from 'react-native-elements';
 import MainFlowStyles from '../../../Styles/MainFlowStyles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 const { width, height } = Dimensions.get('window');
+import { Notifications } from 'expo';
+import * as Permissions from 'expo-permissions';
 class GenerateBillScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data_:this.props.navigation.state.params.bill,
-            data_project:this.props.navigation.state.params.project,
+            data_: this.props.navigation.state.params.bill,
+            data_project: this.props.navigation.state.params.project,
             visible: false,
-            response_:'',
-            User:[],
+            response_: '',
+            token: '',
+            User: [],
+            data:'',
+            myToken:'',
+            notification:'',
         }
     }
-
+    getPushNotificationPermissions = async () => {
+        const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+        let finalStatus = existingStatus;
+        if (existingStatus !== 'granted') {
+          const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+          finalStatus = status;
+         
+        }
+        if (finalStatus !== 'granted') {
+          return;
+        }
+             var token=await Notifications.getExpoPushTokenAsync();
+             this.setState({myToken:token})
+             console.log("mytoken"+token)
+      }
+      _handleNotification = notification => {
+        this.setState({ notification: notification });
+      };
     componentDidMount() {
         this.retrieveData();
+        this.getPushNotificationPermissions()   
+        this._notificationSubscription = Notifications.addListener(this._handleNotification);
     }
 
     retrieveData = async () => {
         try {
-          const value = await AsyncStorage.getItem('User');
-           const val = JSON.parse(value)
-           if (val !== null) {
-             this.setState({
-               User: val,
-             })
-            // console.log(this.state.User)
-          }
+            const value = await AsyncStorage.getItem('User');
+            const val = JSON.parse(value)
+            if (val !== null) {
+                this.setState({
+                    User: val,
+                })
+                // console.log(this.state.User)
+            }
         } catch (error) {
-          console.log('error getting data')
+            console.log('error getting data')
         }
-      };
+    };
+    push_notification() {
+       fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              'accept-encoding': 'gzip, deflate',
+              'host': 'exp.host'
+            },
+            body: JSON.stringify({
+              to: this.state.token,
+              title: 'New Notification',
+              body: "hello danyal",
+              priority: "high",
+              sound: "default",
+              channelId: "default",
+            }),
+          }).then((response) => response.json())
+            .then((responseJson) => { 
+                console.log("noti"+JSON.stringify(responseJson))
+            })
+            .catch((error) => { console.log(error) });
 
+    }
+    get_notifiaction(n_id) {
+        console.log("this.your notify id"+n_id)
+        fetch('http://efundapp.herokuapp.com/api/notification/'+n_id, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-Auth-Token': this.state.User.token,
+            },
+        })
+            .then(response => response.json())
+            .then(json => {
+                this.setState({ token: json.mobileToken,data:json.notification.message })
+                 console.log("tokens:"+this.state.token)
+                this.push_notification()
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
     handlePress = async () => {
-        this.setState({visible: true})
-    console.log("data"+JSON.stringify(this.state.data_))
-    console.log("datap"+this.state.data_project)
+        this.setState({ visible: true })
+        console.log("data" + JSON.stringify(this.state.data_))
+        console.log("datap" + this.state.data_project)
 
         fetch('http://efundapp.herokuapp.com/api/purchase/send-notification', {
             method: 'Post',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type':'application/json',
-                'X-Auth-Token':this.state.User.token,
+                'Content-Type': 'application/json',
+                'X-Auth-Token': this.state.User.token,
             },
             body: JSON.stringify({
-                 "details":this.state.data_
-                ,"project": this.state.data_project
+                "details": this.state.data_
+                , "project": this.state.data_project
             })
         })
             .then(response => response.json())
             .then(json => {
                 console.log(JSON.stringify(json))
-                this.setState({response_:json})
-               // alert(JSON.stringify(this.state.response_))
+                this.setState({ response_: json.notificationID })
+                this.get_notifiaction(this.state.response_);
+                // alert(JSON.stringify(this.state.response_))
 
             })
             .catch(error => {
@@ -112,7 +181,7 @@ class GenerateBillScreen extends Component {
                         title='Forward Request'
                         buttonStyle={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10 }}
                         containerStyle={{ marginHorizontal: 10 }}
-                        onPress={() => {this.handlePress(),{visible:true}}}
+                        onPress={() => { this.handlePress(), { visible: true } }}
                     />
                 </View>
                 <Modal animationType='fade' transparent={true} visible={this.state.visible}>
