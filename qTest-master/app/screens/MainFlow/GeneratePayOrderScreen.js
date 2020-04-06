@@ -33,13 +33,18 @@ class GeneratePayOrderScreen extends Component {
             id:'',
             account_no: '',
             resf:false,
-            isVisible:false
+            isVisible:false,
+            payee: [],
+            // purchaserID: '',
+            selectedPayee: '',
+            details: [],
+            change: false
         };
     }
 
     componentDidUpdate(){
         if(this.state.state === true){
-            this._sendFunds();
+            this.culminative();
         this.setState({state: false});
         }
         if(this.state.resf === true){
@@ -48,6 +53,10 @@ class GeneratePayOrderScreen extends Component {
         resf: false
       });
       }
+      if(this.state.change === true){
+        this.props.navigation.navigate("Home");
+    this.setState({change: false});
+    }
     }
 
     componentDidMount() {
@@ -61,6 +70,7 @@ class GeneratePayOrderScreen extends Component {
              this.setState({
                User: val,
              })
+             console.log(this.state.User)
             this._getBanks();
           }
         } catch (error) {
@@ -74,8 +84,28 @@ class GeneratePayOrderScreen extends Component {
         ))
       }
 
+      loadPayee() {
+        return this.state.payee.map(payee => (
+           <Picker.Item label={payee.payee_name} value={payee._id} />
+        ))
+      }
+
+      culminative(){
+        var myDetails = this.state.details.push({"item": "payorder", "qty": "1", "price": "1", "pkr":this.state.amount, "account_no":this.state.account_no, "description":this.state.description}) 
+        this.setState({
+          details: myDetails
+        })
+        console.log(this.state.details)
+        this.snd();
+      }
+
+      snd(){
+        this._sendFunds();
+      }
+
       _sendFunds(){
-        fetch("http://efundapp.herokuapp.com/api/wallet/sendfund",{
+        console.log(this.state.User.token)
+        fetch("http://efundapp.herokuapp.com/api/purchase/payorder-notification",{
       method:"POST",
         headers: {
           'Accept': 'application/json',
@@ -83,33 +113,37 @@ class GeneratePayOrderScreen extends Component {
          'X-Auth-Token': this.state.User.token,
        },
        body:JSON.stringify({
-        "amount":this.state.amount,
-        "name":this.state.name,
-        "date":this.state.date,
-        "account_no":this.state.account_no,
-        "description":this.state.description
+       "details" : this.state.details,
+       "purchaserID":this.state.selectedPayee,
       })
       })
   .then(response => response.json())
   .then((responseJson)=> {
     console.log(responseJson)
     var msg = responseJson.message
-    if(msg == "Funds added successfully"){
+    if(msg == "Notification has been sent"){
       ToastAndroid.show('Pay Order Generated Successfully And Sent To Accountant', ToastAndroid.SHORT);
       this.setState({
         resf: true,
         show:false,
-        isVisible:true
+        isVisible:true,
       })
     }
     else{
       ToastAndroid.show('Unsuccessfull!', ToastAndroid.SHORT);
       this.setState({
-        
+        show:false,
+        resf:true
       })
     }
     })
-  .catch(error=>ToastAndroid.show('Unsuccessfull!', ToastAndroid.SHORT,))
+  .catch(error=>ToastAndroid.show('Unsuccessfullll!', ToastAndroid.SHORT,),
+  this.setState({
+    show:false,
+    resf:true,
+  }),
+  this.state.details = [],
+  console.log(this.state.details))
   }
 
   set(){
@@ -131,10 +165,30 @@ class GeneratePayOrderScreen extends Component {
         this.setState({
             banks: responseJson.bank
          })
-         this.set();
+         this._getPayee();
         })
        .catch(error=>console.log(error))
          }
+
+         _getPayee(){
+          fetch("http://efundapp.herokuapp.com/api/payee",{
+        method:"GET",
+          headers: {
+            'Accept': 'application/json',
+           'Content-Type': 'application/json',
+           'X-Auth-Token': this.state.User.token,
+         },
+        })
+        .then(response => response.json())
+        .then((responseJson)=> {
+          this.setState({
+              payee: responseJson.payee
+           })
+           console.log(this.state.payee);
+           this.set();
+          })
+         .catch(error=>console.log(error))
+           }
 
         getAmount(){
           console.log("hello tak cash")
@@ -166,6 +220,13 @@ class GeneratePayOrderScreen extends Component {
             this.getAmount();
         }      
 
+        onValueChangeP (value: string) {
+          this.setState({
+            selectedPayee : value
+          });
+          console.log(this.state.selectedPayee)
+      }  
+
     render() {
         if(this.state.show === false){
             return(
@@ -185,7 +246,10 @@ class GeneratePayOrderScreen extends Component {
                     <Button
                       title="OK"
                       onPress={() => {
-                        this.setState({ isVisible: false });
+                        this.setState({
+                          isVisible:false,
+                          change: true
+                        })
                       }}
                       titleStyle={styles.buttonTitleStyle}
                       buttonStyle={[
@@ -204,7 +268,7 @@ class GeneratePayOrderScreen extends Component {
                             <View style={{ borderBottomColor: '#FF3301', borderBottomWidth: 1, marginBottom: 30 }} />
 
                             <View style={{ marginHorizontal: 10 }}>
-                                <Input
+                                {/* <Input
                                     placeholder='Name'
                                     autoCapitalize='words'
                                     autoCompleteType='name'
@@ -214,7 +278,16 @@ class GeneratePayOrderScreen extends Component {
                                     leftIcon={ <Ionicons name='md-person' size={22} color='#FF3301' /> }
                                     leftIconContainerStyle={{ marginLeft: 0 }}
                                     onChangeText={(value) => this.setState({ name: value })}
-                                />
+                                /> */}
+
+                                <Picker
+                                    selectedValue={this.state.selectedPayee}
+                                    // onValueChange={(itemValue, itemIndex) => 
+                                    //     this.setState({selectedBank: itemValue})}>
+                                    onValueChange={this.onValueChangeP.bind(this)}>
+                                        <Picker.Item label='Select a Payee' value='' />
+                                    {this.loadPayee()}
+                                </Picker>
 
                                 <Input
                                     placeholder='Amount'

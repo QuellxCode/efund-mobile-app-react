@@ -34,7 +34,7 @@ class GenerateBillScreen extends Component {
                 this.setState({
                     User: val,
                 })
-                // console.log(this.state.User)
+                console.log(this.state.User)
             }
         } catch (error) {
             console.log('error getting data')
