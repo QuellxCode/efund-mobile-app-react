@@ -5,8 +5,6 @@ import { Button } from 'react-native-elements';
 import MainFlowStyles from "../../Styles/MainFlowStyles"
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 const { width, height } = Dimensions.get('window');
-import { Notifications } from 'expo';
-import * as Permissions from 'expo-permissions';
 export default class Notification extends Component {
     constructor(props) {
         super(props);
@@ -28,24 +26,6 @@ export default class Notification extends Component {
         }
         this.list = React.createRef();
     }
-    getPushNotificationPermissions = async () => {
-        const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-        let finalStatus = existingStatus;
-        if (existingStatus !== 'granted') {
-          const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-          finalStatus = status;
-         
-        }
-        if (finalStatus !== 'granted') {
-          return;
-        }
-             var token=await Notifications.getExpoPushTokenAsync();
-            //  this.setState({myToken:token})
-            //  console.log("mytoken"+token)
-      }
-      _handleNotification = notification => {
-        this.setState({ notification: notification });
-      };
     async componentDidMount() {
         try {
             const value = await AsyncStorage.getItem('User');
@@ -60,8 +40,6 @@ export default class Notification extends Component {
         } catch (error) {
             console.log('error getting data')
         }
-        this.getPushNotificationPermissions()
-        this._handleNotification()
     }
     get_notification() {
         var arr = [];
@@ -77,17 +55,7 @@ export default class Notification extends Component {
             .then(response => response.json())
             .then(json => {
                 this.setState({ data: json.notification })
-                //console.log(JSON.stringify(json))
-                // console.log( "purchaserName"+this.state.data.notification.purchaserName)
-                // console.log("purchaserID"+this.state.data.notification.purchaserID)
-                // var v = this.state.data.length
-                // for (let i = 0; i < v; i++) {
-                //     // arr.push(json.notification[i].message,json.notification[i].project
-                //     arry.push(json.notification[i].project)
-                //     arr.push(json.notification[i].message)
-                // }
-                // this.setState({ dada: arr })
-                // this.setState({ project_data: arry})
+           
             })
             .catch(error => {
                 console.error(error);
@@ -228,7 +196,7 @@ export default class Notification extends Component {
         this.setState({ visible: false })
     }
     render() {
-        if (this.state.User.roles == "Supervisor") {
+        if (this.state.User.roles == "Supervisor"){
             return (
                 <View style={{ flex: 1 }}>
                     <Header />
@@ -404,3 +372,14 @@ export default class Notification extends Component {
         }
     }
 }
+     //console.log(JSON.stringify(json))
+                // console.log( "purchaserName"+this.state.data.notification.purchaserName)
+                // console.log("purchaserID"+this.state.data.notification.purchaserID)
+                // var v = this.state.data.length
+                // for (let i = 0; i < v; i++) {
+                //     // arr.push(json.notification[i].message,json.notification[i].project
+                //     arry.push(json.notification[i].project)
+                //     arr.push(json.notification[i].message)
+                // }
+                // this.setState({ dada: arr })
+                // this.setState({ project_data: arry})

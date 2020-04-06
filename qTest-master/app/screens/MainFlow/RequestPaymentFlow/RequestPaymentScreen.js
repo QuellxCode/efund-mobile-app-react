@@ -6,6 +6,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Bill from '../../../components/Bill';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MainFlowStyles from '../../../Styles/MainFlowStyles'
+import firebase from 'react-native-firebase';
 var n = 1;
 var value = 0;
 const rs = 0;
@@ -36,6 +37,8 @@ class RequestPayment extends Component {
         this.list = React.createRef();
     }
     async componentDidMount() {
+          this.checkPermission();
+
         try {
             const value = await AsyncStorage.getItem('User');
             const val = JSON.parse(value)
@@ -78,6 +81,43 @@ class RequestPayment extends Component {
             });
 
     }
+  //1
+async checkPermission() {
+  const enabled = await firebase.messaging().hasPermission();
+  if (enabled) {
+      this.getToken();
+  } else {
+      this.requestPermission();
+  }
+}
+
+  //3
+async getToken() {
+  let fcmToken = await AsyncStorage.getItem('fcmToken');
+  if (!fcmToken) {
+      fcmToken = await firebase.messaging().getToken();
+      if (fcmToken) {
+          // user has a device token
+          await AsyncStorage.setItem('fcmToken', fcmToken);
+          console.log("??",fcmToken)
+      }
+  }
+}
+
+  //2
+async requestPermission() {
+  try {
+      await firebase.messaging().requestPermission();
+      // User has authorised
+      this.getToken();
+  } catch (error) {
+      // User has rejected permissions
+      console.log('permission rejected');
+  }
+}
+
+
+
     handlePress = async () => {
         var aa = this.state.title;
         var ab = this.state.qty;

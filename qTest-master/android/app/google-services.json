@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "237335251444",
+    "firebase_url": "https://efundapp.firebaseio.com",
+    "project_id": "efundapp",
+    "storage_bucket": "efundapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237335251444:android:c766ea9fcba116aef811a1",
+        "android_client_info": {
+          "package_name": "com.qtest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "237335251444-lsjljjp461kive8kifo5cfq3gskqc9lo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7o1_c-6VGjvFt7j_FoOTU8ItOb5iULOM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "237335251444-lsjljjp461kive8kifo5cfq3gskqc9lo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
