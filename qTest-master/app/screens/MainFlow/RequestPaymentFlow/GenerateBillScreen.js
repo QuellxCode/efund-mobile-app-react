@@ -3,7 +3,6 @@ import { View, Text, Dimensions, FlatList, Modal, AsyncStorage } from 'react-nat
 import Header from '../../../components/Header';
 import { Button } from 'react-native-elements';
 import MainFlowStyles from '../../../Styles/MainFlowStyles';
-import RemotePushController from '../../../screens/MainFlow/RequestPaymentFlow/RemotePushController';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 const { width, height } = Dimensions.get('window');
 var PushNotification = require("react-native-push-notification");
@@ -117,7 +116,6 @@ class GenerateBillScreen extends Component {
         return (
             <View style={{ flex: 1 }}>
                 <Header />
-                 <RemotePushController />
                 <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
                     <View style={[MainFlowStyles.cardStyle, { paddingTop: 10, paddingBottom: 10, flex: 1 }]}>
                         <Text style={MainFlowStyles.headerTextStyle}>Billing</Text>

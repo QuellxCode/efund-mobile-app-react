@@ -4,10 +4,35 @@ import Header from '../../components/Header';
 import { Button } from 'react-native-elements';
 import MainFlowStyles from "../../Styles/MainFlowStyles"
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import PushNotification from "react-native-push-notification";
+import {notificationManager} from '../../screens/MainFlow/RequestPaymentFlow/RemotePushController';
 const { width, height } = Dimensions.get('window');
+ const onRegister=token=> {
+    console.log('[Notification] Register', token);
+  };
+  const onNotification=notify=> {
+    console.log('[Notification] onNotification', notify);
+  };
+ const  onOpenNotification=notify =>{
+    console.log('[Notification] onOpenNotification', notify);
+    Alert.alert('Admin Approved Bill!');
+  };
+ const  onPressCancelNotification =()=>  {
+    localNotify.cancelAllLocalNotification();
+  };
+let localNotify = null;
+ const  onPressSendNotification = ()=>  {
+    localNotify.showNotification(
+      1,
+      'App Notification',
+      '{}', // data
+      '{}', // option
+    );
+  };
 export default class Notification extends Component {
     constructor(props) {
         super(props);
+        
         this.state = {
             visible: false,
             Requestvisible: false,
@@ -23,24 +48,37 @@ export default class Notification extends Component {
             purchaserName:"",
             notification_id:"",
             token:'',
+            arraySize:''
+
         }
         this.list = React.createRef();
     }
-    async componentDidMount() {
-        try {
+   taskRunner() {
+   setInterval((function(){
+    return function(){
+    localNotify = notificationManager;
+    localNotify.configure(onRegister, onNotification, onOpenNotification);
+    };
+  })(this),2000);
+}
+  async componentDidMount() { 
+        try{
             const value = await AsyncStorage.getItem('User');
             const val = JSON.parse(value)
             if (val !== null) {
                 this.setState({
                     User: val,
                 })
+                console.log("userId",this.state.User.user_id)
                 this.get_notification();
-                //console.log(this.state.User)
+                // console.log("userId",this.state.User.user_id)
             }
         } catch (error) {
             console.log('error getting data')
         }
-    }
+          this.taskRunner()
+    
+        }
     get_notification() {
         var arr = [];
         var arry = [];
@@ -55,10 +93,25 @@ export default class Notification extends Component {
             .then(response => response.json())
             .then(json => {
                 this.setState({ data: json.notification })
-           
+                console.log("data",JSON.stringify(this.state.data))
+                   const a= this.state.data.length -1
+                  console.log("datalen",this.state.data.length)
+                  console.log("a",a)
+                  console.log("a1","h")
+                  console.log("last string",this.state.data[a].to)
+                  const aa=this.state.data[a].to
+              if(this.state.data!=undefined&& this.state.data!=null)
+              {
+                    console.log("last string aa",aa)
+         if(this.state.User.user_id===aa)
+             {
+               localNotify.showNotification(1,
+              'Request Payment Rejected',
+            );
+           }}
             })
             .catch(error => {
-                console.error(error);
+            console.error(error);
             });
     }
     push_notification(token) {
@@ -334,6 +387,7 @@ export default class Notification extends Component {
                                                     <FontAwesome name='send' color='#FF3301' size={50} />
                                                 </View>
                                                 <Text
+                                        
                                                     style={{ alignSelf: 'center', fontSize: 16, fontWeight: 'bold', color: '#FF3301', paddingBottom: 40 }}>
                                                     Best your approval is Accepted!
                                                                 </Text>
