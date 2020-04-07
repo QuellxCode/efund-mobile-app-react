@@ -18,6 +18,10 @@ import MenuDrawer from "../components/MenuDrawer";
 import Notification from "../screens/MainFlow/Notification"
 
 const AppNavigator = createSwitchNavigator({
+    
+    
+    
+    
     loginFlow: createStackNavigator({
         Login: LoginScreen
     },

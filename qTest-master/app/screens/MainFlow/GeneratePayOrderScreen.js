@@ -212,7 +212,9 @@ class GeneratePayOrderScreen extends Component {
              .catch(error=>console.log(error))
         }
 
-        onValueChange (value: string) {
+
+        
+        onValueChange (value) {
             this.setState({
                 selectedBank : value
             });
@@ -220,7 +222,7 @@ class GeneratePayOrderScreen extends Component {
             this.getAmount();
         }      
 
-        onValueChangeP (value: string) {
+        onValueChangeP (value) {
           this.setState({
             selectedPayee : value
           });

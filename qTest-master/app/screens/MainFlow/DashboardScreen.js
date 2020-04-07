@@ -1,122 +1,418 @@
-import React, { Component } from 'react';
-import { View, Text, ScrollView, StyleSheet, AsyncStorage } from 'react-native';
+import React, { Component, useEffect, useState } from 'react';
+import { View, Text, ScrollView, StyleSheet, AsyncStorage, Alert } from 'react-native';
 import Header from '../../components/Header';
 import Timeline from '../../components/Timeline';
 import TwoColumnCard from '../../components/TwoColumnCard';
 import ColumnCard from '../../components/ColumnCard';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-// import { Notifications } from 'expo';
-// import * as Permissions from 'expo-permissions';
-class DashboardScreen extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: [
-                {id: 1, name: 'Purchaser', select: true},
-                {id: 2, name: 'Manager', select: false},
-                {id: 3, name: 'Director', select: false},
-                {id: 4, name: 'Accountant', select: false}
-            ],
-            User: [],
-        };
+import { notificationManager } from '../../NotificationManager';
+import Notification from "../../screens/MainFlow/Notification"
+
+
+
+
+
+
+
+
+
+
+const Purchaser = () => {
+    const data = [
+        { id: 1, name: 'Purchaser', select: true },
+        { id: 2, name: 'Manager', select: false },
+        { id: 3, name: 'Director', select: false },
+        { id: 4, name: 'Accountant', select: false }
+    ]
+
+    const [notification, setNotification] = useState();
+    const [user, setUser] = useState();
+    let localNotify = null;
+    let length = '';
+    if (notification != null && notification != undefined) {
+        length = notification.length;
+
     }
-       async componentDidMount() {
-        this._retrieveData();
-       }
-    //     const { status: existingStatus } = await Permissions.getAsync(
-    //       Permissions.NOTIFICATIONS
-    //     );
-    //     let finalStatus = existingStatus;
-    //     if (existingStatus !== 'granted') {
-    //       const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-    //       finalStatus = status;
-    //     }
-    //     if (finalStatus !== 'granted') { return; }
-    //     let token = await Notifications.getExpoPushTokenAsync();
-    //     fetch('http://efundapp.herokuapp.com/api/user/user-edit', {
-    //         method: 'PATCH',
-    //         headers: {
-    //           Accept: 'application/json',
-    //           'Content-Type': 'application/json',
-    //           'X-Auth-Token': this.state.User.token,
-    //         },
-    //         body: JSON.stringify({
-    //             "mobile_token":token
-    //         }),
-    //       }).then((response) => response.json())
-    //         .then((responseJson) => {console.log(responseJson)
-    //             console.log(token) })
-    //         .catch((error) => { console.log(error) });
-    //   }
-     _retrieveData = async () => {
-       try {
-         const value = await AsyncStorage.getItem('User');
-         const val = JSON.parse(value)
-         if (val !== null) {
-           this.setState({
-             User: val,
+    const onRegister = token => {
+        console.log('[Notification] Register', token);
+    };
+    const onNotification = notify => {
+        console.log('[Notification] onNotification', notify);
+    };
+    const onOpenNotification = notify => {
+        console.log('[Notification] onOpenNotification', notify);
+        Alert.alert('Bill is Rejected');
+    };
+    useEffect(() => {
+        localNotify = notificationManager;
+        localNotify.configure(onRegister, onNotification, onOpenNotification);
+    });
+
+    const retrieveData = async () => {
+        try {
+            const value = await AsyncStorage.getItem('User');
+            const val = JSON.parse(value)
+            if (val !== null) {
+                setUser(val)
+            }
+        } catch (error) {
+            console.log('error getting data')
+        }
+    };
+
+    useEffect(() => {
+        retrieveData();
+    }, [])
+
+    useEffect(() => {
+        if (user != undefined && user != null) {
+            fetch('http://efundapp.herokuapp.com/api/notification', {
+                method: 'Get',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-Auth-Token': user.token,
+                }
             })
-         }
-       } catch (error) {
-         console.log('error getting data')
-       }
-     };
+                .then(response => response.json())
+                .then(json => {
+                    setNotification(json.notification)
+                }
+                )
 
-    render() {
-        console.log(this.state.User.roles)
-        if(this.state.User.roles == "Purchaser" || this.state.User.roles == "Supervisor"){
-        return (
-            <View>
-                <Header />
-                <ScrollView
-                    style={{ paddingBottom: 30, marginBottom: 40 }}
-                    showsVerticalScrollIndicator={false}
-                >
-                    <View style={{ marginHorizontal: 20 }}>
-                        <Text style={styles.welcomeTextStyle}>Welcome!</Text>
-                        {/* TIMELINE */}
-                        <View style={[MainFlowStyles.cardStyle, { paddingBottom: 10, marginBottom: 20 }]}>
-                            <View style={styles.currentStatusContainer}>
-                                <Text style={styles.currentStatusTextStyle}>Current Status</Text>
-                            </View>
-                            <View style={{ padding: 10, alignItems: 'center' }}>
-                                <Timeline data={this.state.data} />
-                            </View>
+                .catch(error => {
+                    console.error(error);
+                });
+
+        }
+
+
+    });
+
+    useEffect(() => {
+        if (notification != undefined && notification != null) {
+            const a = notification.length - 1
+            const aa = notification[a].to;
+            if (user.user_id === aa) {
+                localNotify.showNotification(
+                    1,
+                    'Your Bill is Rejected',
+                    '', // data
+                    '', // option
+                );
+            }
+        }
+    }, [length])
+
+
+
+
+    return (
+        <View>
+            <Header />
+            <ScrollView
+                style={{ paddingBottom: 30, marginBottom: 40 }}
+                showsVerticalScrollIndicator={false}
+            >
+                <View style={{ marginHorizontal: 20 }}>
+                    <Text style={styles.welcomeTextStyle}>Welcome!</Text>
+                    {/* TIMELINE */}
+                    <View style={[MainFlowStyles.cardStyle, { paddingBottom: 10, marginBottom: 20 }]}>
+                        <View style={styles.currentStatusContainer}>
+                            <Text style={styles.currentStatusTextStyle}>Current Status</Text>
                         </View>
-
-                        {/* Cards */}
-                        <TwoColumnCard />
+                        <View style={{ padding: 10, alignItems: 'center' }}>
+                            <Timeline data={data} />
+                        </View>
                     </View>
-                </ScrollView>
-            </View>
-        );
-        }
-        if(this.state.User.roles == "Director"){
-            return (
-                <View>
-                    <Header />
-                    <ScrollView
-                        style={{ paddingBottom: 30, marginBottom: 40 }}
-                        showsVerticalScrollIndicator={false}
-                    >
-                        <View style={{ marginHorizontal: 20 }}>
-                            <Text style={styles.welcomeTextStyle}>Welcome!</Text>
-    
-                            {/* Cards */}
-                            <ColumnCard />
-                        </View>
-                    </ScrollView>
+
+                    {/* Cards */}
+                    <TwoColumnCard />
                 </View>
-            );
-        }
-        return(
-            <View>
-                    <Header />
-            </View>
-        )
-    }
+            </ScrollView>
+        </View>
+    );
 }
+
+
+
+
+
+const Supervisor = () => {
+    const data = [
+        { id: 1, name: 'Purchaser', select: true },
+        { id: 2, name: 'Manager', select: false },
+        { id: 3, name: 'Director', select: false },
+        { id: 4, name: 'Accountant', select: false }
+    ]
+
+    const [notification, setNotification] = useState();
+    const [user, setUser] = useState();
+    let localNotify = null;
+    let length = '';
+    if (notification != null && notification != undefined) {
+        length = notification.length;
+
+    }
+    const onRegister = token => {
+        console.log('[Notification] Register', token);
+    };
+    const onNotification = notify => {
+        console.log('[Notification] onNotification', notify);
+    };
+    const onOpenNotification = notify => {
+        console.log('[Notification] onOpenNotification', notify);
+        Alert.alert('Bill is Added');
+    };
+    useEffect(() => {
+        localNotify = notificationManager;
+        localNotify.configure(onRegister, onNotification, onOpenNotification);
+    });
+
+    const retrieveData = async () => {
+        try {
+            const value = await AsyncStorage.getItem('User');
+            const val = JSON.parse(value)
+            if (val !== null) {
+                setUser(val)
+            }
+        } catch (error) {
+            console.log('error getting data')
+        }
+    };
+
+    useEffect(() => {
+        retrieveData();
+    }, [])
+
+    useEffect(() => {
+        if (user != undefined && user != null) {
+            fetch('http://efundapp.herokuapp.com/api/notification', {
+                method: 'Get',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-Auth-Token': user.token,
+                }
+            })
+                .then(response => response.json())
+                .then(json => {
+                    setNotification(json.notification)
+                }
+                )
+
+                .catch(error => {
+                    console.error(error);
+                });
+
+        }
+
+
+    });
+
+    useEffect(() => {
+        if (notification != undefined && notification != null) {
+            const a = notification.length - 1
+            const aa = notification[a].to;
+            if (user.user_id === aa) {
+                localNotify.showNotification(
+                    1,
+                    'Bill is Added!',
+                    '', // data
+                    '', // option
+                );
+            }
+        }
+    }, [length])
+
+
+
+
+
+   
+    return (
+        <View>
+            <Header />
+            <ScrollView
+                style={{ paddingBottom: 30, marginBottom: 40 }}
+                showsVerticalScrollIndicator={false}
+            >
+                <View style={{ marginHorizontal: 20 }}>
+                    <Text style={styles.welcomeTextStyle}>Welcome!</Text>
+                    {/* TIMELINE */}
+                    <View style={[MainFlowStyles.cardStyle, { paddingBottom: 10, marginBottom: 20 }]}>
+                        <View style={styles.currentStatusContainer}>
+                            <Text style={styles.currentStatusTextStyle}>Current Status</Text>
+                        </View>
+                        <View style={{ padding: 10, alignItems: 'center' }}>
+                            <Timeline data={data} />
+                        </View>
+                    </View>
+
+                    {/* Cards */}
+                    <TwoColumnCard />
+                </View>
+            </ScrollView>
+        </View>
+    );
+}
+
+
+
+
+
+const Director = () => {
+    const data = [
+        { id: 1, name: 'Purchaser', select: true },
+        { id: 2, name: 'Manager', select: false },
+        { id: 3, name: 'Director', select: false },
+        { id: 4, name: 'Accountant', select: false }
+    ]
+
+    const [notification, setNotification] = useState();
+    const [user, setUser] = useState();
+    let localNotify = null;
+    let length = '';
+    if (notification != null && notification != undefined) {
+        length = notification.length;
+
+    }
+    const onRegister = token => {
+        console.log('[Notification] Register', token);
+    };
+    const onNotification = notify => {
+        console.log('[Notification] onNotification', notify);
+    };
+    const onOpenNotification = notify => {
+        console.log('[Notification] onOpenNotification', notify);
+        Alert.alert('Bill is Approved');
+    };
+    useEffect(() => {
+        localNotify = notificationManager;
+        localNotify.configure(onRegister, onNotification, onOpenNotification);
+    });
+
+    const retrieveData = async () => {
+        try {
+            const value = await AsyncStorage.getItem('User');
+            const val = JSON.parse(value)
+            if (val !== null) {
+                setUser(val)
+            }
+        } catch (error) {
+            console.log('error getting data')
+        }
+    };
+
+    useEffect(() => {
+        retrieveData();
+    }, [])
+
+    useEffect(() => {
+        if (user != undefined && user != null) {
+            fetch('http://efundapp.herokuapp.com/api/notification', {
+                method: 'Get',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-Auth-Token': user.token,
+                }
+            })
+                .then(response => response.json())
+                .then(json => {
+                    setNotification(json.notification)
+                }
+                )
+
+                .catch(error => {
+                    console.error(error);
+                });
+
+        }
+
+
+    });
+
+    useEffect(() => {
+        if (notification != undefined && notification != null) {
+            const a = notification.length - 1
+            const aa = notification[a].to;
+            if (user.user_id === aa) {
+                localNotify.showNotification(
+                    1,
+                    'Bill is Approved',
+                    '', // data
+                    '', // option
+                );
+            }
+        }
+    }, [length])
+
+
+
+
+
+    return (
+
+        <View>
+            <Header />
+            <ScrollView
+                style={{ paddingBottom: 30, marginBottom: 40 }}
+                showsVerticalScrollIndicator={false}
+            >
+                <View style={{ marginHorizontal: 20 }}>
+                    <Text style={styles.welcomeTextStyle}>Welcome!</Text>
+
+                    {/* Cards */}
+                    <ColumnCard />
+                </View>
+            </ScrollView>
+        </View>
+
+    );
+}
+
+
+const DashboardScreen = () => {
+   
+    const [user, setUser] = useState();
+   
+    const retrieveData = async () => {
+        try {
+            const value = await AsyncStorage.getItem('User');
+            const val = JSON.parse(value)
+            if (val !== null) {
+                setUser(val)
+            }
+        } catch (error) {
+            console.log('error getting data')
+        }
+    };
+
+    useEffect(() => {
+        retrieveData();
+    }, [])
+        
+    if (user != undefined && user != null) {
+        if (user.roles ==="Purchaser") {
+          return  <Purchaser/>
+        }
+        if(user.roles === "Supervisor"){
+            return  <Supervisor/>
+        }
+        if (user.roles === "Director") {
+            return   <Director/>
+        }
+    }
+    return (
+        <View>
+            <Header />
+        </View>
+    )
+
+
+    }  
 
 const styles = StyleSheet.create({
     welcomeTextStyle: {
@@ -138,3 +434,4 @@ const styles = StyleSheet.create({
 });
 
 export default DashboardScreen;
+

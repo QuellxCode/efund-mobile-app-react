@@ -5,7 +5,6 @@ import { Button } from 'react-native-elements';
 import MainFlowStyles from '../../../Styles/MainFlowStyles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 const { width, height } = Dimensions.get('window');
-var PushNotification = require("react-native-push-notification");
 class GenerateBillScreen extends Component {
     constructor(props) {
         super(props);
@@ -63,55 +62,55 @@ class GenerateBillScreen extends Component {
     //         .catch((error) => { console.log(error) });
 
     // }
-    // get_notifiaction(n_id) {
-    //     console.log("this.your notify id"+n_id)
-    //     fetch('http://efundapp.herokuapp.com/api/notification/'+n_id, {
-    //         method: 'GET',
-    //         headers: {
-    //             'Accept': 'application/json',
-    //             'Content-Type': 'application/json',
-    //             'X-Auth-Token': this.state.User.token,
-    //         },
-    //     })
-    //         .then(response => response.json())
-    //         .then(json => {
-    //             this.setState({ token: json.mobileToken,data:json.notification.message })
-    //              console.log("tokens:"+this.state.token)
-    //             this.push_notification()
-    //         })
-    //         .catch(error => {
-    //             console.error(error);
-    //         });
-    // }
-     handlePress = async () => {}
-    //     this.setState({ visible: true })
-    //     console.log("data" + JSON.stringify(this.state.data_))
-    //     console.log("datap" + this.state.data_project)
+    get_notifiaction(n_id) {
+        console.log("this.your notify id"+n_id)
+        fetch('http://efundapp.herokuapp.com/api/notification/'+n_id, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-Auth-Token': this.state.User.token,
+            },
+        })
+            .then(response => response.json())
+            .then(json => {
+                this.setState({ token: json.mobileToken,data:json.notification.message })
+                 console.log("tokens:"+this.state.token)
+                // this.push_notification()
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+     handlePress = async () => {
+        this.setState({ visible: true })
+        console.log("data" + JSON.stringify(this.state.data_))
+        console.log("datap" + this.state.data_project)
 
-    //     fetch('http://efundapp.herokuapp.com/api/purchase/send-notification', {
-    //         method: 'Post',
-    //         headers: {
-    //             'Accept': 'application/json',
-    //             'Content-Type': 'application/json',
-    //             'X-Auth-Token': this.state.User.token,
-    //         },
-    //         body: JSON.stringify({
-    //             "details": this.state.data_
-    //             , "project": this.state.data_project
-    //         })
-    //     })
-    //         .then(response => response.json())
-    //         .then(json => {
-    //             console.log(JSON.stringify(json))
-    //             this.setState({ response_: json.notificationID })
-    //             this.get_notifiaction(this.state.response_);
-    //             // alert(JSON.stringify(this.state.response_))
+        fetch('http://efundapp.herokuapp.com/api/purchase/send-notification', {
+            method: 'Post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-Auth-Token': this.state.User.token,
+            },
+            body: JSON.stringify({
+                "details": this.state.data_
+                , "project": this.state.data_project
+            })
+        })
+            .then(response => response.json())
+            .then(json => {
+                console.log(JSON.stringify(json))
+                this.setState({ response_: json.notificationID })
+                this.get_notifiaction(this.state.response_);
+                // alert(JSON.stringify(this.state.response_))
 
-    //         })
-    //         .catch(error => {
-    //             console.error(error);
-    //         });
-    // }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
     render() {
         return (
             <View style={{ flex: 1 }}>
