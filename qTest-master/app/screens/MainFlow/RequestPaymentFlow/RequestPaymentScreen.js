@@ -242,7 +242,7 @@ async requestPermission() {
                 </View>
                 {/* {this.state.bills.map((item, index) => ( */}
                 {/* ))}    */}
-                <View style={[MainFlowStyles.cardStyle, { padding: 10, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20, marginHorizontal: 20, marginTop: 10 }]}>
+                <View style={[MainFlowStyles.cardStyle, { padding: 10, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10, marginHorizontal: 25, marginTop: 10 }]}>
 
                     <Text style={{ fontWeight: 'bold', fontSize: 16 }}></Text>
                     <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>

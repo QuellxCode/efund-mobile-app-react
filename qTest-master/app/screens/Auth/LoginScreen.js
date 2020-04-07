@@ -64,7 +64,7 @@ class LoginScreen extends Component {
         return (
             <>
             <KeyboardAvoidingView behavior="position">
-            <StatusBar translucent backgroundColor='#8E0438' barStyle="light-content" />
+            <StatusBar translucent backgroundColor='#FF3301' barStyle="light-content" />
             <ScrollView>
                 <View style={{ marginBottom: 20, marginTop: 24 }}>
                     <ImageBackground
