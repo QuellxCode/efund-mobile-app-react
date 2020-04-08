@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, ImageBackground, ScrollView, ToastAndroid, KeyboardAvoidingView, StatusBar, AsyncStorage } from 'react-native';
+import { View, Text, ImageBackground, ScrollView, ToastAndroid, KeyboardAvoidingView, StatusBar, AsyncStorage, TouchableOpacity } from 'react-native';
 import { Input, CheckBox, Button } from 'react-native-elements';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import styles from '../../Styles/AuthStyles';
 import CustomButton from '../../components/CustomButton';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 class LoginScreen extends Component {
     constructor(props) {
@@ -12,7 +14,8 @@ class LoginScreen extends Component {
             loading: true,
             email: '',
             password: '',
-            checked: false
+            checked: false,
+            viewS: true
         };
     }
 
@@ -60,6 +63,15 @@ class LoginScreen extends Component {
     )
     }
 
+    SecureView(){
+      if(this.state.viewS == true){
+        this.setState({viewS:false})
+      }
+      if(this.state.viewS == false){
+        this.setState({viewS:true})
+      }
+    }
+
     render() {
         return (
             // <StatusBar translucent backgroundColor='#FF3301' barStyle="light-content" />
@@ -91,7 +103,7 @@ class LoginScreen extends Component {
                     />
 
                     <Input
-                        secureTextEntry={true}
+                        secureTextEntry={this.state.viewS}
                         placeholder='********'
                         autoCapitalize='none'
                         autoCorrect={false}
@@ -103,6 +115,11 @@ class LoginScreen extends Component {
                         leftIcon={ <MaterialCommunityIcons name='lock' size={22} color='#FF3301' /> }
                         leftIconContainerStyle={{ marginLeft: 0 }}
                         onChangeText={password => this.setState({password})}
+                        rightIcon={
+                          <TouchableOpacity onPress={() =>  this.SecureView()}>
+                              <FontAwesome5 name='eye' size={18} color='#FF3301' />
+                          </TouchableOpacity>
+                      }
                     />
 
                     <View style={{ flexDirection: 'row', marginBottom: 20 }}>
