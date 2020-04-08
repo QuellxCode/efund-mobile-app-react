@@ -83,6 +83,13 @@ class GenerateBillScreen extends Component {
                 console.error(error);
             });
     }
+
+    onClickButton () {
+        this.setState({
+            visible: false
+        })
+        this.props.navigation.navigate('Home')
+    }
      handlePress = async () => {
         this.setState({ visible: true })
         console.log("data" + JSON.stringify(this.state.data_))
@@ -175,7 +182,7 @@ class GenerateBillScreen extends Component {
                             <Button
                                 title='OK'
                                 buttonStyle={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 0, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, }}
-                                onPress={() => this.setState({ visible: false })}
+                                onPress={() => this.onClickButton()}
                             />
                         </View>
                     </View>

@@ -427,16 +427,20 @@ async requestPermission() {
                                 var result = ac * ab
                                 b.push({ title: aa, price: ac, qty: ab, pkr: result });
                                 this.setState({ bills: b, check: false })
+                                
                                 this.props.navigation.navigate('GenerateBill', {
                                     bill: this.state.bills,
                                     project: this.state.selectedValue
                                 })
+                                this.setState({bill: ''})
                             }
                             else {
                                 this.props.navigation.navigate('GenerateBill', {
                                     bill: this.state.bills,
                                     project: this.state.selectedValue
                                 })
+                                this.setState({bill: ''})
+
                             }
                         }}
                     >

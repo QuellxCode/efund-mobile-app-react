@@ -85,7 +85,10 @@ const Purchaser = () => {
     useEffect(() => {
         if (notification != undefined && notification != null && notification.length > 1 ) {
             const a = notification.length - 1
-            const aa = notification[a].to;
+            let aa = '';
+                if(notification[a].to != undefined && notification[a].to != null){
+                    aa = notification[a].to
+                }
             if (user.user_id === aa) {
                 localNotify.showNotification(
                     1,
@@ -204,18 +207,24 @@ const Supervisor = () => {
     });
 
     useEffect(() => {
-        if (notification != undefined && notification != null) {
-            const a = notification.length - 1
-            const aa = notification[a].to;
-            if (user.user_id === aa) {
-                localNotify.showNotification(
-                    1,
-                    'Bill is Added!',
-                    '', // data
-                    '', // option
-                );
+           if(user != undefined && user != null){
+            if (notification != undefined && notification != null && notification.length > 1) {
+                let a = notification.length - 1
+                let aa = '';
+                if(notification[a].to != undefined && notification[a].to != null){
+                    aa = notification[a].to
+                }
+                if (user.user_id === aa) {
+                    localNotify.showNotification(
+                        1,
+                        'Bill is Added!',
+                        '', // data
+                        '', // option
+                    );
+                }
             }
-        }
+  }
+        
     }, [length])
 
 
@@ -302,7 +311,7 @@ const Director = () => {
     }, [])
 
     useEffect(() => {
-        if (user != undefined && user != null) {
+        if (user != undefined && user != null ) {
             fetch('http://efundapp.herokuapp.com/api/notification', {
                 method: 'Get',
                 headers: {
@@ -327,9 +336,12 @@ const Director = () => {
     });
 
     useEffect(() => {
-        if (notification != undefined && notification != null) {
+        if (notification != undefined && notification != null && notification.length > 1) {
             const a = notification.length - 1
-            const aa = notification[a].to;
+            let aa = '';
+            if(notification[a].to != undefined && notification[a].to != null){
+                aa = notification[a].to
+            }
             if (user.user_id === aa) {
                 localNotify.showNotification(
                     1,
