@@ -91,7 +91,7 @@ const Purchaser = () => {
     });
 
     useEffect(() => {
-        if (notification != undefined && notification != null) {
+        if (notification != undefined && notification != null && notification.length > 1 ) {
             const a = notification.length - 1
             const aa = notification[a].to;
             if (user.user_id === aa) {
