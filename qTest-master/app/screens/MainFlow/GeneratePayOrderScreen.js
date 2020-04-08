@@ -39,7 +39,9 @@ class GeneratePayOrderScreen extends Component {
             // purchaserID: '',
             selectedPayee: '',
             details: [],
-            change: false
+            change: false,
+            selectedPayeeNo:'',
+            selectedBankNo:''
         };
     }
 
@@ -208,23 +210,26 @@ class GeneratePayOrderScreen extends Component {
                   account_no: responseJson.account.account_no
                })
                console.log(this.state.cash)
+               console.log(bankNo)
               })
              .catch(error=>console.log(error))
         }
 
-        onValueChange (value: string) {
+        onValueChange (value) {
             this.setState({
-                selectedBank : value
+              selectedBankNo : value
             });
+            this.state.selectedBank = value
             console.log(this.state.selectedBank)
-            var bankNo = this.state.selectedBank;
+            var bankNo = value;
             this.getAmount(bankNo);
         }      
 
-        onValueChangeP (value: string) {
+        onValueChangeP (value) {
           this.setState({
-            selectedPayee : value
+            selectedPayeeNo : value
           });
+          this.state.selectedPayee = value
           console.log(this.state.selectedPayee)
       }  
 
@@ -282,7 +287,7 @@ class GeneratePayOrderScreen extends Component {
                                 /> */}
 
                                 <Picker
-                                   selectedValue={this.state.selectedPayee}
+                                   selectedValue={this.state.selectedPayeeNo}
                                     // onValueChange={(itemValue, itemIndex) => 
                                     //     this.setState({selectedBank: itemValue})}>
                                     onValueChange={this.onValueChangeP.bind(this)}>
@@ -347,7 +352,7 @@ class GeneratePayOrderScreen extends Component {
 
 
                                <Picker
-                                    selectedValue={this.state.selectedBank}
+                                    selectedValue={this.state.selectedBankNo}
                                     // onValueChange={(itemValue, itemIndex) => 
                                     //     this.setState({selectedBank: itemValue})}>
                                     onValueChange={this.onValueChange.bind(this)}>
