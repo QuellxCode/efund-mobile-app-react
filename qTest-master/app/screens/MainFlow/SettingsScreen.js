@@ -88,15 +88,15 @@ class Settings extends Component {
             <View>
                 <Header />
                 <ScrollView style={{ marginBottom: 40 }}>
-                    <View style={{ margin: 20, marginTop: -1 }}>
+                    <View style={{ margin: 20, marginTop: 1 }}>
                         <Text style={MainFlowStyles.headerTextStyle}>Settings</Text>
 
                         <View style={[MainFlowStyles.cardStyle, { paddingHorizontal: 10, marginTop: -13 }]}>
-                            <View style={{ width: 80, height: 80, borderRadius: 80 / 2, backgroundColor: '#FF3301', alignItems: 'center', justifyContent: 'center', alignSelf: 'center', marginVertical: 20 }}>
+                            <View style={{ width: 80, height: 80, borderRadius: 80 / 2, backgroundColor: '#FF3301', alignItems: 'center', justifyContent: 'center', alignSelf: 'center', marginVertical: 10 }}>
                                 <Ionicons name='md-person' size={30} color='white' />
                             </View>
                                 <Text style={{ fontSize: 20, fontWeight: 'bold', alignSelf: 'center', marginBottom: 2 }}>{this.state.User.name}</Text>
-                                <Text style={{ alignSelf: 'center', marginBottom: 20 }}>{this.state.User.roles}</Text>
+                                <Text style={{ alignSelf: 'center', marginBottom: 10 }}>{this.state.User.roles}</Text>
 
                             <Input
                                 editable={this.state.editName}
