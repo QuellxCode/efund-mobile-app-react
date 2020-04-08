@@ -62,11 +62,10 @@ class LoginScreen extends Component {
 
     render() {
         return (
-            <>
-            <KeyboardAvoidingView behavior="position">
-            <StatusBar translucent backgroundColor='#FF3301' barStyle="light-content" />
+            // <StatusBar translucent backgroundColor='#FF3301' barStyle="light-content" />
+            
             <ScrollView>
-                <View style={{ marginBottom: 20, marginTop: 24 }}>
+                <View style={{ marginBottom: 20 }}>
                     <ImageBackground
                         source={require('../../images/SigninTop.jpg')}
                         style={styles.imageBackgroundStyle}
@@ -125,13 +124,11 @@ class LoginScreen extends Component {
                     <Button
                     title="Sign In"
                     buttonStyle={{backgroundColor: '#FF3301', padding: 14, borderRadius: 10}}
-                    containerStyle={[{ marginHorizontal: 10 }]}
+                    containerStyle={[{ marginHorizontal: 10, marginTop:-10 }]}
                     onPress={() => this.getdata()}
                     />
                 </View>
             </ScrollView>
-            </KeyboardAvoidingView>
-            </>
         );
     }
 }
