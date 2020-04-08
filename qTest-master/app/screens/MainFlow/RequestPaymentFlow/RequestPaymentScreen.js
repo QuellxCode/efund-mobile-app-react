@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, StyleSheet, Button, Constants, FlatList, Text, TouchableO, TextInput, KeyboardAvoidingView, Picker, AsyncStorage } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Button, Constants, FlatList, Text, TouchableO, TextInput, KeyboardAvoidingView, Picker, AsyncStorage , ScrollView} from 'react-native';
 import Header from '../../../components/Header';
 import CustomButton from '../../../components/CustomButton';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -7,7 +7,7 @@ import Bill from '../../../components/Bill';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MainFlowStyles from '../../../Styles/MainFlowStyles'
 import firebase from 'react-native-firebase';
-var n = 1;
+var n = 0;
 var value = 0;
 const rs = 0;
 const result = 0;
@@ -33,6 +33,7 @@ class RequestPayment extends Component {
             data: '',
             check: true,
             results: 0,
+            val: 0,
         };
         this.list = React.createRef();
     }
@@ -46,7 +47,7 @@ class RequestPayment extends Component {
                 this.setState({
                     User: val,
                 })
-                console.log(this.state.User)
+        
             }
         } catch (error) {
             console.log('error getting data')
@@ -159,48 +160,60 @@ async requestPermission() {
                 });
         }
     }
-    render_1 = () => (
-        <KeyboardAvoidingView behavior="padding" >
-            <View style={[MainFlowStyles.cardStyle, { padding: 10, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20, marginHorizontal: 5 }]}>
+    // render_1 = () => (
+    //     <KeyboardAvoidingView behavior="padding" >
+    //         <View style={[MainFlowStyles.cardStyle, { padding: 10, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20, marginHorizontal: 5 }]}>
 
-                <Text style={{ fontWeight: 'bold', fontSize: 16 }}></Text>
-                <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-                    <TextInput style={{ fontSize: 16 }}
-                        placeholder='Item'
-                        onChangeText={(title) => this.setState({ title })}
-                        ref={ref => this.ref = ref}
-                    ></TextInput>
-                    <View style={{ marginBottom: 2 }} />
-                </View>
-                <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-                    <TextInput style={{ fontSize: 16 }}
-                        placeholder='price'
-                        keyboardType={'numeric'}
-                        onChangeText={(price) => this.setState({ price })}
-                        ref={ref => this.ref = ref}
+    //             <Text style={{ fontWeight: 'bold', fontSize: 16 }}></Text>
+    //             <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
+    //                 <TextInput style={{ fontSize: 16 }}
+    //                     placeholder='Item'
+    //                     onChangeText={(title) => this.setState({ title })}
+    //                     ref={ref => this.ref = ref}
+    //                 ></TextInput>
+    //                 <View style={{ marginBottom: 2 }} />
+    //             </View>
+    //             <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
+    //                 <TextInput style={{ fontSize: 16 }}
+    //                     placeholder='price'
+    //                     keyboardType={'numeric'}
+    //                     onChangeText={(price) => this.setState({ price })}
+    //                     ref={ref => this.ref = ref}
 
-                    ></TextInput>
-                    <View style={{ marginBottom: 2 }} />
-                </View>
-                <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-                    <TextInput style={{ fontSize: 16 }}
-                        placeholder='qty'
-                        keyboardType={'numeric'}
-                        onChangeText={(qty) => this.setState({ qty })}
-                        ref={ref => this.ref = ref}
+    //                 ></TextInput>
+    //                 <View style={{ marginBottom: 2 }} />
+    //             </View>
+    //             <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
+    //                 <TextInput style={{ fontSize: 16 }}
+    //                     placeholder='qty'
+    //                     keyboardType={'numeric'}
+    //                     onChangeText={(qty) => this.setState({ qty })}
+    //                     ref={ref => this.ref = ref}
 
-                    ></TextInput>
-                    <View style={{ marginBottom: 2 }} />
-                </View>
-                <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-                    <Text style={{ fontSize: 16 }}>
-                        ?
-                    </Text>
-                    <View style={{ marginBottom: 2 }} />
-                </View>
-            </View>
-        </KeyboardAvoidingView>
-    )
+    //                 ></TextInput>
+    //                 <View style={{ marginBottom: 2 }} />
+    //             </View>
+    //             <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
+    //                 {/* <Text style={{ fontSize: 16 }}
+    //                    ref={ref => this.ref = ref}
+    //                 >
+    //                   {this.state.qty * this.state.price}
+
+    //                 </Text> */}
+    //                 <TextInput style={{ fontSize: 16 }}
+    //                     // placeholder='qty'
+    //                     // keyboardType={'numeric'}
+    //                     // onChangeText={(qty) => this.setState({ qty })}
+    //                      ref={ref => this.ref = ref}
+    //                     // value={this.state.price * this.state.qty}
+    //                     value={this.state.results}
+    //                 ></TextInput>
+
+    //                 <View style={{ marginBottom: 2 }} />
+    //             </View>
+    //         </View>
+    //     </KeyboardAvoidingView>
+    // )
     render() {
         const PickerItems = this.state.Category.map((element, index) => (
             <Picker.Item
@@ -211,6 +224,7 @@ async requestPermission() {
             />
         ));
         return (
+            
             <View style={{ flex: 1 }}>
                 <Header />
                 <Text style={{ fontWeight: 'bold', fontSize: 30, alignSelf: 'center', color: '#FF3301' }}>Select Project</Text>
@@ -243,12 +257,13 @@ async requestPermission() {
                 {/* ))}    */}
                 <View style={[MainFlowStyles.cardStyle, { padding: 10, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10, marginHorizontal: 25, marginTop: 10 }]}>
 
-                    <Text style={{ fontWeight: 'bold', fontSize: 16 }}></Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 16, alignSelf:'center' }}>Add Item</Text>
                     <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
                         <TextInput style={{ fontSize: 16 }}
                             placeholder='Item'
                             onChangeText={(title) => this.setState({ title })}
                             ref={ref => this.ref = ref}
+                            value={this.state.title}
                         ></TextInput>
                         <View style={{ marginBottom: 2 }} />
                     </View>
@@ -258,6 +273,7 @@ async requestPermission() {
                             keyboardType={'numeric'}
                             onChangeText={(price) => this.setState({ price })}
                             ref={ref => this.ref = ref}
+                            value={this.state.price}
 
                         ></TextInput>
                         <View style={{ marginBottom: 2 }} />
@@ -268,19 +284,28 @@ async requestPermission() {
                             keyboardType={'numeric'}
                             onChangeText={(qty) => this.setState({ qty, results: this.state.price * this.state.qty })}
                             ref={ref => this.ref = ref}
+                            value={this.state.qty}
 
                         ></TextInput>
                         <View style={{ marginBottom: 2 }} />
                     </View>
                     <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-                        <Text style={{ fontSize: 16 }}>
-                            ?
-                         </Text>
+                        {/* <Text style={{ fontSize: 16 }}>
+                            
+                         </Text> */}
+                         {/* <TextInput style={{ fontSize: 16 }}
+                            // placeholder='qty'
+                            // keyboardType={'numeric'}
+                            // onChangeText={(qty) => this.setState({ qty, results: this.state.price * this.state.qty })}
+                            ref={ref => this.ref = ref}
+                            value={this.state.result}
+
+                        ></TextInput> */}
                         <View style={{ marginBottom: 2 }} />
                     </View>
                 </View>
                 <View style={{ flex: 1, marginHorizontal: 20, marginTop: 5 }}>
-                    <FlatList
+                    {/* <FlatList
                         ref={this.list}
                         style={{ flexGrow: 0 }}
                         data={this.state.bills}
@@ -289,7 +314,71 @@ async requestPermission() {
                         onContentSizeChange={() => this.list.current.scrollToEnd({ 'animated': false })}
                         //renderItem={({ item }) => <Bill item={item} />}
                         renderItem={this.render_1}
-                    />
+                    /> */}
+                    <ScrollView>
+                    {this.state.bills.map((item, index) =>(
+                       
+                        <View style={[MainFlowStyles.cardStyle, { padding: 10, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20, marginHorizontal: 5 }]}>
+            
+                    <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.number}</Text>
+                            <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
+                                {/* <TextInput style={{ fontSize: 16 }}
+                                    placeholder='Item'
+                                    // onChangeText={(title) => this.setState({ title })}
+                                    // ref={ref => this.ref = ref}
+                                ></TextInput> */}
+                                    <Text>{item.item}</Text>
+                                  <View style={{ marginBottom: 2 }} />
+                            </View>
+                            <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
+                                {/* <TextInput style={{ fontSize: 16 }}
+                                    placeholder='price'
+                                    keyboardType={'numeric'}
+                                    onChangeText={(price) => this.setState({ price })}
+                                    ref={ref => this.ref = ref}
+            
+                                ></TextInput> */}
+                                    <Text>{item.price}</Text>
+
+                                <View style={{ marginBottom: 2 }} />
+                            </View>
+                            <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
+                                {/* <TextInput style={{ fontSize: 16 }}
+                                    placeholder='qty'
+                                    keyboardType={'numeric'}
+                                    onChangeText={(qty) => this.setState({ qty })}
+                                    ref={ref => this.ref = ref}
+            
+                                ></TextInput> */}
+                                    <Text>{item.qty}</Text>
+
+                                <View style={{ marginBottom: 2 }} />
+                            </View>
+                            <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
+                                {/* <Text style={{ fontSize: 16 }}
+                                   ref={ref => this.ref = ref}
+                                >
+                                  {this.state.qty * this.state.price}
+            
+                                </Text> */}
+                                {/* <TextInput style={{ fontSize: 16 }}
+                                    // placeholder='qty'
+                                    // keyboardType={'numeric'}
+                                    // onChangeText={(qty) => this.setState({ qty })}
+                                     ref={ref => this.ref = ref}
+                                    // value={this.state.price * this.state.qty}
+                                    value={this.state.results}
+                                ></TextInput> */}
+                                    <Text>{item.pkr}</Text>
+
+            
+                                <View style={{ marginBottom: 2 }} />
+                            </View>
+                        </View>
+                         
+                                           ))}
+                                            </ScrollView>
+
                     <View style={{ flexDirection: "row", justifyContent: "center" }}>
 
                         <TouchableOpacity
@@ -300,21 +389,25 @@ async requestPermission() {
                                 var ab = this.state.qty;
                                 var ac = this.state.price;
                                 var ae = this.state.pkr;
-                                var result = ac * ab
+                                var result = ac * ab;
+                                this.setState({val: result})
                                 this.handlePress();
                                 n = n + 1
                                 b.push({ number: n, item: aa, price: ac, qty: ab, pkr: result });
-                                this.setState({ bills: b })
-                                console.log("arr", this.state.bills)
+                                this.setState({ bills: b, title:'', qty: '', price: '' })
+                                console.log("arr from button", this.state.bills)
+                                
                             }
                             }
                         >
-                            <Text style={{ alignSelf: 'center', color: '#FFF', alignContent: 'center', justifyContent: "center" }}>New Row</Text>
+                            <Text style={{ alignSelf: 'center', color: '#FFF', alignContent: 'center', justifyContent: "center" }}>Add New</Text>
 
                             {/* <AntDesign name='pluscircle' size={20} color='#FF3301' /> */}
                         </TouchableOpacity>
                     </View>
+                    
                 </View>
+                
                 <View style={{ marginHorizontal: 15, marginBottom: 20, marginTop: 10 }}>
                     {/* <CustomButton
                         text='Generate Bill'
@@ -352,7 +445,10 @@ async requestPermission() {
                         >Generate Bill</Text>
                     </TouchableOpacity>
                 </View>
+                
             </View>
+            
+            
         );
     }
 }
