@@ -134,6 +134,9 @@ android {
         multiDexEnabled true
 
     }
+
+ 
+
     splits {
         abi {
             reset()
@@ -149,6 +152,14 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+         release {
+        if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+            storeFile file(MYAPP_RELEASE_STORE_FILE)
+            storePassword MYAPP_RELEASE_STORE_PASSWORD
+            keyAlias MYAPP_RELEASE_KEY_ALIAS
+            keyPassword MYAPP_RELEASE_KEY_PASSWORD
+        }
+    }
     }
     buildTypes {
         debug {
@@ -160,6 +171,7 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release
@@ -181,6 +193,7 @@ android {
 dependencies {
   implementation project(':react-native-firebase')
 implementation "com.google.firebase:firebase-messaging:18.0.0"
+    implementation project(':react-native-minimize')
     implementation project(':react-native-document-picker')
     implementation project(':react-native-push-notification')
     implementation project(':react-native-vector-icons')

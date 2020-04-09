@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import Nav from './app/navigator/AppNavigator';
 
-class App extends Component {
-  render() {
+const App = () => {
+  
+
     return (
       <Nav />
     );
   }
-}
 
-export default App;
+
+export default App

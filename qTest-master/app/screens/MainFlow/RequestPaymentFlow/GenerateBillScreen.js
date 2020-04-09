@@ -5,7 +5,6 @@ import { Button } from 'react-native-elements';
 import MainFlowStyles from '../../../Styles/MainFlowStyles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 const { width, height } = Dimensions.get('window');
-var PushNotification = require("react-native-push-notification");
 class GenerateBillScreen extends Component {
     constructor(props) {
         super(props);
@@ -78,10 +77,18 @@ class GenerateBillScreen extends Component {
                 this.setState({ token: json.mobileToken,data:json.notification.message })
                  console.log("tokens:"+this.state.token)
                 //this.push_notification()
+                // this.push_notification()
             })
             .catch(error => {
                 console.error(error);
             });
+    }
+
+    onClickButton () {
+        this.setState({
+            visible: false
+        })
+        this.props.navigation.navigate('Home')
     }
      handlePress = async () => {
         this.setState({ visible: true })
@@ -175,7 +182,7 @@ class GenerateBillScreen extends Component {
                             <Button
                                 title='OK'
                                 buttonStyle={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 0, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, }}
-                                onPress={() => this.setState({ visible: false })}
+                                onPress={() => this.onClickButton()}
                             />
                         </View>
                     </View>
