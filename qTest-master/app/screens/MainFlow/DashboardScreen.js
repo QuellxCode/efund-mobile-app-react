@@ -65,6 +65,7 @@ const Purchaser = props => {
     }, [])
 
     useEffect(() => {
+       setTimeout(() => {
         if (user != undefined && user != null) {
             fetch('http://efundapp.herokuapp.com/api/notification', {
                 method: 'Get',
@@ -84,7 +85,9 @@ const Purchaser = props => {
                     console.error(error);
                 });
 
-        }
+        }  
+       }, 15000);
+        
 
     });
      
@@ -193,29 +196,31 @@ const Supervisor = props => {
     }, [])
 
     useEffect(() => {
-        if (user != undefined && user != null) {
-            fetch('http://efundapp.herokuapp.com/api/notification', {
-                method: 'Get',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    'X-Auth-Token': user.token,
-                }
-            })
-                .then(response => response.json())
-                .then(json => {
-                    setNotification(json.notification)
-                }
-                )
-
-                .catch(error => {
-                    console.error(error);
-                });
-
-        }
-
-
-    });
+        setTimeout(() => {
+         if (user != undefined && user != null) {
+             fetch('http://efundapp.herokuapp.com/api/notification', {
+                 method: 'Get',
+                 headers: {
+                     Accept: 'application/json',
+                     'Content-Type': 'application/json',
+                     'X-Auth-Token': user.token,
+                 }
+             })
+                 .then(response => response.json())
+                 .then(json => {
+                     setNotification(json.notification)
+                 }
+                 )
+ 
+                 .catch(error => {
+                     console.error(error);
+                 });
+ 
+         }  
+        }, 15000);
+         
+ 
+     });
 
     useEffect(() => {
            if(user != undefined && user != null){
@@ -352,30 +357,31 @@ const Director = props => {
     }, [])
 
     useEffect(() => {
-        if (user != undefined && user != null ) {
-            fetch('http://efundapp.herokuapp.com/api/notification', {
-                method: 'Get',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    'X-Auth-Token': user.token,
-                }
-            })
-                .then(response => response.json())
-                .then(json => {
-                    setNotification(json.notification)
-                }
-                )
-
-                .catch(error => {
-                    console.error(error);
-                });
-
-        }
-
-
-    });
-
+        setTimeout(() => {
+         if (user != undefined && user != null) {
+             fetch('http://efundapp.herokuapp.com/api/notification', {
+                 method: 'Get',
+                 headers: {
+                     Accept: 'application/json',
+                     'Content-Type': 'application/json',
+                     'X-Auth-Token': user.token,
+                 }
+             })
+                 .then(response => response.json())
+                 .then(json => {
+                     setNotification(json.notification)
+                 }
+                 )
+ 
+                 .catch(error => {
+                     console.error(error);
+                 });
+ 
+         }  
+        }, 15000);
+         
+ 
+     });
     useEffect(() => {
         if (notification != undefined && notification != null && notification.length > 1) {
             const a = notification.length - 1
