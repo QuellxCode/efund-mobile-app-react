@@ -139,6 +139,9 @@ class GenerateBillScreen extends Component {
                             <View style={MainFlowStyles.billHeadingStyle}>
                                 <Text>Quantity</Text>
                             </View>
+                            <View style={MainFlowStyles.billHeadingStyle}>
+                                <Text>Total</Text>
+                            </View>
                         </View>
                         <FlatList
                             style={{ flexGrow: 0 }}
@@ -156,6 +159,9 @@ class GenerateBillScreen extends Component {
                                         </View>
                                         <View style={MainFlowStyles.billHeadingStyle}>
                                             <Text>{item.qty}</Text>
+                                        </View>
+                                        <View style={MainFlowStyles.billHeadingStyle}>
+                                            <Text>{item.qty * item.price}</Text>
                                         </View>
                                     </View>
                                 );

@@ -10,7 +10,7 @@ import { notificationManager } from '../../NotificationManager';
 import Notification from "../../screens/MainFlow/Notification"
 import { withNavigation } from 'react-navigation';
 
-const Purchaser = ({navigation}) => {
+const Purchaser = props => {
     const data = [
         { id: 1, name: 'Purchaser', select: true },
         { id: 2, name: 'Manager', select: false },
@@ -38,7 +38,9 @@ const Purchaser = ({navigation}) => {
     };
     const onOpenNotification = notify => {
         console.log('[Notification] onOpenNotification', notify);
-        redirect();
+    //    <Notification/>
+        props.navigation.navigate('Notification')
+    // Alert.alert('bill jfdkjkj')
 
     };
     useEffect(() => {
@@ -138,7 +140,7 @@ const Purchaser = ({navigation}) => {
 
 
 
-const Supervisor = (props) => {
+const Supervisor = props => {
     const data = [
         { id: 1, name: 'Purchaser', select: true },
         { id: 2, name: 'Manager', select: false },
@@ -155,7 +157,7 @@ const Supervisor = (props) => {
 
     }
     const redirect =()=> {
-        props.navigation.navigate('Notification');
+       return props.navigation.navigate('Notification');
       };
     const onRegister = token => {
         console.log('[Notification] Register', token);
@@ -166,7 +168,8 @@ const Supervisor = (props) => {
     const onOpenNotification = notify => {
         console.log('[Notification] onOpenNotification', notify);
         // Alert.alert('Bill is Added');
-        redirect()
+        props.navigation.navigate('Notification')
+        //  <Notification/>
     };
     useEffect(() => {
         localNotify = notificationManager;
@@ -219,16 +222,38 @@ const Supervisor = (props) => {
             if (notification != undefined && notification != null && notification.length > 1) {
                 let a = notification.length - 1
                 let aa = '';
+               
                 if(notification[a].to != undefined && notification[a].to != null){
+               
                     aa = notification[a].to
                 }
+                              
                 if (user.user_id === aa) {
                     localNotify.showNotification(
-                        1,
-                        'Bill is Added!',
-                        '', // data
-                        '', // option
-                    );
+                                    1,
+                                    'Bill is Added!',
+                                    '', // data
+                                    '', // option
+                                );
+                    // if(aa != undefined && aa != null){
+                    //     if( notification[a].notification_status === 'RequestPayment'){
+                    //         localNotify.showNotification(
+                    //             1,
+                    //             'Bill is Added!',
+                    //             '', // data
+                    //             '', // option
+                    //         );
+                             
+                    //        }else{
+                    //          localNotify.showNotification(
+                    //             1,
+                    //             'A New Claim Request!',
+                    //             '', // data
+                    //             '', // option
+                    //          );
+                    //        }
+                    // }
+                    
                 }
             }
   }
@@ -272,7 +297,7 @@ const Supervisor = (props) => {
 
 
 
-const Director = ({ navigation }) => {
+const Director = props => {
     const data = [
         { id: 1, name: 'Purchaser', select: true },
         { id: 2, name: 'Manager', select: false },
@@ -301,8 +326,9 @@ const Director = ({ navigation }) => {
     const onOpenNotification = notify => {
         console.log('[Notification] onOpenNotification', notify);
         // Alert.alert('Bill is Approved');
-        redirect();
-
+        // redirect();
+    //  <Notification/>
+    props.navigation.navigate('Notification')
     };
     useEffect(() => {
         localNotify = notificationManager;
