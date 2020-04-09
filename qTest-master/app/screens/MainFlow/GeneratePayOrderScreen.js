@@ -14,6 +14,7 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
+import RNPickerSelect from 'react-native-picker-select';
 
 class GeneratePayOrderScreen extends Component {
     constructor(props) {
@@ -38,7 +39,9 @@ class GeneratePayOrderScreen extends Component {
             // purchaserID: '',
             selectedPayee: '',
             details: [],
-            change: false
+            change: false,
+            selectedPayeeNo:'',
+            selectedBankNo:''
         };
     }
 
@@ -190,9 +193,9 @@ class GeneratePayOrderScreen extends Component {
          .catch(error=>console.log(error))
            }
 
-        getAmount(){
+        getAmount(bankNo){
           console.log("hello tak cash")
-          fetch("http://efundapp.herokuapp.com/api/bankAccount/account/"+this.state.selectedBank,{
+          fetch("http://efundapp.herokuapp.com/api/bankAccount/account/"+bankNo,{
             method:"GET",
               headers: {
                 'Accept': 'application/json',
@@ -207,23 +210,26 @@ class GeneratePayOrderScreen extends Component {
                   account_no: responseJson.account.account_no
                })
                console.log(this.state.cash)
-               //console.log(responseJson)
+               console.log(bankNo)
               })
              .catch(error=>console.log(error))
         }
 
-        onValueChange (value: string) {
+        onValueChange (value) {
             this.setState({
-                selectedBank : value
+              selectedBankNo : value
             });
+            this.state.selectedBank = value
             console.log(this.state.selectedBank)
-            this.getAmount();
+            var bankNo = value;
+            this.getAmount(bankNo);
         }      
 
-        onValueChangeP (value: string) {
+        onValueChangeP (value) {
           this.setState({
-            selectedPayee : value
+            selectedPayeeNo : value
           });
+          this.state.selectedPayee = value
           console.log(this.state.selectedPayee)
       }  
 
@@ -281,7 +287,7 @@ class GeneratePayOrderScreen extends Component {
                                 /> */}
 
                                 <Picker
-                                    selectedValue={this.state.selectedPayee}
+                                   selectedValue={this.state.selectedPayeeNo}
                                     // onValueChange={(itemValue, itemIndex) => 
                                     //     this.setState({selectedBank: itemValue})}>
                                     onValueChange={this.onValueChangeP.bind(this)}>
@@ -345,12 +351,12 @@ class GeneratePayOrderScreen extends Component {
                                 />
 
 
-                                <Picker
-                                    selectedValue={this.state.selectedBank}
+                               <Picker
+                                    selectedValue={this.state.selectedBankNo}
                                     // onValueChange={(itemValue, itemIndex) => 
                                     //     this.setState({selectedBank: itemValue})}>
                                     onValueChange={this.onValueChange.bind(this)}>
-                                        <Picker.Item label='Select a bank' value='' />
+                                       <Picker.Item label='Select a Bank' value='' />
                                     {this.loadBanks()}
                                 </Picker>
 
