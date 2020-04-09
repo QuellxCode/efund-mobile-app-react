@@ -84,28 +84,28 @@ export default class Notification extends Component {
     } catch (error) {
       console.log('error getting data');
     }
-    firebase
-      .messaging()
-      .getToken()
-      .then(fcmToken => {
-        if (fcmToken) {
-          console.log('fcmtokem', fcmToken);
-          firebase.messaging().sendMessage(message);
-        } else {
-          console.log('no fcmtokem');
-        }
-      });
-    // PushNotification.configure({
-    //   onRegister: function(token) {
-    //     console.log('TOKENe:', token);
-    //   },
-    //   onNotification: function(notification) {
-    //     console.log('REMOTE NOTIFICATION ==>', notification);
-    //   },
-    //   senderID: '237335251444',
-    //   popInitialNotification: true,
-    //   requestPermissions: true,
-    // });
+    // firebase
+    //   .messaging()
+    //   .getToken()
+    //   .then(fcmToken => {
+    //     if (fcmToken) {
+    //       console.log('fcmtokem', fcmToken);
+    //       firebase.messaging().sendMessage(message);
+    //     } else {
+    //       console.log('no fcmtokem');
+    //     }
+    //   });
+    PushNotification.configure({
+      onRegister: function(token) {
+        console.log('TOKENe:', token);
+      },
+      onNotification: function(notification) {
+        console.log('REMOTE NOTIFICATION ==>', notification);
+      },
+      senderID: '237335251444',
+      popInitialNotification: true,
+      requestPermissions: true,
+    });
     // localNotify = notificationManager;
     // localNotify.configure(onRegister, onNotification, onOpenNotification);
   }

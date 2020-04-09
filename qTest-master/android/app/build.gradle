@@ -179,8 +179,6 @@ android {
 }
 
 dependencies {
-
-      // This should be here already
   implementation project(':react-native-firebase')
 implementation "com.google.firebase:firebase-messaging:18.0.0"
     implementation project(':react-native-document-picker')
