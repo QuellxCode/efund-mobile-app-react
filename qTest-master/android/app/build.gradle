@@ -179,14 +179,15 @@ android {
 }
 
 dependencies {
+
+      // This should be here already
+  implementation project(':react-native-firebase')
+implementation "com.google.firebase:firebase-messaging:18.0.0"
     implementation project(':react-native-document-picker')
     implementation project(':react-native-push-notification')
     implementation project(':react-native-vector-icons')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
-   implementation "com.google.firebase:firebase-auth:17.0.0"
-    implementation 'com.google.firebase:firebase-messaging:20.1.0'
-    implementation project(':react-native-firebase')
     implementation "com.google.android.gms:play-services-base:16.1.0"
     implementation "com.google.firebase:firebase-core:16.0.9"
      implementation "com.google.firebase:firebase-database:17.0.0"

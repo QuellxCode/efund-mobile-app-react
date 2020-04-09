@@ -46,7 +46,6 @@
             </intent-filter>
         </receiver>
         <!-- < Only if you're using GCM or localNotificationSchedule() > -->
-
         <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />
         <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationBootEventReceiver">
             <intent-filter>
@@ -63,9 +62,11 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
-        <!-- </ Only if you're using GCM or localNotificationSchedule() > -->
-
-        <!-- < Else > -->
+         <service android:name="io.invertase.firebase.messaging.RNFirebaseMessagingService">
+       <intent-filter>
+        <action android:name="com.google.firebase.MESSAGING_EVENT" />
+       </intent-filter>
+      </service>
         <service
             android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService"
             android:exported="false" >
@@ -73,6 +74,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+          <service android:name="io.invertase.firebase.messaging.RNFirebaseBackgroundMessagingService" />
     </application>
 
 </manifest>

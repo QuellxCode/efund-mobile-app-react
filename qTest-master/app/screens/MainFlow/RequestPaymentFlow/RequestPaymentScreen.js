@@ -90,7 +90,6 @@ async checkPermission() {
       this.requestPermission();
   }
 }
-
   //3
 async getToken() {
   let fcmToken = await AsyncStorage.getItem('fcmToken');

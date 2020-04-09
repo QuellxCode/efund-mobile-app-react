@@ -6,8 +6,6 @@ import TwoColumnCard from '../../components/TwoColumnCard';
 import ColumnCard from '../../components/ColumnCard';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-// import { Notifications } from 'expo';
-// import * as Permissions from 'expo-permissions';
 class DashboardScreen extends Component {
     constructor(props) {
         super(props);
