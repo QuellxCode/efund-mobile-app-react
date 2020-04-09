@@ -43,6 +43,7 @@ export default class ClaimDropDown extends Component {
     };
     this.list = React.createRef();
   }
+
   async componentDidMount() {
     try {
       const value = await AsyncStorage.getItem('User');
@@ -97,7 +98,7 @@ export default class ClaimDropDown extends Component {
             marginHorizontal: 3,
           },
         ]}>
-        <Text style={{fontWeight: 'bold', fontSize: 16}}>{item.number}</Text>
+        <Text style={{fontWeight: 'bold', fontSize: 16}}></Text>
         <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
           <TextInput
             style={{fontSize: 16}}
@@ -231,7 +232,7 @@ export default class ClaimDropDown extends Component {
                 marginTop: 10,
               },
             ]}>
-            <Text style={{fontWeight: 'bold', fontSize: 16}}>1</Text>
+            <Text style={{fontWeight: 'bold', fontSize: 16}}></Text>
             <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
               <TextInput
                 style={{fontSize: 16}}
@@ -332,20 +333,48 @@ export default class ClaimDropDown extends Component {
                   category: cat,
                 });
                 this.setState({bills: b});
-                //console.log(this.state.bills)
               }}>
               <AntDesign name="pluscircle" size={20} color="#FF3301" />
             </TouchableOpacity>
           </View>
           <View
             style={{marginHorizontal: 15, marginBottom: 20, marginTop: 250}}>
-            <CustomButton
+            {/* <CustomButton
+            onPress={this.s}
               text="Claim"
               routeName="ClaimPayment"
               data={this.state.bills}
               data1={this.state.selectedValue}
               data_ctg={this.state.ctg}
-            />
+            /> */}
+             <TouchableOpacity
+                        style={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10 }}
+                        onPress={() => {
+                                 var aa = this.state.title;
+                                 var ab = this.state.qty;
+                                  var ac = this.state.price;
+                                  var ae = this.state.pkr;
+                                  let b = this.state.bills;
+                                  var result = ac * ab;
+                                  var cat = this.state.ctg;
+                                   b.push({
+                                         title: aa,
+                                         quantity: ab,
+                                         price: ac,
+                                         total_price: result,
+                                         category: cat,
+                                 });
+                                this.props.navigation.navigate('ClaimPayment', {
+                                    data: this.state.bills,
+                                    data1: this.state.selectedValue,
+                                    data_ctg:this.state.ctg,
+                                })
+                        }}
+                    >
+                        <Text
+                            style={{ fontSize: 20, alignSelf: "center", color: "white" }}
+                        >Add Image</Text>
+                    </TouchableOpacity>
           </View>
         </ScrollView>
       </View>

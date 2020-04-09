@@ -155,7 +155,7 @@ const Supervisor = (props) => {
 
     }
     const redirect =()=> {
-        props.navigation.navigate('Notification');
+       return props.navigation.navigate('Notification');
       };
     const onRegister = token => {
         console.log('[Notification] Register', token);
@@ -166,7 +166,7 @@ const Supervisor = (props) => {
     const onOpenNotification = notify => {
         console.log('[Notification] onOpenNotification', notify);
         // Alert.alert('Bill is Added');
-        redirect()
+        props.navigation.navigate('Notification')
     };
     useEffect(() => {
         localNotify = notificationManager;
@@ -367,11 +367,6 @@ const Director = ({ navigation }) => {
             }
         }
     }, [length])
-
-
-
-
-
     return (
 
         <View>
