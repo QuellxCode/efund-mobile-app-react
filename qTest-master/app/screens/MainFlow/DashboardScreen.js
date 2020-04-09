@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, AsyncStorage, Alert } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, AsyncStorage, Alert, Button } from 'react-native';
 import Header from '../../components/Header';
 import Timeline from '../../components/Timeline';
 import TwoColumnCard from '../../components/TwoColumnCard';
@@ -8,9 +8,9 @@ import MainFlowStyles from '../../Styles/MainFlowStyles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { notificationManager } from '../../NotificationManager';
 import Notification from "../../screens/MainFlow/Notification"
+import { withNavigation } from 'react-navigation';
 
-
-const Purchaser = () => {
+const Purchaser = ({navigation}) => {
     const data = [
         { id: 1, name: 'Purchaser', select: true },
         { id: 2, name: 'Manager', select: false },
@@ -26,6 +26,10 @@ const Purchaser = () => {
         length = notification.length;
 
     }
+
+    const redirect =()=> {
+        props.navigation.navigate('Notification')
+      };
     const onRegister = token => {
         console.log('[Notification] Register', token);
     };
@@ -34,7 +38,8 @@ const Purchaser = () => {
     };
     const onOpenNotification = notify => {
         console.log('[Notification] onOpenNotification', notify);
-        Alert.alert('Bill is Rejected');
+        redirect();
+
     };
     useEffect(() => {
         localNotify = notificationManager;
@@ -134,7 +139,7 @@ const Purchaser = () => {
 
 
 
-const Supervisor = () => {
+const Supervisor = (props) => {
     const data = [
         { id: 1, name: 'Purchaser', select: true },
         { id: 2, name: 'Manager', select: false },
@@ -150,6 +155,9 @@ const Supervisor = () => {
         length = notification.length;
 
     }
+    const redirect =()=> {
+        props.navigation.navigate('Notification');
+      };
     const onRegister = token => {
         console.log('[Notification] Register', token);
     };
@@ -158,7 +166,8 @@ const Supervisor = () => {
     };
     const onOpenNotification = notify => {
         console.log('[Notification] onOpenNotification', notify);
-        Alert.alert('Bill is Added');
+        // Alert.alert('Bill is Added');
+        redirect()
     };
     useEffect(() => {
         localNotify = notificationManager;
@@ -235,6 +244,7 @@ const Supervisor = () => {
     return (
         <View>
             <Header />
+            
             <ScrollView
                 style={{ paddingBottom: 30, marginBottom: 40 }}
                 showsVerticalScrollIndicator={false}
@@ -263,7 +273,7 @@ const Supervisor = () => {
 
 
 
-const Director = () => {
+const Director = ({ navigation }) => {
     const data = [
         { id: 1, name: 'Purchaser', select: true },
         { id: 2, name: 'Manager', select: false },
@@ -279,6 +289,10 @@ const Director = () => {
         length = notification.length;
 
     }
+    const redirect =()=> {
+        props.navigation.navigate('Notification')
+      };
+    
     const onRegister = token => {
         console.log('[Notification] Register', token);
     };
@@ -287,7 +301,9 @@ const Director = () => {
     };
     const onOpenNotification = notify => {
         console.log('[Notification] onOpenNotification', notify);
-        Alert.alert('Bill is Approved');
+        // Alert.alert('Bill is Approved');
+        redirect();
+
     };
     useEffect(() => {
         localNotify = notificationManager;
@@ -378,7 +394,7 @@ const Director = () => {
 }
 
 
-const DashboardScreen = () => {
+const DashboardScreen = ({navigation}) => {
    
     const [user, setUser] = useState();
    
@@ -400,13 +416,13 @@ const DashboardScreen = () => {
         
     if (user != undefined && user != null) {
         if (user.roles ==="Purchaser") {
-          return  <Purchaser/>
+          return  <Purchaser navigation={navigation}/>
         }
         if(user.roles === "Supervisor"){
-            return  <Supervisor/>
+            return  <Supervisor navigation={navigation}/>
         }
         if (user.roles === "Director") {
-            return   <Director/>
+            return   <Director navigation={navigation}/>
         }
     }
     return (
@@ -437,5 +453,5 @@ const styles = StyleSheet.create({
     }
 });
 
-export default DashboardScreen;
+export default withNavigation(DashboardScreen);
 
