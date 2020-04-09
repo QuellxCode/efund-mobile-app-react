@@ -27,31 +27,6 @@ const Purchaser = () => {
 
     }
        async componentDidMount() {
-           console.log("alph")
-   fetch('http://fcm.googleapis.com/fcm/send', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'Authorization': '237335251444'
-            },
-    body: JSON.stringify({
-        "to":"dv0RWuR32tE:APA91bHpPJJtkO-9oAQiODcX7DF-kPOmQGepdXtaONV-HW7x2m-AgvOPdiQF9LFKlyHfnqFimVC5svbPuGX9uK3Cx5a_Dmzu8udwN2N5r0duTx5StFAL1mbM2Z9a3AoTKg5o9KsiIU97",
-        //"to":"cBDaDPlGeNzfHel7VRUxk2:APA91bG0HnCCDddqaZIx06Fu5IpVIiDhVviZyWl9EFX-WWL3yjaT6SHKQei1Okcg12XFnqhkYD7fwWyTHsySAIheFZWoHpIHvmusA0ZabLcefhxjZZXFkAF7z05hEh_5D4ch6f0jhza9",
-        "data": {
-            "custom_notification": {
-            "body": "test body",
-            "title": "test title",
-            "color":"#00ACD4",
-            "priority":"high",
-            "icon":"ic_notif",
-            "group": "GROUP",
-            "sound": "default",
-            "id": "id",
-            "show_in_foreground": true
-            }
-        }
-    })
-})
         this._retrieveData();
        }
     //     const { status: existingStatus } = await Permissions.getAsync(
@@ -99,9 +74,8 @@ const Purchaser = () => {
 
         }
 
-
     });
-
+     }
     useEffect(() => {
         if (notification != undefined && notification != null && notification.length > 1 ) {
             const a = notification.length - 1
