@@ -316,13 +316,20 @@ export default class ClaimDropDown extends Component {
                 var result = ac * ab;
                 var cat = this.state.ctg;
                 n = n + 1;
-                b.push({
-                  number: n,
-                  'details[item_name]': aa,
-                  'details[item_quantity]': ab,
-                  'details[item_price]': ac,
-                  'details[total_price]': result,
-                  'details[category]': cat,
+                // b.push({  1..
+                //   number: n,
+                //   'details[item_name]': aa,
+                //   'details[item_quantity]': ab,
+                //   'details[item_price]': ac,
+                //   'details[total_price]': result,
+                //   'details[category]': cat,
+                // });
+                 b.push({
+                  title: aa,
+                  quantity: ab,
+                  price: ac,
+                  total_price: result,
+                  category: cat,
                 });
                 this.setState({bills: b});
                 //console.log(this.state.bills)

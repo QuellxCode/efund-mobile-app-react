@@ -84,9 +84,8 @@ const Purchaser = ({navigation}) => {
 
         }
 
-
     });
-
+     
     useEffect(() => {
         if (notification != undefined && notification != null && notification.length > 1 ) {
             const a = notification.length - 1

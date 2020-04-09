@@ -115,9 +115,6 @@ async requestPermission() {
       console.log('permission rejected');
   }
 }
-
-
-
     handlePress = async () => {
         var aa = this.state.title;
         var ab = this.state.qty;
