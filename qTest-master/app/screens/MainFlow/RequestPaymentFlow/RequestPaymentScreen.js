@@ -428,7 +428,7 @@ async requestPermission() {
                     <TouchableOpacity
                         style={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10 }}
                         onPress={() => {
-                            if (this.state.check == true) {
+                             if (this.state.check == true) {
                                
                                     // let b = this.state.bills;
                                     // var aa = this.state.title;
@@ -443,7 +443,6 @@ async requestPermission() {
                                         bill: this.state.bills,
                                         project: this.state.selectedValue
                                     })
-                                    this.setState({bill: []})
                                
                                
                             }
@@ -452,8 +451,7 @@ async requestPermission() {
                                     bill: this.state.bills,
                                     project: this.state.selectedValue
                                 })
-                                this.setState({bill: []})
-
+                                
                             }
                         }}
                     >

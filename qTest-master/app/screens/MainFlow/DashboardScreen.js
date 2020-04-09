@@ -234,7 +234,7 @@ const Supervisor = props => {
                                     'Bill is Added!',
                                     '', // data
                                     '', // option
-                                );
+                 );
                     // if(aa != undefined && aa != null){
                     //     if( notification[a].notification_status === 'RequestPayment'){
                     //         localNotify.showNotification(
@@ -393,11 +393,6 @@ const Director = props => {
             }
         }
     }, [length])
-
-
-
-
-
     return (
 
         <View>

@@ -95,17 +95,17 @@ export default class Notification extends Component {
     //       console.log('no fcmtokem');
     //     }
     //   });
-    PushNotification.configure({
-      onRegister: function(token) {
-        console.log('TOKENe:', token);
-      },
-      onNotification: function(notification) {
-        console.log('REMOTE NOTIFICATION ==>', notification);
-      },
-      senderID: '237335251444',
-      popInitialNotification: true,
-      requestPermissions: true,
-    });
+    // PushNotification.configure({
+    //   onRegister: function(token) {
+    //     console.log('TOKENe:', token);
+    //   },
+    //   onNotification: function(notification) {
+    //     console.log('REMOTE NOTIFICATION ==>', notification);
+    //   },
+    //   senderID: '237335251444',
+    //   popInitialNotification: true,
+    //   requestPermissions: true,
+    // });
     // localNotify = notificationManager;
     // localNotify.configure(onRegister, onNotification, onOpenNotification);
   }
@@ -297,45 +297,55 @@ export default class Notification extends Component {
                   <View style={{flexDirection: 'column'}}>
                     <Text
                       style={{
-                        fontSize: 10,
-                        color: 'blue',
+                        fontSize: 20,
+                        color: 'white',
+                        backgroundColor:'#FF3301',
                         marginLeft: '1%',
                         height: 50,
                         width: 300,
+                        padding:10,
                       }}>
-                      Status :  {item.notification_status}
+                      Purchaser Name:{item.purchaserName}
                     </Text>
-                    <Text
+                    {/* <Text
                       style={{
-                        fontSize: 10,
-                        color: 'blue',
+                        fontSize: 20,
+                         color: 'white',
+                        backgroundColor:'#FF3301',
                         marginLeft: '1%',
+                        marginTop:1,
                         height: 50,
                         width: 300,
                       }}>
                       Purchaser Id :{item.purchaserID}
-                    </Text>
+                    </Text> */}
                     <Text
                       style={{
-                        fontSize: 10,
-                        color: 'blue',
+                        fontSize: 20,
+                         color: 'white',
+                        marginTop:1,
+                         padding:10,
+                        backgroundColor:'#FF3301',
                         marginLeft: '1%',
                         height: 50,
                         width: 300,
                       }}>
-                      Request : {item.message}
+                  Status :  {item.notification_status}
                     </Text>
                     <Text
                       style={{
-                        fontSize: 10,
-                        color: 'blue',
+                        fontSize: 15,
+                         color: 'white',
+                        backgroundColor:'#FF3301',
+                        marginTop:1,
                         marginLeft: '1%',
-                        height: 50,
-                        width: 300,
+                        height: 120,
+                         padding:10,
+                         width: 300,
                       }}>
-                      Purchaser Name:{item.purchaserName}
+                    Detail: {item.message}
                     </Text>
-                  </View>
+                     </View>
                   <View
                     style={{flexDirection: 'row', justifyContent: 'center'}}>
                     <TouchableOpacity
@@ -507,9 +517,11 @@ export default class Notification extends Component {
                     <Text
                       style={{
                         fontSize: 30,
-                        color: 'blue',
                         marginLeft: '1%',
-                        height: 50,
+                        color: 'white',
+                        backgroundColor:'#FF3301',
+                        padding:10,
+                        height: 60,
                         width: 300,
                       }}>
                       Reason:
@@ -517,9 +529,12 @@ export default class Notification extends Component {
                     <Text
                       style={{
                         fontSize: 20,
-                        color: 'red',
+                        color: 'white',
+                        backgroundColor:'#FF3301',
+                        marginTop:1,
+                        padding:10,
                         marginLeft: '1%',
-                        height: 80,
+                        height: 100,
                         width: 300,
                       }}>
                       {item.message}
@@ -556,7 +571,7 @@ export default class Notification extends Component {
                       }}>
                       Request: {item.message}
                     </Text>
-                    <Text
+                    {/* <Text
                       style={{
                         fontSize: 10,
                         color: 'blue',
@@ -574,8 +589,8 @@ export default class Notification extends Component {
                         height: 50,
                         width: 300,
                       }}>
-                      Project id:{item.project}
-                    </Text>
+                      {/* Project id:{item.project}
+                    </Text> */}
                     <Text
                       style={{
                         fontSize: 10,
