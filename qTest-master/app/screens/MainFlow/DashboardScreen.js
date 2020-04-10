@@ -85,6 +85,8 @@ const Purchaser = props => {
                     console.error(error);
                 });
 
+            
+
         }  
        }, 15000);
         
@@ -233,37 +235,36 @@ const Supervisor = props => {
                     aa = notification[a].to
                 }
                               
-                // if (user.user_id === aa) {
-                //     localNotify.showNotification(
-                //                     1,
-                //                     'Bill is Added!',
-                //                     '', // data
-                //                     '', // option
-                //  );
-                    if(aa != undefined && aa != null){
-                        if( notification[a].notification_status == 'RequestPayment'){
-                            localNotify.showNotification(
-                                1,
-                                'Bill is Added!',
-                                '', // data
-                                '', // option
-                            );
+                if (user.user_id === aa) {
+                    localNotify.showNotification(
+                                    1,
+                                    'Bill is Added!',
+                                    '', // data
+                                    '', // option
+                 );
+                   
+                   // if(aa != undefined && aa != null){
+                    //     if( notification[a].notification_status == 'RequestPayment'){
+                    //         localNotify.showNotification(
+                    //             1,
+                    //             'Bill is Added!',
+                    //             '', // data
+                    //             '', // option
+                    //         );
                              
-                           }else{
-                             localNotify.showNotification(
-                                1,
-                                'A New Claim Request Added!',
-                                '', // data
-                                '', // option
-                             );
-                           }
-                    }
+                    //        }else{
+                    //          localNotify.showNotification(
+                    //             1,
+                    //             'A New Claim Request Added!',
+                    //             '', // data
+                    //             '', // option
+                    //          );
+                    //        }
+                     }
                     
                 }
             }
-  }
-        
-    , [length])
+  },[length])
 
 
 
