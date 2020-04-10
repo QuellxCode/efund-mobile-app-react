@@ -66,6 +66,7 @@ export default class Notification extends Component {
       notification_id: '',
       token: '',
       arraySize: '',
+      Isvisible:false,
     };
     this.list = React.createRef();
   }
@@ -141,33 +142,8 @@ export default class Notification extends Component {
         console.error(error);
       });
   }
-  // push_notification(token) {
-  //   fetch('https://exp.host/--/api/v2/push/send', {
-  //     method: 'POST',
-  //     headers: {
-  //       Accept: 'application/json',
-  //       'Content-Type': 'application/json',
-  //       'accept-encoding': 'gzip, deflate',
-  //       host: 'exp.host',
-  //     },
-  //     body: JSON.stringify({
-  //       to: token,
-  //       title: 'New Notification',
-  //       body: 'Request Payment Notification from supervisor',
-  //       priority: 'high',
-  //       sound: 'default',
-  //       channelId: 'default',
-  //     }),
-  //   })
-  //     .then(response => response.json())
-  //     .then(responseJson => {
-  //       console.log('noti' + JSON.stringify(responseJson));
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //     });
-  // }
-  director_accept() {
+  director_accept(item) {
+    console.log("dddd",item)
     fetch('http://efundapp.herokuapp.com/api/purchase/director-accept', {
       method: 'Post',
       headers: {
@@ -184,7 +160,7 @@ export default class Notification extends Component {
     })
       .then(response => response.json())
       .then(json => {
-        console.log('response:' + JSON.stringify(json));
+        this.setState({Isvisible:true})
       })
       .catch(error => {
         console.error(error);
@@ -343,8 +319,11 @@ export default class Notification extends Component {
                          padding:10,
                          width: 300,
                       }}>
-                Request : {item.message}
-                    </Text>
+ {/* {this.state.item.message.map((element, index) => (
+   <Text> {element.item}</Text>
+        ));} */}
+        {item.message}
+ </Text>
                   </View>
                   <View
                     style={{flexDirection: 'row', justifyContent: 'center'}}>
@@ -563,43 +542,55 @@ export default class Notification extends Component {
                   <View style={{flexDirection: 'column'}}>
                     <Text
                       style={{
-                        fontSize: 10,
-                        color: 'blue',
+                        fontSize: 15,
+                         color: 'white',
+                        backgroundColor:'#FF3301',
                         marginLeft: '1%',
+                        padding:10,
                         height: 50,
                         width: 300,
                       }}>
-                      Request: {item.message}
+                                            Purchaser Name:{item.purchaserName}
+
                     </Text>
                     <Text
                       style={{
-                        fontSize: 10,
-                        color: 'blue',
+                        fontSize: 15,
                         marginLeft: '1%',
-                        height: 50,
+                        color: 'white',
+                        padding:10,
+                         marginTop:2,
+                        backgroundColor:'#FF3301',
+                        height: 70,
                         width: 300,
                       }}>
                       Purchaser Id:{item.purchaserID}
                     </Text>
-                    <Text
+                    {/* <Text
                       style={{
-                        fontSize: 10,
-                        color: 'blue',
+                        fontSize: 15,
+                        padding:10,
+                         marginTop:2,
+                         color: 'white',
+                        backgroundColor:'#FF3301',
                         marginLeft: '1%',
                         height: 50,
                         width: 300,
                       }}>
                       Project id:{item.project}
-                    </Text>
+                    </Text> */}
                     <Text
                       style={{
-                        fontSize: 10,
-                        color: 'blue',
+                        fontSize: 15,
+                         color: 'white',
+                         padding:10,
+                         marginTop:2,
+                        backgroundColor:'#FF3301',
                         marginLeft: '1%',
-                        height: 50,
+                        height: 150,
                         width: 300,
                       }}>
-                      Purchaser Name:{item.purchaserName}
+                     Request: {item.message}
                     </Text>
                   </View>
                   <View
@@ -743,6 +734,51 @@ export default class Notification extends Component {
                             borderBottomRightRadius: 10,
                           }}
                           onPress={() => this.reject_ok()}
+                        />
+                      </View>
+                    </View>
+                  </Modal>
+                      <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={this.state.Isvisible}>
+                    <View
+                      style={{
+                        flex: 1,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                      }}>
+                      <View
+                        style={{
+                          backgroundColor: 'white',
+                          paddingTop: 10,
+                          borderRadius: 20,
+                          width: width * 0.8,
+                        }}>
+                        <View style={{alignSelf: 'center', padding: 20}}>
+                          <FontAwesome name="send" color="#FF3301" size={50} />
+                        </View>
+                               <Text
+                          style={{
+                            alignSelf: 'center',
+                            fontSize: 16,
+                            fontWeight: 'bold',
+                            color: '#FF3301',
+                            paddingBottom: 40,
+                          }}>
+                          Approval is Accepted by Director!
+                        </Text>
+                        <Button
+                          title="OK"
+                          buttonStyle={{
+                            backgroundColor: '#FF3301',
+                            padding: 14,
+                            borderRadius: 0,
+                            borderBottomLeftRadius: 10,
+                            borderBottomRightRadius: 10,
+                          }}
+                          onPress={() => this.setState({Isvisible:false})}
                         />
                       </View>
                     </View>

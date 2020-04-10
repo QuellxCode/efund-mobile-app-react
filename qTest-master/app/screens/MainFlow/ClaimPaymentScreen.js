@@ -105,6 +105,32 @@ class ClaimPaymentScreen extends Component {
       return {uri: this.state.image};
     }
   }
+   notification_send = async () => {
+        // console.log("data" + this.state.data_)
+        // console.log("datap" + this.state.Selected_Proj)
+        fetch('http://efundapp.herokuapp.com/api/purchase/send-notification', {
+            method: 'Post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-Auth-Token': this.state.User.token,
+            },
+            body: JSON.stringify({
+                "details": this.state.data_
+                ,"project": this.state.Selected_Proj,
+                 "notification_status":"ClaimRequest",
+            })
+        })
+            .then(response => response.json())
+            .then(json => {
+                console.log(JSON.stringify(json))
+                this.setState({ response_: json.notificationID })
+                 this.setState({ visible: false })
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
   submit(){
     console.log("submit")
   formdata.append('file', {
@@ -222,7 +248,7 @@ class ClaimPaymentScreen extends Component {
                   borderBottomRightRadius: 10,
                 }}
                 onPress={() => {
-                  this.setState({visible:false})
+                  this.notification_send()
                 }
                 }
               />

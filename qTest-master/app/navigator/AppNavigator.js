@@ -18,10 +18,6 @@ import MenuDrawer from "../components/MenuDrawer";
 import Notification from "../screens/MainFlow/Notification"
 
 const AppNavigator = createSwitchNavigator({
-    
-    
-    
-    
     loginFlow: createStackNavigator({
         Login: LoginScreen
     },
@@ -37,7 +33,6 @@ const AppNavigator = createSwitchNavigator({
             Projects: ProjectList,
             RequestPayment: RequestPaymentScreen,
             GenerateBill: GenerateBillScreen,
-           
         },
         {
             initialRouteName: 'RequestPayment',
