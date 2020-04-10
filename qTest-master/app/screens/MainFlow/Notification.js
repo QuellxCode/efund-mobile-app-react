@@ -124,7 +124,6 @@ export default class Notification extends Component {
       .then(response => response.json())
       .then(json => {
         this.setState({data: json.notification});
-        console.log('data102', JSON.stringify(this.state.data));
         // const a = this.state.data.length - 1;
         // console.log('datalen', this.state.data.length);
         // console.log('a', a);
@@ -255,7 +254,18 @@ export default class Notification extends Component {
       });
     this.setState({visible: false});
   }
+
+  txt(item) {
+    var str = item;
+ str = str.replace(/[^a-zA-Z0-9]/g, ' ');
+ str = str.replace(/  +/g, ' ') 
+ str = str.replace("/ ",":")
+return str
+  }  
+
+
   render() {
+   
     if (this.state.User.roles == 'Supervisor') {
       return (
         <View style={{flex: 1}}>
@@ -319,7 +329,7 @@ export default class Notification extends Component {
                          padding:10,
                          width: 300,
                       }}>
-                    Detail: {item.message}
+                    Detail: {this.txt(item.message)}
                     </Text>
                      </View>
                   <View
@@ -587,7 +597,7 @@ export default class Notification extends Component {
                         height: 150,
                         width: 300,
                       }}>
-                     Request: {item.message}
+                     Request:{this.txt(item.message)}
                     </Text>
                   </View>
                   <View
