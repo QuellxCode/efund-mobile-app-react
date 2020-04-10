@@ -31,14 +31,14 @@ export default class ClaimDropDown extends Component {
       selectedProject: '',
       User: [],
       bills: [],
-      qty: '',
-      price: '',
-      pkr: '',
+      qty: 0,
+      price: 0,
+      pkr: 0,
       title: '',
       ctg: '',
       orderss: [],
       response_: '',
-      data: '',
+      data: [],
       pickerValue:''
     };
     this.list = React.createRef();

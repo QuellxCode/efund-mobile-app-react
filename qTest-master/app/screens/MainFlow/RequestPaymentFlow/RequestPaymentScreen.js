@@ -121,15 +121,16 @@ async requestPermission() {
         var ac = this.state.price;
         var project = this.state.selectedValue;
         var r = this.state.price * this.state.qty
+        console.log('project id', this.state.selectedValue)
         var data = {
-            "payment": "50000",
+            // "payment": "50000",
             "project": project,
             "details": [
                 {
-                    "item_name": aa,
-                    "item_quantity": ab,
-                    "item_price": ac,
-                    "total_price": r
+                    "item": aa,
+                    "qty": ab,
+                    "price": ac,
+                    "pkr": r
                 }
             ]
         }
@@ -451,7 +452,8 @@ async requestPermission() {
                                     bill: this.state.bills,
                                     project: this.state.selectedValue
                                 })
-                                
+                                console.log('bills', this.state.bills)
+                                console.log('prject', this.state.selectedValue)
                             }
                         }}
                     >
