@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, StyleSheet, Button, Constants, FlatList, Text, TouchableO, TextInput, KeyboardAvoidingView, Picker, AsyncStorage , ScrollView, Alert} from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Button, Constants, FlatList, Text, TouchableO, TextInput, KeyboardAvoidingView, Picker, AsyncStorage , ScrollView} from 'react-native';
 import Header from '../../../components/Header';
 import CustomButton from '../../../components/CustomButton';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -120,8 +120,7 @@ class RequestPayment extends Component {
         var ac = this.state.price;
         var project = this.state.selectedValue;
         var r = this.state.price * this.state.qty
-        console.log('project id', this.state.selectedValue)
-        var data = {
+         var data = {
             // "payment": "50000",
             "project": project,
             "details": [
@@ -133,7 +132,7 @@ class RequestPayment extends Component {
                 }
             ]
         }
-        if (data.details[0].item_name == '') {
+        if (data.details[0].item == '') {
             console.log('nt call a api')
 
         }
@@ -381,32 +380,19 @@ class RequestPayment extends Component {
                         <TouchableOpacity
                             style={{ alignSelf: 'center', alignContent: 'center', backgroundColor: '#FF3301', height: 40, width: 100, borderRadius: 20, justifyContent: "center" }}
                             onPress={() => {
-                                if (this.state.check == true) {
-                                    if(this.state.title == '' ){
-                                        Alert.alert('Please add Title')
-                                    }else if(this.state.price  == ''){
-                                        Alert.alert('Please add Price!')
-                                    }
-                                    else if(this.state.qty == '' ){
-                                        Alert.alert('Please add Quantity!')
-                                    } else{
-                                        let b = this.state.bills;
-                                        var aa = this.state.title;
-                                        var ab = this.state.qty;
-                                        var ac = this.state.price;
-                                        var ae = this.state.pkr;
-                                        var result = ac * ab;
-                                        this.setState({val: result})
-                                        this.handlePress();
-                                        n = n + 1
-                                        b.push({ number: n, item: aa, price: ac, qty: ab, pkr: result });
-                                        this.setState({ bills: b, title:'', qty: '', price: '' })
-                                        console.log("arr from button", this.state.bills)
-                                       
-                                    }
-                                   
-                                }
+                                let b = this.state.bills;
+                                var aa = this.state.title;
+                                var ab = this.state.qty;
+                                var ac = this.state.price;
+                                var ae = this.state.pkr;
+                                var result = ac * ab;
+                                this.setState({val: result})
+                                this.handlePress();
+                                n = n + 1
+                                b.push({ number: n, item: aa, price: ac, qty: ab, pkr: result });
+                                this.setState({ bills: b, title:'', qty: '', price: '' })
                                 console.log("arr from button", this.state.bills)
+                                
                             }
                             }
                         >
@@ -428,31 +414,29 @@ class RequestPayment extends Component {
                     <TouchableOpacity
                         style={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10 }}
                         onPress={() => {
-                             if (this.state.check == true) {
-                               
-                                    // let b = this.state.bills;
-                                    // var aa = this.state.title;
-                                    // var ab = this.state.qty;
-                                    // var ac = this.state.price;
-                                    // var ae = this.state.pkr;
-                                    // var result = ac * ab
-                                    // b.push({ title: aa, price: ac, qty: ab, pkr: result });
-                                    // this.setState({ bills: b, check: false })
-                                    
-                                    this.props.navigation.navigate('GenerateBill', {
-                                        bill: this.state.bills,
-                                        project: this.state.selectedValue
-                                    })
-                               
-                               
+                            if (this.state.check == true) {
+                                let b = this.state.bills;
+                                var aa = this.state.title;
+                                var ab = this.state.qty;
+                                var ac = this.state.price;
+                                var ae = this.state.pkr;
+                                var result = ac * ab
+                                b.push({ title: aa, price: ac, qty: ab, pkr: result });
+                                this.setState({ bills: b, check: false })
+                                this.handlePress();
+                                this.props.navigation.navigate('', {
+                                    bill: this.state.bills,
+                                    project: this.state.selectedValue
+                                })
+                                this.setState({bill: ''})
                             }
                             else {
                                 this.props.navigation.navigate('GenerateBill', {
                                     bill: this.state.bills,
                                     project: this.state.selectedValue
                                 })
-                                console.log('bills', this.state.bills)
-                                console.log('prject', this.state.selectedValue)
+                                this.setState({bill: ''})
+
                             }
                         }}
                     >

@@ -64,50 +64,50 @@ const Purchaser = props => {
         retrieveData();
     }, [])
 
-    // useEffect(() => {
-    //    setTimeout(() => {
-    //     if (user != undefined && user != null) {
-    //         fetch('http://efundapp.herokuapp.com/api/notification', {
-    //             method: 'Get',
-    //             headers: {
-    //                 Accept: 'application/json',
-    //                 'Content-Type': 'application/json',
-    //                 'X-Auth-Token': user.token,
-    //             }
-    //         })
-    //             .then(response => response.json())
-    //             .then(json => {
-    //                 setNotification(json.notification)
-    //             }
-    //             )
+    useEffect(() => {
+       setTimeout(() => {
+        if (user != undefined && user != null) {
+            fetch('http://efundapp.herokuapp.com/api/notification', {
+                method: 'Get',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-Auth-Token': user.token,
+                }
+            })
+                .then(response => response.json())
+                .then(json => {
+                    setNotification(json.notification)
+                }
+                )
 
-    //             .catch(error => {
-    //                 console.error(error);
-    //             });
+                .catch(error => {
+                    console.error(error);
+                });
 
-    //     }  
-    //    }, 15000);
+        }  
+       }, 15000);
         
 
-    // });
+    });
      
-    // useEffect(() => {
-    //     if (notification != undefined && notification != null && notification.length > 1 ) {
-    //         const a = notification.length - 1
-    //         let aa = '';
-    //             if(notification[a].to != undefined && notification[a].to != null){
-    //                 aa = notification[a].to
-    //             }
-    //         if (user.user_id === aa) {
-    //             localNotify.showNotification(
-    //                 1,
-    //                 'Your Bill is Rejected',
-    //                 '', // data
-    //                 '', // option
-    //             );
-    //         }
-    //     }
-    // }, [length])
+    useEffect(() => {
+        if (notification != undefined && notification != null && notification.length > 1 ) {
+            const a = notification.length - 1
+            let aa = '';
+                if(notification[a].to != undefined && notification[a].to != null){
+                    aa = notification[a].to
+                }
+            if (user.user_id === aa) {
+                localNotify.showNotification(
+                    1,
+                    'Your Bill is Rejected',
+                    '', // data
+                    '', // option
+                );
+            }
+        }
+    }, [length])
 
 
 
@@ -195,75 +195,75 @@ const Supervisor = props => {
         retrieveData();
     }, [])
 
-//     useEffect(() => {
-//         setTimeout(() => {
-//          if (user != undefined && user != null) {
-//              fetch('http://efundapp.herokuapp.com/api/notification', {
-//                  method: 'Get',
-//                  headers: {
-//                      Accept: 'application/json',
-//                      'Content-Type': 'application/json',
-//                      'X-Auth-Token': user.token,
-//                  }
-//              })
-//                  .then(response => response.json())
-//                  .then(json => {
-//                      setNotification(json.notification)
-//                  }
-//                  )
+    useEffect(() => {
+        setTimeout(() => {
+         if (user != undefined && user != null) {
+             fetch('http://efundapp.herokuapp.com/api/notification', {
+                 method: 'Get',
+                 headers: {
+                     Accept: 'application/json',
+                     'Content-Type': 'application/json',
+                     'X-Auth-Token': user.token,
+                 }
+             })
+                 .then(response => response.json())
+                 .then(json => {
+                     setNotification(json.notification)
+                 }
+                 )
  
-//                  .catch(error => {
-//                      console.error(error);
-//                  });
+                 .catch(error => {
+                     console.error(error);
+                 });
  
-//          }  
-//         }, 15000);
+         }  
+        }, 15000);
          
  
-//      });
+     });
 
-//     useEffect(() => {
-//            if(user != undefined && user != null){
-//             if (notification != undefined && notification != null && notification.length > 1) {
-//                 let a = notification.length - 1
-//                 let aa = '';
+    useEffect(() => {
+           if(user != undefined && user != null){
+            if (notification != undefined && notification != null && notification.length > 1) {
+                let a = notification.length - 1
+                let aa = '';
                
-//                 if(notification[a].to != undefined && notification[a].to != null){
+                if(notification[a].to != undefined && notification[a].to != null){
                
-//                     aa = notification[a].to
-//                 }
+                    aa = notification[a].to
+                }
                               
-//                 if (user.user_id === aa) {
-//                     localNotify.showNotification(
-//                                     1,
-//                                     'Bill is Added!',
-//                                     '', // data
-//                                     '', // option
-//                  );
-//                     // if(aa != undefined && aa != null){
-//                     //     if( notification[a].notification_status === 'RequestPayment'){
-//                     //         localNotify.showNotification(
-//                     //             1,
-//                     //             'Bill is Added!',
-//                     //             '', // data
-//                     //             '', // option
-//                     //         );
+                // if (user.user_id === aa) {
+                //     localNotify.showNotification(
+                //                     1,
+                //                     'Bill is Added!',
+                //                     '', // data
+                //                     '', // option
+                //  );
+                    if(aa != undefined && aa != null){
+                        if( notification[a].notification_status == 'RequestPayment'){
+                            localNotify.showNotification(
+                                1,
+                                'Bill is Added!',
+                                '', // data
+                                '', // option
+                            );
                              
-//                     //        }else{
-//                     //          localNotify.showNotification(
-//                     //             1,
-//                     //             'A New Claim Request!',
-//                     //             '', // data
-//                     //             '', // option
-//                     //          );
-//                     //        }
-//                     // }
+                           }else{
+                             localNotify.showNotification(
+                                1,
+                                'A New Claim Request Added!',
+                                '', // data
+                                '', // option
+                             );
+                           }
+                    }
                     
-//                 }
-//             }
-//   }
+                }
+            }
+  }
         
-//     }, [length])
+    , [length])
 
 
 
@@ -356,49 +356,49 @@ const Director = props => {
         retrieveData();
     }, [])
 
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //      if (user != undefined && user != null) {
-    //          fetch('http://efundapp.herokuapp.com/api/notification', {
-    //              method: 'Get',
-    //              headers: {
-    //                  Accept: 'application/json',
-    //                  'Content-Type': 'application/json',
-    //                  'X-Auth-Token': user.token,
-    //              }
-    //          })
-    //              .then(response => response.json())
-    //              .then(json => {
-    //                  setNotification(json.notification)
-    //              }
-    //              )
+    useEffect(() => {
+        setTimeout(() => {
+         if (user != undefined && user != null) {
+             fetch('http://efundapp.herokuapp.com/api/notification', {
+                 method: 'Get',
+                 headers: {
+                     Accept: 'application/json',
+                     'Content-Type': 'application/json',
+                     'X-Auth-Token': user.token,
+                 }
+             })
+                 .then(response => response.json())
+                 .then(json => {
+                     setNotification(json.notification)
+                 }
+                 )
  
-    //              .catch(error => {
-    //                  console.error(error);
-    //              });
+                 .catch(error => {
+                     console.error(error);
+                 });
  
-    //      }  
-    //     }, 15000);
+         }  
+        }, 15000);
          
  
-    //  });
-    // useEffect(() => {
-    //     if (notification != undefined && notification != null && notification.length > 1) {
-    //         const a = notification.length - 1
-    //         let aa = '';
-    //         if(notification[a].to != undefined && notification[a].to != null){
-    //             aa = notification[a].to
-    //         }
-    //         if (user.user_id === aa) {
-    //             localNotify.showNotification(
-    //                 1,
-    //                 'Bill is Approved',
-    //                 '', // data
-    //                 '', // option
-    //             );
-    //         }
-    //     }
-    // }, [length])
+     });
+    useEffect(() => {
+        if (notification != undefined && notification != null && notification.length > 1) {
+            const a = notification.length - 1
+            let aa = '';
+            if(notification[a].to != undefined && notification[a].to != null){
+                aa = notification[a].to
+            }
+            if (user.user_id === aa) {
+                localNotify.showNotification(
+                    1,
+                    'Bill is Approved',
+                    '', // data
+                    '', // option
+                );
+            }
+        }
+    }, [length])
     return (
 
         <View>

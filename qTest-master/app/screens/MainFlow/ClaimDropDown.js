@@ -54,21 +54,34 @@ export default class ClaimDropDown extends Component {
     // var name=this.state.User.name
     // console.log(name);
     //console.log("a",aa,"b",ab,"c",ac,"d",result,"pe",project,'cat',cat)
-    var data = {
-            "payment": result,
+    // var data = {
+    //         "payment": result,
+    //         "project": project,
+    //         "purchaser":name,
+    //         "details": [
+    //             {
+    //               "title": aa,
+    //               "quantity": ab,
+    //               "price": ac,
+    //               "total_price": result,
+    //               "category": cat,
+    //             }
+    //         ]
+    //     }
+     var data = {
+            // "payment": "50000",
             "project": project,
-            "purchaser":name,
             "details": [
                 {
-                  "title": aa,
-                  "quantity": ab,
-                  "price": ac,
-                  "total_price": result,
-                  "category": cat,
+                    "item": aa,
+                    "qty": ab,
+                    "price": ac,
+                    "pkr": result,
+                    "category": cat,
                 }
             ]
         }
-    if (data.details[0].title == '') {
+    if (data.details[0].item == '') {
       console.log('nt call a api');
     } else {
       fetch('http://efundapp.herokuapp.com/api/purchase/claimpayment', {
@@ -84,7 +97,7 @@ export default class ClaimDropDown extends Component {
         .then(json => {
           console.log(JSON.stringify(json));
           this.setState({ID: json.ID});
-          console.log('your id', this.state.ID);
+          console.log('your ids', this.state.ID);
         })
         .catch(error => {
           console.error(error);
@@ -337,7 +350,7 @@ export default class ClaimDropDown extends Component {
               <View style={{marginBottom: 2}} />
             </View>
           </View>
-          <View style={{flex: 1, marginHorizontal: 20, marginTop: 30}}>
+          <View style={{flex: 1, marginHorizontal: 20, marginTop: 10}}>
             <FlatList
               ref={this.list}
               style={{flexGrow: 0}}
@@ -405,24 +418,26 @@ export default class ClaimDropDown extends Component {
                 borderRadius: 10,
               }}
               onPress={() => {
+                let b = this.state.bills;
                 var aa = this.state.title;
                 var ab = this.state.qty;
                 var ac = this.state.price;
-                var ae = this.state.pkr;
-                let b = this.state.bills;
                 var result = ac * ab;
                 var cat = this.state.ctg;
+                this.claim_handlePress();
                 b.push({
-                  title: aa,
-                  quantity: ab,
+                  item: aa,
                   price: ac,
-                  total_price: result,
+                  qty: ab,
+                  pkr: result,
                   category: cat,
                 });
+                this.setState({bills: b});
                 this.props.navigation.navigate('ClaimPayment', {
-                  data: this.state.bills,
-                  data1: this.state.selectedValue,
-                  data_ctg: this.state.ctg,
+                    ID:this.state.ID,
+                    data: this.state.bills,
+                    data1: this.state.selectedValue,
+                    data_ctg: this.state.ctg,
                 });
               }}>
               <Text style={{fontSize: 20, alignSelf: 'center', color: 'white'}}>
