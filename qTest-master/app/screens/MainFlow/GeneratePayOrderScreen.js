@@ -57,7 +57,10 @@ class GeneratePayOrderScreen extends Component {
       });
       }
       if(this.state.change === true){
-        this.props.navigation.navigate("Home");
+        this.state.details = []
+        console.log(this.state.details)
+        //this.props.navigation.replace("GeneratePayOrder");
+        this.props.navigation.goBack();
     this.setState({change: false});
     }
     }

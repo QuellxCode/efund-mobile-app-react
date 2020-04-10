@@ -574,11 +574,7 @@ export default class Notification extends Component {
                         height: 50,
                         width: 300,
                       }}>
-<<<<<<< HEAD
-                      {/* Project id:{item.project}
-=======
                       Project id:{item.project}
->>>>>>> d60809541d8962352bf67b8bc9bdcb4b900071b2
                     </Text> */}
                     <Text
                       style={{
