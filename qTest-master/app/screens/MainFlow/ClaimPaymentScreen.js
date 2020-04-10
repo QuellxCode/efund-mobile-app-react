@@ -11,15 +11,15 @@ class ClaimPaymentScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      ID: this.props.navigation.state.params.ID,
       data_: this.props.navigation.state.params.data,
       Selected_Proj: this.props.navigation.state.params.data1,
-      data_ctg: this.props.navigation.state.params.data_ctg,
+      //data_ctg: this.props.navigation.state.params.data_ctg,
       chek: false,
       User: '',
       response_: '',
       Username: '',
       visible: false,
-      ID:''
     };
   }
   //var array2=[{"details[item_name]":"Aaa","details[item_quantity]":"5","details[item_price]":"55","details[total_price]":"55"}]
@@ -33,7 +33,7 @@ class ClaimPaymentScreen extends Component {
   // console.log(token)
 
   async componentDidMount() {
-       try {
+    try {
       const value = await AsyncStorage.getItem('User');
       const val = JSON.parse(value);
       if (val !== null) {
@@ -44,60 +44,26 @@ class ClaimPaymentScreen extends Component {
     } catch (error) {
       console.log('error getting data');
     }
-    this.api_claim()
-    this.picker_1()
+    console.log('userID:', this.state.ID);
+    this.picker_1();
   }
-  retrieveData = async () => {
- 
-  };
-  api_claim() {
-      console.log("api call")
-      console.log("arr",this.state.data_)
-    //var arrey = JSON.stringify(this.state.data_);
-    // for (var i = 1; i < arrey.length; i++) {
-    //   formdata.append(arrey[i].item_name);
-    //   formdata.append(arrey[i].item_quantity);
-    //   formdata.append(arrey[i].item_price);
-    //   formdata.append(arrey[i].total_price);
-    //   formdata.append(arrey[i].category);
-    // }
-    // formdata.append('purchaser', JSON.stringify(this.state.User.name));
-    // formdata.append('payment', '30000');
-    // formdata.append('payment_status', '0');
-    // formdata.append('project', JSON.stringify(this.state.Selected_Proj));
-    // formdata.append('file', {
-    //   uri: this.state.image,
-    //   type: 'image/jpeg',
-    //   name: 'image${moment()}',
-    // });
-    fetch('http://efundapp.herokuapp.com/api/purchase/claimpayment', {
-      method: 'Post',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'X-Auth-Token': this.state.User.token,
-      },
-         body:JSON.stringify({
-                "details": this.state.data_,
-                "project": this.state.Selected_Proj,
-                "purchaser":this.state.User.name,
-                //  "payment":'30000',
-                 "payment_status":'0',
-
-            })
-        })
-      .then(response => response.json())
-      .then(json => {
-        console.log(JSON.stringify(json));
-        this.setState({ID:json.ID})
-        console.log("isIDs",this.state.ID);
-        //this.setState({visible: true});
-        //'Content-Type': 'multipart/form-data',
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }
+  //var arrey = JSON.stringify(this.state.data_);
+  // for (var i = 1; i < arrey.length; i++) {
+  //   formdata.append(arrey[i].item_name);
+  //   formdata.append(arrey[i].item_quantity);
+  //   formdata.append(arrey[i].item_price);
+  //   formdata.append(arrey[i].total_price);
+  //   formdata.append(arrey[i].category);
+  // }
+  // formdata.append('purchaser', JSON.stringify(this.state.User.name));
+  // formdata.append('payment', '30000');
+  // formdata.append('payment_status', '0');
+  // formdata.append('project', JSON.stringify(this.state.Selected_Proj));
+  // formdata.append('file', {
+  //   uri: this.state.image,
+  //   type: 'image/jpeg',
+  //   name: 'image${moment()}',
+  // });
   displayuri() {
     if (this.state.chek == false) {
       return {uri: null};
@@ -105,51 +71,55 @@ class ClaimPaymentScreen extends Component {
       return {uri: this.state.image};
     }
   }
-   notification_send = async () => {
-        // console.log("data" + this.state.data_)
-        // console.log("datap" + this.state.Selected_Proj)
-        fetch('http://efundapp.herokuapp.com/api/purchase/send-notification', {
-            method: 'Post',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'X-Auth-Token': this.state.User.token,
-            },
-            body: JSON.stringify({
-                "details": this.state.data_
-                ,"project": this.state.Selected_Proj,
-                 "notification_status":"ClaimRequest",
-            })
-        })
-            .then(response => response.json())
-            .then(json => {
-                console.log(JSON.stringify(json))
-                this.setState({ response_: json.notificationID })
-                 this.setState({ visible: false })
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    }
-  submit(){
-    console.log("submit")
-  formdata.append('file', {
+  notification_send = async () => {
+    fetch('http://efundapp.herokuapp.com/api/purchase/send-notification', {
+      method: 'Post',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token': this.state.User.token,
+      },
+      body: JSON.stringify({
+        details: this.state.data_,
+        project: this.state.Selected_Proj,
+        notification_status: 'ClaimRequest',
+      }),
+    })
+      .then(response => response.json())
+      .then(json => {
+        console.log(JSON.stringify(json));
+        this.setState({response_: json.notificationID});
+        this.setState({visible: false});
+        this.props.navigation.replace('ClaimDropDown')
+        this.props.navigation.navigate('Home')
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+  submit() {
+    console.log('submit');
+    formdata.append('file', {
       uri: this.state.image,
       type: 'image/jpeg',
       name: 'image${moment()}',
     });
-     fetch('http://efundapp.herokuapp.com/api/purchase/claimimage/'+this.state.ID, {
-      method: 'Post',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-        'X-Auth-Token': this.state.User.token,
+    fetch(
+      'http://efundapp.herokuapp.com/api/purchase/claimimage/' + this.state.ID,
+      {
+        method: 'Post',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+          'X-Auth-Token': this.state.User.token,
+        },
+        body: formdata,
       },
-         body:formdata
-          }).then(response => response.json())
+    )
+      .then(response => response.json())
       .then(json => {
-        console.log("image",json);
-        this.setState({visible:true})
+        console.log('image', json);
+        this.setState({visible: true});
       })
       .catch(error => {
         console.error(error);
@@ -248,9 +218,8 @@ class ClaimPaymentScreen extends Component {
                   borderBottomRightRadius: 10,
                 }}
                 onPress={() => {
-                  this.notification_send()
-                }
-                }
+                  this.notification_send();
+                }}
               />
             </View>
           </View>
