@@ -10,7 +10,7 @@ import { notificationManager } from '../../NotificationManager';
 import Notification from "../../screens/MainFlow/Notification"
 import { withNavigation } from 'react-navigation';
 
-const Purchaser = ({navigation}) => {
+const Purchaser = props => {
     const data = [
         { id: 1, name: 'Purchaser', select: true },
         { id: 2, name: 'Manager', select: false },
@@ -38,7 +38,9 @@ const Purchaser = ({navigation}) => {
     };
     const onOpenNotification = notify => {
         console.log('[Notification] onOpenNotification', notify);
-        redirect();
+    //    <Notification/>
+        props.navigation.navigate('Notification')
+    // Alert.alert('bill jfdkjkj')
 
     };
     useEffect(() => {
@@ -62,47 +64,50 @@ const Purchaser = ({navigation}) => {
         retrieveData();
     }, [])
 
-    useEffect(() => {
-        if (user != undefined && user != null) {
-            fetch('http://efundapp.herokuapp.com/api/notification', {
-                method: 'Get',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    'X-Auth-Token': user.token,
-                }
-            })
-                .then(response => response.json())
-                .then(json => {
-                    setNotification(json.notification)
-                }
-                )
+    // useEffect(() => {
+    //    setTimeout(() => {
+    //     if (user != undefined && user != null) {
+    //         fetch('http://efundapp.herokuapp.com/api/notification', {
+    //             method: 'Get',
+    //             headers: {
+    //                 Accept: 'application/json',
+    //                 'Content-Type': 'application/json',
+    //                 'X-Auth-Token': user.token,
+    //             }
+    //         })
+    //             .then(response => response.json())
+    //             .then(json => {
+    //                 setNotification(json.notification)
+    //             }
+    //             )
 
-                .catch(error => {
-                    console.error(error);
-                });
+    //             .catch(error => {
+    //                 console.error(error);
+    //             });
 
-        }
+    //     }  
+    //    }, 15000);
+        
 
-    });
+    // });
      
-    useEffect(() => {
-        if (notification != undefined && notification != null && notification.length > 1 ) {
-            const a = notification.length - 1
-            let aa = '';
-                if(notification[a].to != undefined && notification[a].to != null){
-                    aa = notification[a].to
-                }
-            if (user.user_id === aa) {
-                localNotify.showNotification(
-                    1,
-                    'Your Bill is Rejected',
-                    '', // data
-                    '', // option
-                );
-            }
-        }
-    }, [length])
+    // useEffect(() => {
+    //     if (notification != undefined && notification != null && notification.length > 1 ) {
+    //         const a = notification.length - 1
+    //         let aa = '';
+    //             if(notification[a].to != undefined && notification[a].to != null){
+    //                 aa = notification[a].to
+    //             }
+    //         if (user.user_id === aa) {
+    //             localNotify.showNotification(
+    //                 1,
+    //                 'Your Bill is Rejected',
+    //                 '', // data
+    //                 '', // option
+    //             );
+    //         }
+    //     }
+    // }, [length])
 
 
 
@@ -138,7 +143,7 @@ const Purchaser = ({navigation}) => {
 
 
 
-const Supervisor = (props) => {
+const Supervisor = props => {
     const data = [
         { id: 1, name: 'Purchaser', select: true },
         { id: 2, name: 'Manager', select: false },
@@ -167,6 +172,7 @@ const Supervisor = (props) => {
         console.log('[Notification] onOpenNotification', notify);
         // Alert.alert('Bill is Added');
         props.navigation.navigate('Notification')
+        //  <Notification/>
     };
     useEffect(() => {
         localNotify = notificationManager;
@@ -189,51 +195,75 @@ const Supervisor = (props) => {
         retrieveData();
     }, [])
 
-    useEffect(() => {
-        if (user != undefined && user != null) {
-            fetch('http://efundapp.herokuapp.com/api/notification', {
-                method: 'Get',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    'X-Auth-Token': user.token,
-                }
-            })
-                .then(response => response.json())
-                .then(json => {
-                    setNotification(json.notification)
-                }
-                )
+//     useEffect(() => {
+//         setTimeout(() => {
+//          if (user != undefined && user != null) {
+//              fetch('http://efundapp.herokuapp.com/api/notification', {
+//                  method: 'Get',
+//                  headers: {
+//                      Accept: 'application/json',
+//                      'Content-Type': 'application/json',
+//                      'X-Auth-Token': user.token,
+//                  }
+//              })
+//                  .then(response => response.json())
+//                  .then(json => {
+//                      setNotification(json.notification)
+//                  }
+//                  )
+ 
+//                  .catch(error => {
+//                      console.error(error);
+//                  });
+ 
+//          }  
+//         }, 15000);
+         
+ 
+//      });
 
-                .catch(error => {
-                    console.error(error);
-                });
-
-        }
-
-
-    });
-
-    useEffect(() => {
-           if(user != undefined && user != null){
-            if (notification != undefined && notification != null && notification.length > 1) {
-                let a = notification.length - 1
-                let aa = '';
-                if(notification[a].to != undefined && notification[a].to != null){
-                    aa = notification[a].to
-                }
-                if (user.user_id === aa) {
-                    localNotify.showNotification(
-                        1,
-                        'Bill is Added!',
-                        '', // data
-                        '', // option
-                    );
-                }
-            }
-  }
+//     useEffect(() => {
+//            if(user != undefined && user != null){
+//             if (notification != undefined && notification != null && notification.length > 1) {
+//                 let a = notification.length - 1
+//                 let aa = '';
+               
+//                 if(notification[a].to != undefined && notification[a].to != null){
+               
+//                     aa = notification[a].to
+//                 }
+                              
+//                 if (user.user_id === aa) {
+//                     localNotify.showNotification(
+//                                     1,
+//                                     'Bill is Added!',
+//                                     '', // data
+//                                     '', // option
+//                  );
+//                     // if(aa != undefined && aa != null){
+//                     //     if( notification[a].notification_status === 'RequestPayment'){
+//                     //         localNotify.showNotification(
+//                     //             1,
+//                     //             'Bill is Added!',
+//                     //             '', // data
+//                     //             '', // option
+//                     //         );
+                             
+//                     //        }else{
+//                     //          localNotify.showNotification(
+//                     //             1,
+//                     //             'A New Claim Request!',
+//                     //             '', // data
+//                     //             '', // option
+//                     //          );
+//                     //        }
+//                     // }
+                    
+//                 }
+//             }
+//   }
         
-    }, [length])
+//     }, [length])
 
 
 
@@ -272,7 +302,7 @@ const Supervisor = (props) => {
 
 
 
-const Director = ({ navigation }) => {
+const Director = props => {
     const data = [
         { id: 1, name: 'Purchaser', select: true },
         { id: 2, name: 'Manager', select: false },
@@ -301,8 +331,9 @@ const Director = ({ navigation }) => {
     const onOpenNotification = notify => {
         console.log('[Notification] onOpenNotification', notify);
         // Alert.alert('Bill is Approved');
-        redirect();
-
+        // redirect();
+    //  <Notification/>
+    props.navigation.navigate('Notification')
     };
     useEffect(() => {
         localNotify = notificationManager;
@@ -325,48 +356,49 @@ const Director = ({ navigation }) => {
         retrieveData();
     }, [])
 
-    useEffect(() => {
-        if (user != undefined && user != null ) {
-            fetch('http://efundapp.herokuapp.com/api/notification', {
-                method: 'Get',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    'X-Auth-Token': user.token,
-                }
-            })
-                .then(response => response.json())
-                .then(json => {
-                    setNotification(json.notification)
-                }
-                )
-
-                .catch(error => {
-                    console.error(error);
-                });
-
-        }
-
-
-    });
-
-    useEffect(() => {
-        if (notification != undefined && notification != null && notification.length > 1) {
-            const a = notification.length - 1
-            let aa = '';
-            if(notification[a].to != undefined && notification[a].to != null){
-                aa = notification[a].to
-            }
-            if (user.user_id === aa) {
-                localNotify.showNotification(
-                    1,
-                    'Bill is Approved',
-                    '', // data
-                    '', // option
-                );
-            }
-        }
-    }, [length])
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //      if (user != undefined && user != null) {
+    //          fetch('http://efundapp.herokuapp.com/api/notification', {
+    //              method: 'Get',
+    //              headers: {
+    //                  Accept: 'application/json',
+    //                  'Content-Type': 'application/json',
+    //                  'X-Auth-Token': user.token,
+    //              }
+    //          })
+    //              .then(response => response.json())
+    //              .then(json => {
+    //                  setNotification(json.notification)
+    //              }
+    //              )
+ 
+    //              .catch(error => {
+    //                  console.error(error);
+    //              });
+ 
+    //      }  
+    //     }, 15000);
+         
+ 
+    //  });
+    // useEffect(() => {
+    //     if (notification != undefined && notification != null && notification.length > 1) {
+    //         const a = notification.length - 1
+    //         let aa = '';
+    //         if(notification[a].to != undefined && notification[a].to != null){
+    //             aa = notification[a].to
+    //         }
+    //         if (user.user_id === aa) {
+    //             localNotify.showNotification(
+    //                 1,
+    //                 'Bill is Approved',
+    //                 '', // data
+    //                 '', // option
+    //             );
+    //         }
+    //     }
+    // }, [length])
     return (
 
         <View>

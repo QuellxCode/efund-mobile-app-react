@@ -306,7 +306,7 @@ export default class Notification extends Component {
                         height: 50,
                         width: 300,
                       }}>
-                Status :  {item.notification_status}
+                  Status :  {item.notification_status}
                     </Text>
                     <Text
                       style={{
@@ -319,12 +319,9 @@ export default class Notification extends Component {
                          padding:10,
                          width: 300,
                       }}>
- {/* {this.state.item.message.map((element, index) => (
-   <Text> {element.item}</Text>
-        ));} */}
-        {item.message}
- </Text>
-                  </View>
+                    Detail: {item.message}
+                    </Text>
+                     </View>
                   <View
                     style={{flexDirection: 'row', justifyContent: 'center'}}>
                     <TouchableOpacity
@@ -553,7 +550,7 @@ export default class Notification extends Component {
                                             Purchaser Name:{item.purchaserName}
 
                     </Text>
-                    <Text
+                    {/* <Text
                       style={{
                         fontSize: 15,
                         marginLeft: '1%',
@@ -577,7 +574,11 @@ export default class Notification extends Component {
                         height: 50,
                         width: 300,
                       }}>
+<<<<<<< HEAD
+                      {/* Project id:{item.project}
+=======
                       Project id:{item.project}
+>>>>>>> d60809541d8962352bf67b8bc9bdcb4b900071b2
                     </Text> */}
                     <Text
                       style={{

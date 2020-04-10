@@ -81,7 +81,7 @@ class ClaimPaymentScreen extends Component {
                 "details": this.state.data_,
                 "project": this.state.Selected_Proj,
                 "purchaser":this.state.User.name,
-                 "payment":'30000',
+                //  "payment":'30000',
                  "payment_status":'0',
 
             })
