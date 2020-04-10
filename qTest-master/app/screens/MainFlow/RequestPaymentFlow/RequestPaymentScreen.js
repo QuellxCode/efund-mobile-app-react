@@ -38,7 +38,7 @@ class RequestPayment extends Component {
         this.list = React.createRef();
     }
     async componentDidMount() {
-          this.checkPermission();
+         // this.checkPermission();
         try {
             const value = await AsyncStorage.getItem('User');
             const val = JSON.parse(value)
@@ -53,7 +53,7 @@ class RequestPayment extends Component {
         }
         var thisdata = []
         var arr = []
-        fetch('http://efundapp.herokuapp.com/api/project/', {
+        fetch('http://efundapp.herokuapp.com/api/project', {
             method: 'Get',
             headers: {
                 'Accept': 'application/json',
@@ -64,6 +64,7 @@ class RequestPayment extends Component {
             .then(response => response.json())
             .then(json => {
                 this.setState({ data: json.project })
+                console.log("ffffff")
                 var v = this.state.data.length
                 for (let i = 0; i < v; i++) {
                     console.log('v:' + json.project[i].project_name)
@@ -77,7 +78,7 @@ class RequestPayment extends Component {
             })
 
             .catch(error => {
-                console.error(error);
+                console.log(error);
             });
 
     }
@@ -241,6 +242,7 @@ class RequestPayment extends Component {
                         }}
                         onValueChange={(itemValue, itemIndex) => {
                             this.setState({ selectedValue: itemValue })
+                            this.setState({selectedProject: itemValue});
                             console.log("selected:val" + this.state.selectedValue)
 
                         }}
