@@ -1,5 +1,5 @@
 import React from 'react';
-import { createSwitchNavigator, createAppContainer } from "react-navigation";
+import { createSwitchNavigator, createAppContainer, NavigationActions } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import LoginScreen from "../screens/Auth/LoginScreen";
 import { createDrawerNavigator } from "react-navigation-drawer";
