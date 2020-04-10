@@ -38,7 +38,7 @@ class RequestPayment extends Component {
         this.list = React.createRef();
     }
     async componentDidMount() {
-          this.checkPermission();
+        //   this.checkPermission();
         try {
             const value = await AsyncStorage.getItem('User');
             const val = JSON.parse(value)
@@ -414,30 +414,30 @@ class RequestPayment extends Component {
                     <TouchableOpacity
                         style={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10 }}
                         onPress={() => {
-                            if (this.state.check == true) {
-                                let b = this.state.bills;
-                                var aa = this.state.title;
-                                var ab = this.state.qty;
-                                var ac = this.state.price;
-                                var ae = this.state.pkr;
-                                var result = ac * ab
-                                b.push({ title: aa, price: ac, qty: ab, pkr: result });
-                                this.setState({ bills: b, check: false })
-                                this.handlePress();
-                                this.props.navigation.navigate('', {
-                                    bill: this.state.bills,
-                                    project: this.state.selectedValue
-                                })
-                                this.setState({bill: ''})
-                            }
-                            else {
+                            // if (this.state.check == true) {
+                            //     // let b = this.state.bills;
+                            //     // var aa = this.state.title;
+                            //     // var ab = this.state.qty;
+                            //     // var ac = this.state.price;
+                            //     // var ae = this.state.pkr;
+                            //     // var result = ac * ab
+                            //     // b.push({ title: aa, price: ac, qty: ab, pkr: result });
+                            //     //  this.setState({ bills: b, check: false })
+                            //      this.handlePress();
+                            //     this.props.navigation.navigate('', {
+                            //         bill: this.state.bills,
+                            //         project: this.state.selectedValue
+                            //     })
+                            //     this.setState({bill: ''})
+                            // }
+                            // else {
                                 this.props.navigation.navigate('GenerateBill', {
                                     bill: this.state.bills,
                                     project: this.state.selectedValue
                                 })
-                                this.setState({bill: ''})
+                               this.setState({bill: ''})
 
-                            }
+                            // }
                         }}
                     >
                         <Text
