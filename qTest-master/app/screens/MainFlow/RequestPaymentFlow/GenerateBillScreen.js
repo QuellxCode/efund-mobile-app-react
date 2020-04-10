@@ -88,6 +88,7 @@ class GenerateBillScreen extends Component {
         this.setState({
             visible: false
         })
+        this.props.navigation.replace('RequestPayment')
         this.props.navigation.navigate('Home')
     }
      handlePress = async () => {

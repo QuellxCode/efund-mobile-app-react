@@ -126,10 +126,10 @@ async requestPermission() {
             "project": project,
             "details": [
                 {
-                    "item_name": aa,
-                    "item_quantity": ab,
-                    "item_price": ac,
-                    "total_price": r
+                    "item": aa,
+                    "qty": ab,
+                    "price": ac,
+                    "pkr": r
                 }
             ]
         }
