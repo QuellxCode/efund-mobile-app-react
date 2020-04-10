@@ -39,11 +39,58 @@ export default class ClaimDropDown extends Component {
       orderss: [],
       response_: '',
       data: '',
-      pickerValue:''
+      pickerValue: '',
     };
     this.list = React.createRef();
   }
-
+  claim_handlePress = async () => {
+    console.log("claimcall")
+    var aa = this.state.title;
+    var ab = this.state.qty;
+    var ac = this.state.price;
+    var result = ac * ab;
+    var project = this.state.selectedValue;
+    var cat = this.state.ctg;
+    // var name=this.state.User.name
+    // console.log(name);
+    //console.log("a",aa,"b",ab,"c",ac,"d",result,"pe",project,'cat',cat)
+    var data = {
+            "payment": result,
+            "project": project,
+            "purchaser":name,
+            "details": [
+                {
+                  "title": aa,
+                  "quantity": ab,
+                  "price": ac,
+                  "total_price": result,
+                  "category": cat,
+                }
+            ]
+        }
+    if (data.details[0].title == '') {
+      console.log('nt call a api');
+    } else {
+      fetch('http://efundapp.herokuapp.com/api/purchase/claimpayment', {
+        method: 'Post',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'X-Auth-Token': this.state.User.token,
+        },
+        body: JSON.stringify(data),
+      })
+        .then(response => response.json())
+        .then(json => {
+          console.log(JSON.stringify(json));
+          this.setState({ID: json.ID});
+          console.log('your id', this.state.ID);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+  }
   async componentDidMount() {
     try {
       const value = await AsyncStorage.getItem('User');
@@ -78,7 +125,6 @@ export default class ClaimDropDown extends Component {
           });
         }
         this.setState({Category: thisdata});
-        //console.log("aaa" + JSON.stringify(this.state.Category));
       })
 
       .catch(error => {
@@ -98,7 +144,7 @@ export default class ClaimDropDown extends Component {
             marginHorizontal: 3,
           },
         ]}>
-        <Text style={{fontWeight: 'bold', fontSize: 16}}></Text>
+        <Text style={{fontWeight: 'bold', fontSize: 16}} />
         <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
           <TextInput
             style={{fontSize: 16}}
@@ -157,8 +203,8 @@ export default class ClaimDropDown extends Component {
     </KeyboardAvoidingView>
   );
   onValueChange(value) {
-    this.setState({selectedValue:value})
-    this.state.pickerValue=value;
+    this.setState({selectedValue: value});
+    this.state.pickerValue = value;
   }
   render() {
     const PickerItems = this.state.Category.map((element, index) => (
@@ -214,9 +260,7 @@ export default class ClaimDropDown extends Component {
                 console.log(
                   'selected:value of project' + this.state.selectedValue,
                 );
-              }
-              }
-              >
+              }}>
               {PickerItems}
             </Picker>
           </View>
@@ -232,7 +276,7 @@ export default class ClaimDropDown extends Component {
                 marginTop: 10,
               },
             ]}>
-            <Text style={{fontWeight: 'bold', fontSize: 16}}></Text>
+            <Text style={{fontWeight: 'bold', fontSize: 16}} />
             <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
               <TextInput
                 style={{fontSize: 16}}
@@ -306,35 +350,42 @@ export default class ClaimDropDown extends Component {
               renderItem={this.render_1}
             />
             <TouchableOpacity
-              style={{alignSelf: 'center'}}
+              style={{
+                alignSelf: 'center',
+                alignContent: 'center',
+                backgroundColor: '#FF3301',
+                height: 40,
+                width: 100,
+                borderRadius: 20,
+                justifyContent: 'center',
+              }}
               onPress={() => {
+                let b = this.state.bills;
                 var aa = this.state.title;
                 var ab = this.state.qty;
                 var ac = this.state.price;
                 var ae = this.state.pkr;
-                var project = this.state.selectedValue;
-                let b = this.state.bills;
                 var result = ac * ab;
                 var cat = this.state.ctg;
-                n = n + 1;
-                // b.push({  1..
-                //   number: n,
-                //   'details[item_name]': aa,
-                //   'details[item_quantity]': ab,
-                //   'details[item_price]': ac,
-                //   'details[total_price]': result,
-                //   'details[category]': cat,
-                // });
-                 b.push({
-                  title: aa,
-                  quantity: ab,
+                this.claim_handlePress();
+                b.push({
+                  item: aa,
                   price: ac,
-                  total_price: result,
+                  qty: ab,
+                  pkr: result,
                   category: cat,
                 });
                 this.setState({bills: b});
               }}>
-              <AntDesign name="pluscircle" size={20} color="#FF3301" />
+              <Text
+                style={{
+                  alignSelf: 'center',
+                  color: '#FFF',
+                  alignContent: 'center',
+                  justifyContent: 'center',
+                }}>
+                Add New
+              </Text>
             </TouchableOpacity>
           </View>
           <View
@@ -347,34 +398,37 @@ export default class ClaimDropDown extends Component {
               data1={this.state.selectedValue}
               data_ctg={this.state.ctg}
             /> */}
-             <TouchableOpacity
-                        style={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10 }}
-                        onPress={() => {
-                                 var aa = this.state.title;
-                                 var ab = this.state.qty;
-                                  var ac = this.state.price;
-                                  var ae = this.state.pkr;
-                                  let b = this.state.bills;
-                                  var result = ac * ab;
-                                  var cat = this.state.ctg;
-                                   b.push({
-                                         title: aa,
-                                         quantity: ab,
-                                         price: ac,
-                                         total_price: result,
-                                         category: cat,
-                                 });
-                                this.props.navigation.navigate('ClaimPayment', {
-                                    data: this.state.bills,
-                                    data1: this.state.selectedValue,
-                                    data_ctg:this.state.ctg,
-                                })
-                        }}
-                    >
-                        <Text
-                            style={{ fontSize: 20, alignSelf: "center", color: "white" }}
-                        >Add Image</Text>
-                    </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#FF3301',
+                padding: 14,
+                borderRadius: 10,
+              }}
+              onPress={() => {
+                var aa = this.state.title;
+                var ab = this.state.qty;
+                var ac = this.state.price;
+                var ae = this.state.pkr;
+                let b = this.state.bills;
+                var result = ac * ab;
+                var cat = this.state.ctg;
+                b.push({
+                  title: aa,
+                  quantity: ab,
+                  price: ac,
+                  total_price: result,
+                  category: cat,
+                });
+                this.props.navigation.navigate('ClaimPayment', {
+                  data: this.state.bills,
+                  data1: this.state.selectedValue,
+                  data_ctg: this.state.ctg,
+                });
+              }}>
+              <Text style={{fontSize: 20, alignSelf: 'center', color: 'white'}}>
+                Add Image
+              </Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </View>

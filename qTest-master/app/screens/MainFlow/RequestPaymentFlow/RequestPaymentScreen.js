@@ -39,7 +39,6 @@ class RequestPayment extends Component {
     }
     async componentDidMount() {
           this.checkPermission();
-
         try {
             const value = await AsyncStorage.getItem('User');
             const val = JSON.parse(value)
@@ -82,39 +81,39 @@ class RequestPayment extends Component {
             });
 
     }
-  //1
-async checkPermission() {
-  const enabled = await firebase.messaging().hasPermission();
-  if (enabled) {
-      this.getToken();
-  } else {
-      this.requestPermission();
-  }
-}
-  //3
-async getToken() {
-  let fcmToken = await AsyncStorage.getItem('fcmToken');
-  if (!fcmToken) {
-      fcmToken = await firebase.messaging().getToken();
-      if (fcmToken) {
-          // user has a device token
-          await AsyncStorage.setItem('fcmToken', fcmToken);
-          console.log("??",fcmToken)
-      }
-  }
-}
+//1
+// async checkPermission() {
+//   const enabled = await firebase.messaging().hasPermission();
+//   if (enabled) {
+//       this.getToken();
+//   } else {
+//       this.requestPermission();
+//   }
+// }
+//   //3
+// async getToken() {
+//   let fcmToken = await AsyncStorage.getItem('fcmToken');
+//   if (!fcmToken) {
+//       fcmToken = await firebase.messaging().getToken();
+//       if (fcmToken) {
+//           // user has a device token
+//           await AsyncStorage.setItem('fcmToken', fcmToken);
+//           console.log("??",fcmToken)
+//       }
+//   }
+// }
 
-  //2
-async requestPermission() {
-  try {
-      await firebase.messaging().requestPermission();
-      // User has authorised
-      this.getToken();
-  } catch (error) {
-      // User has rejected permissions
-      console.log('permission rejected');
-  }
-}
+//   //2
+// async requestPermission() {
+//   try {
+//       await firebase.messaging().requestPermission();
+//       // User has authorised
+//       this.getToken();
+//   } catch (error) {
+//       // User has rejected permissions
+//       console.log('permission rejected');
+//   }
+// }
     handlePress = async () => {
         var aa = this.state.title;
         var ab = this.state.qty;
@@ -122,7 +121,7 @@ async requestPermission() {
         var project = this.state.selectedValue;
         var r = this.state.price * this.state.qty
         var data = {
-            "payment": "50000",
+            "payment": r,
             "project": project,
             "details": [
                 {
@@ -215,7 +214,7 @@ async requestPermission() {
         const PickerItems = this.state.Category.map((element, index) => (
             <Picker.Item
                 key={"pick" + element.project_name}
-                label={"" + "    " + element.project_name}
+                label={"" + "  " + element.project_name}
                 value={element.project_id}
                 prompt='Options'
             />
