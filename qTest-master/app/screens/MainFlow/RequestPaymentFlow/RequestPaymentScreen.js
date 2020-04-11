@@ -38,7 +38,6 @@ class RequestPayment extends Component {
         this.list = React.createRef();
     }
     async componentDidMount() {
-          this.checkPermission();
         try {
             const value = await AsyncStorage.getItem('User');
             const val = JSON.parse(value)
@@ -53,7 +52,7 @@ class RequestPayment extends Component {
         }
         var thisdata = []
         var arr = []
-        fetch('http://efundapp.herokuapp.com/api/project/', {
+        fetch('http://efundapp.herokuapp.com/api/project', {
             method: 'Get',
             headers: {
                 'Accept': 'application/json',
@@ -73,7 +72,7 @@ class RequestPayment extends Component {
                     });
                 }
                 this.setState({ Category: thisdata })
-                //console.log("aaa" + JSON.stringify(this.state.Category));
+                console.log("aaa" + JSON.stringify(this.state.Category));
             })
 
             .catch(error => {
@@ -81,39 +80,7 @@ class RequestPayment extends Component {
             });
 
     }
-//1
-// async checkPermission() {
-//   const enabled = await firebase.messaging().hasPermission();
-//   if (enabled) {
-//       this.getToken();
-//   } else {
-//       this.requestPermission();
-//   }
-// }
-//   //3
-// async getToken() {
-//   let fcmToken = await AsyncStorage.getItem('fcmToken');
-//   if (!fcmToken) {
-//       fcmToken = await firebase.messaging().getToken();
-//       if (fcmToken) {
-//           // user has a device token
-//           await AsyncStorage.setItem('fcmToken', fcmToken);
-//           console.log("??",fcmToken)
-//       }
-//   }
-// }
 
-//   //2
-// async requestPermission() {
-//   try {
-//       await firebase.messaging().requestPermission();
-//       // User has authorised
-//       this.getToken();
-//   } catch (error) {
-//       // User has rejected permissions
-//       console.log('permission rejected');
-//   }
-// }
     handlePress = async () => {
         var aa = this.state.title;
         var ab = this.state.qty;
@@ -389,7 +356,7 @@ class RequestPayment extends Component {
                                 this.setState({val: result})
                                 this.handlePress();
                                 n = n + 1
-                                b.push({ number: n, item: aa, price: ac, qty: ab, pkr: result });
+                                b.push({ item: aa, price: ac, qty: ab, pkr: result });
                                 this.setState({ bills: b, title:'', qty: '', price: '' })
                                 console.log("arr from button", this.state.bills)
                                 

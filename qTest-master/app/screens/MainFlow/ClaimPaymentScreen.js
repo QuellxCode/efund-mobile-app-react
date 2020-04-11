@@ -87,7 +87,7 @@ class ClaimPaymentScreen extends Component {
     })
       .then(response => response.json())
       .then(json => {
-        console.log(JSON.stringify(json));
+        console.log(JSON.stringify(json));      
         this.setState({response_: json.notificationID});
         this.setState({visible: false});
         this.props.navigation.replace('ClaimDropDown')

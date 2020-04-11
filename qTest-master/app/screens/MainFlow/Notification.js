@@ -19,7 +19,9 @@ import firebase from 'react-native-firebase';
 import {notificationManager} from '../../screens/MainFlow/RequestPaymentFlow/RemotePushController';
 const {width, height} = Dimensions.get('window');
 const message = new firebase.messaging.RemoteMessage()
-  .setMessageId('cBDaDPlGeNzfHel7VRUxk2:APA91bG0HnCCDddqaZIx06Fu5IpVIiDhVviZyWl9EFX-WWL3yjaT6SHKQei1Okcg12XFnqhkYD7fwWyTHsySAIheFZWoHpIHvmusA0ZabLcefhxjZZXFkAF7z05hEh_5D4ch6f0jhza9')
+  .setMessageId(
+    'cBDaDPlGeNzfHel7VRUxk2:APA91bG0HnCCDddqaZIx06Fu5IpVIiDhVviZyWl9EFX-WWL3yjaT6SHKQei1Okcg12XFnqhkYD7fwWyTHsySAIheFZWoHpIHvmusA0ZabLcefhxjZZXFkAF7z05hEh_5D4ch6f0jhza9',
+  )
   .setTo('senderId@gcm.googleapis.com')
   .setData({
     key1: 'value1',
@@ -66,7 +68,7 @@ export default class Notification extends Component {
       notification_id: '',
       token: '',
       arraySize: '',
-      Isvisible:false,
+      Isvisible: false,
     };
     this.list = React.createRef();
   }
@@ -123,27 +125,25 @@ export default class Notification extends Component {
     })
       .then(response => response.json())
       .then(json => {
-        this.setState({data: json.notification});
-        console.log('data102', JSON.stringify(this.state.data));
-        // const a = this.state.data.length - 1;
-        // console.log('datalen', this.state.data.length);
-        // console.log('a', a);
-        // console.log('a1', 'h');
-        //console.log('last string', this.state.data[a].to);
-        // const aa = this.state.data[a].to;
-        // if (this.state.data != undefined && this.state.data != null) {
-        //   console.log('last string aa', aa);
-        //   if (this.state.User.user_id === aa) {
-        //     //localNotify.showNotification(1, 'Request Payment Rejected');
-        //   }
-        // }
+        this.setState({
+          data: json.notification,
+        });
+        console.log("aabe",json.notification[3].message[0].pkr)
+        var v = this.state.data.length;
+        for (let i = 0; i < v; i++) {
+          // arr.push(json.notification[i].message,json.notification[i].project
+         // arry.push(json.notification[i].project);
+          arr.push(json.notification[i].message);
+        }
+        this.setState({dada:arr})
+        // console.log('dada arr', JSON.stringify(arr));
       })
       .catch(error => {
         console.error(error);
       });
   }
   director_accept(item) {
-    console.log("dddd",item)
+    console.log('dddd', item);
     fetch('http://efundapp.herokuapp.com/api/purchase/director-accept', {
       method: 'Post',
       headers: {
@@ -160,7 +160,7 @@ export default class Notification extends Component {
     })
       .then(response => response.json())
       .then(json => {
-        this.setState({Isvisible:true})
+        this.setState({Isvisible: true});
       })
       .catch(error => {
         console.error(error);
@@ -178,16 +178,12 @@ export default class Notification extends Component {
       .then(response => response.json())
       .then(json => {
         this.setState({token: json.mobileToken});
-        //this.push_notification(this.state.token);
       })
       .catch(error => {
         console.error(error);
       });
   }
   sup_accept(item) {
-    // console.log("item::::"+item)
-    // console.log("itemssss::::"+this.state.project)
-    // console.log("accepted_item" + item)
     fetch('http://efundapp.herokuapp.com/api/purchase/accept-notification', {
       method: 'Post',
       headers: {
@@ -204,13 +200,11 @@ export default class Notification extends Component {
     })
       .then(response => response.json())
       .then(json => {
-        //console.log("responseSSSS:" + JSON.stringify(json))
         this.setState({
           notification_id: json.notificationID,
           Requestvisible: true,
         });
         this.director_notification(this.state.notification_id);
-        // console.log("new + +id"+JSON.stringify(json))
       })
       .catch(error => {
         console.error(error);
@@ -268,60 +262,62 @@ export default class Notification extends Component {
               data={this.state.data}
               ItemSeparatorComponent={this.FlatListItemSeparator}
               keyExtractor={(a, b) => b.toString()}
-              renderItem={({item, index}) => (
+              renderItem={({item, index,}) => (
                 <View style={{backgroundColor: 'white', padding: 10}}>
                   <View style={{flexDirection: 'column'}}>
                     <Text
                       style={{
                         fontSize: 20,
                         color: 'white',
-                        backgroundColor:'#FF3301',
+                        backgroundColor: '#FF3301',
                         marginLeft: '1%',
                         height: 50,
                         width: 300,
-                        padding:10,
+                        padding: 10,
+                      }}>
+                      {/* Purchaser Name:{item.purchaserName} */}
+                      {index+1}
+                    </Text>
+                      <Text
+                      style={{
+                        fontSize: 20,
+                        color: 'white',
+                        backgroundColor: '#FF3301',
+                        marginLeft: '1%',
+                        height: 50,
+                        marginTop:1,
+                        width: 300,
+                        padding: 10,
                       }}>
                       Purchaser Name:{item.purchaserName}
                     </Text>
-                    {/* <Text
-                      style={{
-                        fontSize: 20,
-                         color: 'white',
-                        backgroundColor:'#FF3301',
-                        marginLeft: '1%',
-                        marginTop:1,
-                        height: 50,
-                        width: 300,
-                      }}>
-                      Purchaser Id :{item.purchaserID}
-                    </Text> */}
                     <Text
                       style={{
                         fontSize: 20,
-                         color: 'white',
-                        marginTop:1,
-                         padding:10,
-                        backgroundColor:'#FF3301',
+                        color: 'white',
+                        marginTop: 1,
+                        padding: 10,
+                        backgroundColor: '#FF3301',
                         marginLeft: '1%',
                         height: 50,
                         width: 300,
                       }}>
-                  Status :  {item.notification_status}
+                      Status : {item.notification_status}
                     </Text>
                     <Text
                       style={{
                         fontSize: 15,
-                         color: 'white',
-                        backgroundColor:'#FF3301',
-                        marginTop:1,
+                        color: 'white',
+                        backgroundColor: '#FF3301',
+                        marginTop: 1,
                         marginLeft: '1%',
                         height: 120,
-                         padding:10,
-                         width: 300,
+                        padding: 10,
+                        width: 300,
                       }}>
-                    Detail: {item.message}
+                      Detail: {item.message}
                     </Text>
-                     </View>
+                  </View>
                   <View
                     style={{flexDirection: 'row', justifyContent: 'center'}}>
                     <TouchableOpacity
@@ -378,6 +374,7 @@ export default class Notification extends Component {
                       </Text>
                     </TouchableOpacity>
                   </View>
+
                   <Modal
                     animationType="fade"
                     transparent={true}
@@ -495,8 +492,8 @@ export default class Notification extends Component {
                         fontSize: 30,
                         marginLeft: '1%',
                         color: 'white',
-                        backgroundColor:'#FF3301',
-                        padding:10,
+                        backgroundColor: '#FF3301',
+                        padding: 10,
                         height: 60,
                         width: 300,
                       }}>
@@ -506,9 +503,9 @@ export default class Notification extends Component {
                       style={{
                         fontSize: 20,
                         color: 'white',
-                        backgroundColor:'#FF3301',
-                        marginTop:1,
-                        padding:10,
+                        backgroundColor: '#FF3301',
+                        marginTop: 1,
+                        padding: 10,
                         marginLeft: '1%',
                         height: 100,
                         width: 300,
@@ -540,54 +537,27 @@ export default class Notification extends Component {
                     <Text
                       style={{
                         fontSize: 15,
-                         color: 'white',
-                        backgroundColor:'#FF3301',
-                        marginLeft: '1%',
-                        padding:10,
-                        height: 50,
-                        width: 300,
-                      }}>
-                                            Purchaser Name:{item.purchaserName}
-
-                    </Text>
-                    {/* <Text
-                      style={{
-                        fontSize: 15,
-                        marginLeft: '1%',
                         color: 'white',
-                        padding:10,
-                         marginTop:2,
-                        backgroundColor:'#FF3301',
-                        height: 70,
-                        width: 300,
-                      }}>
-                      Purchaser Id:{item.purchaserID}
-                    </Text>
-                    {/* <Text
-                      style={{
-                        fontSize: 15,
-                        padding:10,
-                         marginTop:2,
-                         color: 'white',
-                        backgroundColor:'#FF3301',
+                        backgroundColor: '#FF3301',
                         marginLeft: '1%',
+                        padding: 10,
                         height: 50,
                         width: 300,
                       }}>
-                      Project id:{item.project}
-                    </Text> */}
+                      Purchaser Name:{item.purchaserName}
+                    </Text>
                     <Text
                       style={{
                         fontSize: 15,
-                         color: 'white',
-                         padding:10,
-                         marginTop:2,
-                        backgroundColor:'#FF3301',
+                        color: 'white',
+                        padding: 10,
+                        marginTop: 2,
+                        backgroundColor: '#FF3301',
                         marginLeft: '1%',
                         height: 150,
                         width: 300,
                       }}>
-                     Request: {item.message}
+                      Request: {item.message}
                     </Text>
                   </View>
                   <View
@@ -735,7 +705,7 @@ export default class Notification extends Component {
                       </View>
                     </View>
                   </Modal>
-                      <Modal
+                  <Modal
                     animationType="fade"
                     transparent={true}
                     visible={this.state.Isvisible}>
@@ -756,7 +726,7 @@ export default class Notification extends Component {
                         <View style={{alignSelf: 'center', padding: 20}}>
                           <FontAwesome name="send" color="#FF3301" size={50} />
                         </View>
-                               <Text
+                        <Text
                           style={{
                             alignSelf: 'center',
                             fontSize: 16,
@@ -775,7 +745,7 @@ export default class Notification extends Component {
                             borderBottomLeftRadius: 10,
                             borderBottomRightRadius: 10,
                           }}
-                          onPress={() => this.setState({Isvisible:false})}
+                          onPress={() => this.setState({Isvisible: false})}
                         />
                       </View>
                     </View>
@@ -798,5 +768,19 @@ export default class Notification extends Component {
 //     arry.push(json.notification[i].project)
 //     arr.push(json.notification[i].message)
 // }
+
+/////////////////////////////rehman////////////////////////////////
 // this.setState({ dada: arr })
 // this.setState({ project_data: arry})
+// const a = this.state.data.length - 1;
+// console.log('datalen', this.state.data.length);
+// console.log('a', a);
+// console.log('a1', 'h');
+//console.log('last string', this.state.data[a].to);
+// const aa = this.state.data[a].to;
+// if (this.state.data != undefined && this.state.data != null) {
+//   console.log('last string aa', aa);
+//   if (this.state.User.user_id === aa) {
+//     //localNotify.showNotification(1, 'Request Payment Rejected');
+//   }
+// }
