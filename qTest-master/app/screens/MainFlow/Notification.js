@@ -249,7 +249,18 @@ export default class Notification extends Component {
       });
     this.setState({visible: false});
   }
+
+  txt(item) {
+    var str = item;
+ str = str.replace(/[^a-zA-Z0-9]/g, ' ');
+ str = str.replace(/  +/g, ' ') 
+ str = str.replace("/ ",":")
+return str
+  }  
+
+
   render() {
+   
     if (this.state.User.roles == 'Supervisor') {
       return (
         <View style={{flex: 1}}>
@@ -315,7 +326,7 @@ export default class Notification extends Component {
                         padding: 10,
                         width: 300,
                       }}>
-                      Detail: {item.message}
+                    Detail: {this.txt(item.message)}
                     </Text>
                   </View>
                   <View

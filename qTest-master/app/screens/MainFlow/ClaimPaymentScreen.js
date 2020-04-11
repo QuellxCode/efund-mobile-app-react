@@ -160,7 +160,7 @@ class ClaimPaymentScreen extends Component {
             onPress={() => this.picker_1()}
           /> */}
           <Image
-            style={{width: '100%', height: '65%'}}
+            style={{width: '40%', height: '40%'}}
             source={this.displayuri()}
           />
           <Button

@@ -206,12 +206,12 @@ export default class ClaimDropDown extends Component {
           </View>
           <View style={{marginBottom: 2}} />
         </View>
-        <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
+        {/* <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
           <Text style={{fontSize: 16}}>
             {this.state.price * this.state.qty}
           </Text>
           <View style={{marginBottom: 2}} />
-        </View>
+        </View> */}
       </View>
     </KeyboardAvoidingView>
   );
@@ -343,12 +343,12 @@ export default class ClaimDropDown extends Component {
               <View style={{marginBottom: 2}} />
             </View>
 
-            <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
+            {/* <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
               <Text style={{fontSize: 16}}>
                 {this.state.price * this.state.qty}
               </Text>
               <View style={{marginBottom: 2}} />
-            </View>
+            </View> */}
           </View>
           <View style={{flex: 1, marginHorizontal: 20, marginTop: 10}}>
             <FlatList
