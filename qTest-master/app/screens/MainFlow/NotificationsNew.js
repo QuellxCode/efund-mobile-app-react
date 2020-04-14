@@ -15,47 +15,208 @@ class NotificationsNewScreen extends Component {
             selectedRejected: false,
             User: [],
             all: [
-                { date: 'Jan 01, 2020', bNumber: '01', id: 'John Doe', status: true },
-                { date: 'Jan 01, 2020', bNumber: '02', id: 'John Doe', status: false },
-                { date: 'Jan 01, 2020', bNumber: '03', id: 'John Doe', status: false },
-                { date: 'Jan 01, 2020', bNumber: '04', id: 'John Doe', status: true },
-                { date: 'Jan 01, 2020', bNumber: '05', id: 'John Doe', status: false },
-                { date: 'Jan 01, 2020', bNumber: '06', id: 'John Doe', status: false },
-                { date: 'Jan 01, 2020', bNumber: '06', id: 'John Doe', status: true },
-                { date: 'Jan 01, 2020', bNumber: '06', id: 'John Doe', status: false },
-                { date: 'Jan 01, 2020', bNumber: '06', id: 'John Doe', status: false},
+                // { date: 'Jan 01, 2020', bNumber: '01', id: 'John Doe', status: true },
+                // { date: 'Jan 01, 2020', bNumber: '02', id: 'John Doe', status: false },
+                // { date: 'Jan 01, 2020', bNumber: '03', id: 'John Doe', status: false },
+                // { date: 'Jan 01, 2020', bNumber: '04', id: 'John Doe', status: true },
+                // { date: 'Jan 01, 2020', bNumber: '05', id: 'John Doe', status: false },
+                // { date: 'Jan 01, 2020', bNumber: '06', id: 'John Doe', status: false },
+                // { date: 'Jan 01, 2020', bNumber: '06', id: 'John Doe', status: true },
+                // { date: 'Jan 01, 2020', bNumber: '06', id: 'John Doe', status: false },
+                // { date: 'Jan 01, 2020', bNumber: '06', id: 'John Doe', status: false},
             ],
             approved: [
-                { date: 'Jan 01, 2020', bNumber: '01', id: 'John Doe', status: true },
-                { date: 'Jan 01, 2020', bNumber: '02', id: 'John Doe', status: true }
+                // { date: 'Jan 01, 2020', bNumber: '01', id: 'John Doe', status: 1 },
+                // { date: 'Jan 01, 2020', bNumber: '02', id: 'John Doe', status: 1 }
             ],
             rejected: [
-                { date: 'Jan 01, 2020', bNumber: '01', id: 'John Doe', status: false },
-                { date: 'Jan 01, 2020', bNumber: '02', id: 'John Doe', status: false },
-                { date: 'Jan 01, 2020', bNumber: '03', id: 'John Doe', status: false },
-                { date: 'Jan 01, 2020', bNumber: '04', id: 'John Doe', status: false }
+                // { date: 'Jan 01, 2020', bNumber: '01', id: 'John Doe', status: 0 },
+                // { date: 'Jan 01, 2020', bNumber: '02', id: 'John Doe', status: 0 },
+                // { date: 'Jan 01, 2020', bNumber: '03', id: 'John Doe', status: 0 },
+                // { date: 'Jan 01, 2020', bNumber: '04', id: 'John Doe', status: 0 }
             ]
         };
     }
 
-    componentDidMount(){
-        this.checkStorge();
-      }
-    
-      checkStorge = async () => {
-          try {
-            const value = await AsyncStorage.getItem('User');
-            const val = JSON.parse(value)
-            if (value !== null) {
-              this.setState({
-                  User: val,
-              })
-            //   this._getDaily();
-            }
-          } catch (error) {
-            console.log('error getting data')
+    async componentDidMount() {
+        try {
+          const value = await AsyncStorage.getItem('User');
+          const val = JSON.parse(value);
+          if (val !== null) {
+            this.setState({
+              User: val,
+            });
+            console.log('userIdii', this.state.User.user_id);
+            this.get_notification();
+            // console.log("userId",this.state.User.user_id)
           }
-        };
+        } catch (error) {
+          console.log('error getting data');
+        }
+    }
+
+        get_notification() {
+            var arr = [];
+            var arry = [];
+            fetch('http://efundapp.herokuapp.com/api/notification', {
+              method: 'Get',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-Auth-Token': this.state.User.token,
+              },
+            })
+              .then(response => response.json())
+              .then(json => {
+                this.setState({
+                  all: json.notification,
+                });
+                console.log("aabe",json.notification[3].message[0].pkr)
+                console.log("dasdatsd", this.state.all)
+                console.log("dasdatsd", this.state.all.length)
+                var v = this.state.all.length;
+                for (let i = 0; i < v; i++) {
+                  // arr.push(json.notification[i].message,json.notification[i].project
+                 // arry.push(json.notification[i].project);
+                  arr.push(json.notification[i].message);
+                }
+                this.setState({dada:arr})
+                // console.log('dada arr', JSON.stringify(arr));
+                this.dataCheck();
+              })
+              .catch(error => {
+                console.error(error);
+              });
+          }
+
+          dataCheck(){
+            for(let i=0; i<this.state.all.length; i++){
+                if(this.state.all[i].status == 0){
+                    this.state.rejected.push(this.state.all[i])
+                }
+                else{
+                    this.state.approved.push(this.state.all[i])
+                }
+            }
+            console.log("rejs", this.state.rejected)
+            console.log("asasd", this.state.approved)
+          }
+
+          director_accept(item) {
+            console.log('dddd', item);
+            fetch('http://efundapp.herokuapp.com/api/purchase/director-accept', {
+              method: 'Post',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-Auth-Token': this.state.User.token,
+              },
+              body: JSON.stringify({
+                details: item,
+                project: this.state.project,
+                purchaserName: this.state.purchaserName,
+                purchaserID: this.state.purchaserID,
+              }),
+            })
+              .then(response => response.json())
+              .then(json => {
+                this.setState({Isvisible: true});
+              })
+              .catch(error => {
+                console.error(error);
+              });
+          }
+          director_notification(id) {
+            fetch('http://efundapp.herokuapp.com/api/notification/' + id, {
+              method: 'GET',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-Auth-Token': this.state.User.token,
+              },
+            })
+              .then(response => response.json())
+              .then(json => {
+                this.setState({token: json.mobileToken});
+              })
+              .catch(error => {
+                console.error(error);
+              });
+          }
+          sup_accept(item) {
+            fetch('http://efundapp.herokuapp.com/api/purchase/accept-notification', {
+              method: 'Post',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-Auth-Token': this.state.User.token,
+              },
+              body: JSON.stringify({
+                details: item,
+                project: this.state.project,
+                purchaserName: this.state.purchaserName,
+                purchaserID: this.state.purchaserID,
+              }),
+            })
+              .then(response => response.json())
+              .then(json => {
+                this.setState({
+                  notification_id: json.notificationID,
+                  Requestvisible: true,
+                });
+                this.director_notification(this.state.notification_id);
+              })
+              .catch(error => {
+                console.error(error);
+              });
+          }
+          FlatListItemSeparator = () => {
+            return (
+              <View
+                style={{
+                  height: 1,
+                  width: '100%',
+                  backgroundColor: '#000',
+                }}
+              />
+            );
+          };
+          reject_ok() {
+            // console.log("item::::"+this.state.items)
+            // console.log("itemssss::::"+this.state.project)
+            // console.log("msg"+this.state.Msg)
+            fetch('http://efundapp.herokuapp.com/api/purchase/reject-notification', {
+              method: 'Post',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-Auth-Token': this.state.User.token,
+              },
+              body: JSON.stringify({
+                details: this.state.items,
+                project: this.state.project,
+                message: this.state.Msg,
+                purchaserName: this.state.purchaserName,
+                purchaserID: this.state.purchaserID,
+              }),
+            })
+              .then(response => response.json())
+              .then(json => {
+                console.log('response:' + JSON.stringify(json));
+              })
+              .catch(error => {
+                console.error(error);
+              });
+            this.setState({visible: false});
+          }
+        
+          txt(item) {
+            var str = item;
+         str = str.replace(/[^a-zA-Z0-9]/g, ' ');
+         str = str.replace(/  +/g, ' ') 
+         str = str.replace("/ ",":")
+        return str
+          }  
 
     render() {
         return (
@@ -111,7 +272,7 @@ class NotificationsNewScreen extends Component {
                         renderItem={({ item, index }) => {
                             return (
                                 <View style={{ marginBottom: this.state.selectedAll ? (index === this.state.all.length - 1 ? 20 : 0) : (this.state.selectedApproved ? (index === this.state.approved.length - 1 ? 20 : 0) : (index === this.state.rejected.length - 1 ? 20 : 0)) }}>
-                                    <View style={[MainFlowStyles.cardStyle, { marginBottom: 20, marginHorizontal: 5, marginTop: index === 0 ? 20 : 0, flex: 1, borderColor: item.status ? 'green' : 'red', borderWidth:2 }]}>
+                                    <View style={[MainFlowStyles.cardStyle, { marginBottom: 20, marginHorizontal: 5, marginTop: index === 0 ? 20 : 0, flex: 1, borderColor: item.status == 0 ? 'red' : 'green', borderWidth:2 }]}>
                                         <View style={{ padding: 10 }}>
                                             <View style={{ flexDirection: 'row' }}>
                                                 <View style={{ flexDirection: 'row', width: (width - 50) / 3 }}>
@@ -126,10 +287,10 @@ class NotificationsNewScreen extends Component {
                                                 </View> */}
 
                                                 <View style={{ width: (width - 40) / 2, alignItems: 'flex-end', marginLeft:'10%' }}>
-                                                    <Text style={{ fontSize: 16 }}>Refrence ID: {item.id}</Text>
+                                                    <Text style={{ fontSize: 16 }}>Refrence ID: {item.purchaserName}</Text>
                                                 </View>
                                             </View>
-                                            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Bill {item.bNumber}</Text>
+                                            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Bill {index + 1}</Text>
                                         </View>
                                         {/* <View style={{ borderBottomColor: '#FF3301', borderBottomWidth: 1 }} />
                                         <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center' }}>

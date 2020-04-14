@@ -139,10 +139,10 @@ class GenerateBillScreen extends Component {
                                 <Text>Item Name</Text>
                             </View>
                             <View style={MainFlowStyles.billHeadingStyle}>
-                                <Text>Price</Text>
+                                <Text>Quantity</Text>
                             </View>
                             <View style={MainFlowStyles.billHeadingStyle}>
-                                <Text>Quantity</Text>
+                                <Text>Rate</Text>
                             </View>
                             <View style={MainFlowStyles.billHeadingStyle}>
                                 <Text>Total</Text>
@@ -160,10 +160,10 @@ class GenerateBillScreen extends Component {
                                             <Text>{item.item}</Text>
                                         </View>
                                         <View style={MainFlowStyles.billHeadingStyle}>
-                                            <Text>{item.price}</Text>
+                                            <Text>{item.qty}</Text>
                                         </View>
                                         <View style={MainFlowStyles.billHeadingStyle}>
-                                            <Text>{item.qty}</Text>
+                                            <Text>{item.price}</Text>
                                         </View>
                                         <View style={MainFlowStyles.billHeadingStyle}>
                                             <Text>{item.qty * item.price}</Text>

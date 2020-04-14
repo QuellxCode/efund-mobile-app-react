@@ -443,7 +443,7 @@ class RequestPayment extends Component {
                     >
                         
                         <Text
-                            style={{ fontSize: 20, alignSelf: "center", color: "white" }}
+                            style={{ alignSelf: 'center', color: '#FFF', alignContent: 'center', justifyContent: "center" }}
                         >Generate Bill</Text>
                     </TouchableOpacity>
                 </View>
