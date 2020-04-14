@@ -219,6 +219,7 @@ class NotificationsNewScreen extends Component {
           }  
 
     render() {
+        if (this.state.User.roles == 'Supervisor') {
         return (
             <View>
                 <Header />
@@ -307,6 +308,188 @@ class NotificationsNewScreen extends Component {
                 </View>
             </View>
         );
+                    }
+                    else if (this.state.User.roles == 'Purchaser') {
+                        return (
+                            <View>
+                                <Header />
+                                <View style={{ margin: 10 }}>
+                                    <Text style={MainFlowStyles.headerTextStyle}>Notifications</Text>
+                
+                                    <TouchableOpacity style={{ flexDirection: 'row', marginBottom: 10 }}>
+                                        <TouchableOpacity
+                                            style={MainFlowStyles.tabStyles}
+                                            onPress={() => this.setState({ selectedAll: true, selectedApproved: false, selectedRejected: false })}
+                                        >
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <View style={[MainFlowStyles.tabTextContainerStyle, { borderBottomColor: this.state.selectedAll ? '#FF3301' : 'transparent', marginLeft: 10 }]}>
+                                                    <Text style={[MainFlowStyles.tabTextStyle, { color: this.state.selectedAll ? 'black' : 'grey' }]}>ALL</Text>
+                                                </View>
+                                                <View style={{ flex: 1 }} />
+                                            </View>
+                                        </TouchableOpacity>
+                
+                                        <TouchableOpacity
+                                            style={MainFlowStyles.tabStyles}
+                                            onPress={() => this.setState({ selectedAll: false, selectedApproved: true, selectedRejected: false })}
+                                        >
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <View style={{flex: 1}} />
+                                                <View style={[MainFlowStyles.tabTextContainerStyle, {borderBottomColor: this.state.selectedApproved ? '#FF3301' : 'transparent'}]}>
+                                                    <Text style={[MainFlowStyles.tabTextStyle, { color: this.state.selectedApproved ? 'black' : 'green' }]}>APPROVED</Text>
+                                                </View>
+                                                <View style={{flex: 1}} />
+                                            </View>
+                                        </TouchableOpacity>
+                
+                                        <TouchableOpacity
+                                            style={MainFlowStyles.tabStyles}
+                                            onPress={() => this.setState({ selectedAll: false, selectedApproved: false, selectedRejected: true })}
+                                        >
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <View style={{ flex: 1 }} />
+                                                <View style={[MainFlowStyles.tabTextContainerStyle, { borderBottomColor: this.state.selectedRejected ? '#FF3301' : 'transparent', marginRight: 10 }]}>
+                                                    <Text style={[MainFlowStyles.tabTextStyle, { color: this.state.selectedRejected ? 'black' : 'red' }]}>REJECTED</Text>
+                                                </View>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </TouchableOpacity>
+                
+                                    <FlatList
+                                        style={{ maxHeight: height * 0.75 }}
+                                        data={this.state.selectedAll ? this.state.all : this.state.selectedApproved ? this.state.approved : this.state.rejected}
+                                        keyExtractor={(item, index) => index.toString()}
+                                        showsVerticalScrollIndicator={false}
+                                        renderItem={({ item, index }) => {
+                                            return (
+                                                <View style={{ marginBottom: this.state.selectedAll ? (index === this.state.all.length - 1 ? 20 : 0) : (this.state.selectedApproved ? (index === this.state.approved.length - 1 ? 20 : 0) : (index === this.state.rejected.length - 1 ? 20 : 0)) }}>
+                                                    <View style={[MainFlowStyles.cardStyle, { marginBottom: 20, marginHorizontal: 5, marginTop: index === 0 ? 20 : 0, flex: 1, borderColor: item.status == 0 ? 'red' : 'green', borderWidth:2 }]}>
+                                                        <View style={{ padding: 10 }}>
+                                                            <View style={{ flexDirection: 'row' }}>
+                                                                <View style={{ flexDirection: 'row', width: (width - 50) / 3 }}>
+                                                                    <View>
+                                                                        <AntDesign name='calendar' size={20} color='#FF3301' />
+                                                                    </View>
+                                                                    <Text> {item.date}</Text>
+                                                                </View>
+                
+                                                                {/* <View style={{ width: (width - 50) / 3, alignItems: 'center' }}>
+                                                                    <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Bill {item.bNumber}</Text>
+                                                                </View> */}
+                
+                                                                <View style={{ width: (width - 40) / 2, alignItems: 'flex-end', marginLeft:'10%' }}>
+                                                                    <Text style={{ fontSize: 16 }}>Refrence ID: {item.purchaserName}</Text>
+                                                                </View>
+                                                            </View>
+                                                            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Bill {index + 1}</Text>
+                                                            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.message}</Text>
+                                                        </View>
+                                                        {/* <View style={{ borderBottomColor: '#FF3301', borderBottomWidth: 1 }} />
+                                                        <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center' }}>
+                                                            <Text style={{ color: '#FF3301', fontWeight: 'bold', fontSize: 16, marginRight: 10 }}>Show Details</Text>
+                                                            <View style={{ justifyContent: 'flex-end', marginBottom: 4 }}>
+                                                                <FontAwesome name='chevron-down' size={12} color='#FF3301' />
+                                                            </View>
+                                                        </View> */}
+                                                    </View>
+                                                </View>
+                                            );
+                                        }}
+                                    />
+                                </View>
+                            </View>
+                        );
+                    }
+                    else{
+                        return (
+                            <View>
+                                <Header />
+                                <View style={{ margin: 10 }}>
+                                    <Text style={MainFlowStyles.headerTextStyle}>Notifications</Text>
+                
+                                    <TouchableOpacity style={{ flexDirection: 'row', marginBottom: 10 }}>
+                                        <TouchableOpacity
+                                            style={MainFlowStyles.tabStyles}
+                                            onPress={() => this.setState({ selectedAll: true, selectedApproved: false, selectedRejected: false })}
+                                        >
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <View style={[MainFlowStyles.tabTextContainerStyle, { borderBottomColor: this.state.selectedAll ? '#FF3301' : 'transparent', marginLeft: 10 }]}>
+                                                    <Text style={[MainFlowStyles.tabTextStyle, { color: this.state.selectedAll ? 'black' : 'grey' }]}>ALL</Text>
+                                                </View>
+                                                <View style={{ flex: 1 }} />
+                                            </View>
+                                        </TouchableOpacity>
+                
+                                        <TouchableOpacity
+                                            style={MainFlowStyles.tabStyles}
+                                            onPress={() => this.setState({ selectedAll: false, selectedApproved: true, selectedRejected: false })}
+                                        >
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <View style={{flex: 1}} />
+                                                <View style={[MainFlowStyles.tabTextContainerStyle, {borderBottomColor: this.state.selectedApproved ? '#FF3301' : 'transparent'}]}>
+                                                    <Text style={[MainFlowStyles.tabTextStyle, { color: this.state.selectedApproved ? 'black' : 'green' }]}>APPROVED</Text>
+                                                </View>
+                                                <View style={{flex: 1}} />
+                                            </View>
+                                        </TouchableOpacity>
+                
+                                        <TouchableOpacity
+                                            style={MainFlowStyles.tabStyles}
+                                            onPress={() => this.setState({ selectedAll: false, selectedApproved: false, selectedRejected: true })}
+                                        >
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <View style={{ flex: 1 }} />
+                                                <View style={[MainFlowStyles.tabTextContainerStyle, { borderBottomColor: this.state.selectedRejected ? '#FF3301' : 'transparent', marginRight: 10 }]}>
+                                                    <Text style={[MainFlowStyles.tabTextStyle, { color: this.state.selectedRejected ? 'black' : 'red' }]}>REJECTED</Text>
+                                                </View>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </TouchableOpacity>
+                
+                                    <FlatList
+                                        style={{ maxHeight: height * 0.75 }}
+                                        data={this.state.selectedAll ? this.state.all : this.state.selectedApproved ? this.state.approved : this.state.rejected}
+                                        keyExtractor={(item, index) => index.toString()}
+                                        showsVerticalScrollIndicator={false}
+                                        renderItem={({ item, index }) => {
+                                            return (
+                                                <View style={{ marginBottom: this.state.selectedAll ? (index === this.state.all.length - 1 ? 20 : 0) : (this.state.selectedApproved ? (index === this.state.approved.length - 1 ? 20 : 0) : (index === this.state.rejected.length - 1 ? 20 : 0)) }}>
+                                                    <View style={[MainFlowStyles.cardStyle, { marginBottom: 20, marginHorizontal: 5, marginTop: index === 0 ? 20 : 0, flex: 1, borderColor: item.status == 0 ? 'red' : 'green', borderWidth:2 }]}>
+                                                        <View style={{ padding: 10 }}>
+                                                            <View style={{ flexDirection: 'row' }}>
+                                                                <View style={{ flexDirection: 'row', width: (width - 50) / 3 }}>
+                                                                    <View>
+                                                                        <AntDesign name='calendar' size={20} color='#FF3301' />
+                                                                    </View>
+                                                                    <Text> {item.date}</Text>
+                                                                </View>
+                
+                                                                {/* <View style={{ width: (width - 50) / 3, alignItems: 'center' }}>
+                                                                    <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Bill {item.bNumber}</Text>
+                                                                </View> */}
+                
+                                                                <View style={{ width: (width - 40) / 2, alignItems: 'flex-end', marginLeft:'10%' }}>
+                                                                    <Text style={{ fontSize: 16 }}>Refrence ID: {item.purchaserName}</Text>
+                                                                </View>
+                                                            </View>
+                                                            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Bill {index + 1}</Text>
+                                                        </View>
+                                                        {/* <View style={{ borderBottomColor: '#FF3301', borderBottomWidth: 1 }} />
+                                                        <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center' }}>
+                                                            <Text style={{ color: '#FF3301', fontWeight: 'bold', fontSize: 16, marginRight: 10 }}>Show Details</Text>
+                                                            <View style={{ justifyContent: 'flex-end', marginBottom: 4 }}>
+                                                                <FontAwesome name='chevron-down' size={12} color='#FF3301' />
+                                                            </View>
+                                                        </View> */}
+                                                    </View>
+                                                </View>
+                                            );
+                                        }}
+                                    />
+                                </View>
+                            </View>
+                        );
+                    }
     }
 }
 
