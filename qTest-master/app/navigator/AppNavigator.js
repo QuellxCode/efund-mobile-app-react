@@ -16,6 +16,7 @@ import SettingsScreen from '../screens/MainFlow/SettingsScreen';
 import ClaimDropDown from "../screens/MainFlow/ClaimDropDown";
 import MenuDrawer from "../components/MenuDrawer";
 import Notification from "../screens/MainFlow/Notification"
+import NotificationNew from "../screens/MainFlow/NotificationsNew"
 
 const AppNavigator = createSwitchNavigator({
     loginFlow: createStackNavigator({
@@ -50,7 +51,7 @@ const AppNavigator = createSwitchNavigator({
                 headerShown: false
             }
         }),
-        Notification: Notification,
+        Notification: NotificationNew,
         GeneratePayOrder: GeneratePayOrderScreen,
         Reports: ReportsScreen,
         Wallet: WalletScreen,

@@ -4,7 +4,9 @@ import Header from '../../../components/Header';
 import { Button } from 'react-native-elements';
 import MainFlowStyles from '../../../Styles/MainFlowStyles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
 const { width, height } = Dimensions.get('window');
+
 class GenerateBillScreen extends Component {
     constructor(props) {
         super(props);
@@ -18,6 +20,8 @@ class GenerateBillScreen extends Component {
             data: '',
             myToken: '',
             notification: '',
+            total: 0,
+            totall: this.props.navigation.state.params.total,
         }
     }
 
@@ -156,7 +160,7 @@ class GenerateBillScreen extends Component {
                                             <Text>{item.item}</Text>
                                         </View>
                                         <View style={MainFlowStyles.billHeadingStyle}>
-                                            <Text>{'Rs.' + item.price}</Text>
+                                            <Text>{item.price}</Text>
                                         </View>
                                         <View style={MainFlowStyles.billHeadingStyle}>
                                             <Text>{item.qty}</Text>
@@ -168,7 +172,7 @@ class GenerateBillScreen extends Component {
                                 );
                             }}
                         />
-
+                    <Text style={{alignSelf:'flex-end', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth:1, marginRight:'5.5%'}}>{this.state.totall}</Text>
                     </View>
                 </View>
                 <View style={{ marginHorizontal: 20, marginBottom: 20, marginTop: 10, elevation: 5 }}>
