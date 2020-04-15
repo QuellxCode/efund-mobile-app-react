@@ -61,6 +61,7 @@ else{
             <View>
                 {navLink('Home', 'Home'.toUpperCase(), require('../images/Home.png'))}
                 {navLink('requestPaymentFlow', 'Request Payment'.toUpperCase(), require('../images/RequestPayment.png'))}
+                {navLink('claim', 'Claim Payment'.toUpperCase(), require('../images/RequestPayment.png'))}
                 {navLink('Reports', 'Reports'.toUpperCase(), require('../images/Reports.png'))}
                 {navLink('Wallet', 'Wallet'.toUpperCase(), require('../images/Wallet.png'))}
                 {navLink('Settings', 'Settings'.toUpperCase(), require('../images/Settings.png'))}

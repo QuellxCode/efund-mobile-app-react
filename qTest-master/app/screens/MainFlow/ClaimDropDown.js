@@ -478,7 +478,7 @@ export default class ClaimDropDown extends Component {
                   data_ctg: this.state.ctg,
                 });
               }}>
-              <Text style={{fontSize: 20, alignSelf: 'center', color: 'white'}}>
+              <Text style={{ alignSelf: 'center', color: '#FFF', alignContent: 'center', justifyContent: "center" }}>
                 Add Image
               </Text>
             </TouchableOpacity>

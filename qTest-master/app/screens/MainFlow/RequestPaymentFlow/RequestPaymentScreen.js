@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, StyleSheet, Button, Constants, FlatList, Text, TouchableO, TextInput, KeyboardAvoidingView, Picker, AsyncStorage , ScrollView} from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Button, Constants, FlatList, Text, TouchableO, TextInput, KeyboardAvoidingView, Picker, AsyncStorage , ScrollView, ToastAndroid} from 'react-native';
 import Header from '../../../components/Header';
 import CustomButton from '../../../components/CustomButton';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -34,6 +34,8 @@ class RequestPayment extends Component {
             check: true,
             results: 0,
             val: 0,
+            disabledB: true,
+            total: 0
         };
         this.list = React.createRef();
     }
@@ -117,7 +119,10 @@ class RequestPayment extends Component {
                 .then(response => response.json())
                 .then(json => {
                     console.log(json)
-                    this.setState({ response_: json })
+                    this.setState({ 
+                        response_: json,
+                        disabledB: false
+                    })
                 })
                 .catch(error => {
                     console.error(error);
@@ -234,18 +239,7 @@ class RequestPayment extends Component {
                     </View>
                     <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
                         <TextInput style={{ fontSize: 16 }}
-                            placeholder='price'
-                            keyboardType={'numeric'}
-                            onChangeText={(price) => this.setState({ price })}
-                            ref={ref => this.ref = ref}
-                            value={this.state.price}
-
-                        ></TextInput>
-                        <View style={{ marginBottom: 2 }} />
-                    </View>
-                    <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-                        <TextInput style={{ fontSize: 16 }}
-                            placeholder='qty'
+                            placeholder='Qty'
                             keyboardType={'numeric'}
                             onChangeText={(qty) => this.setState({ qty, results: this.state.price * this.state.qty })}
                             ref={ref => this.ref = ref}
@@ -255,6 +249,26 @@ class RequestPayment extends Component {
                         <View style={{ marginBottom: 2 }} />
                     </View>
                     <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
+                    <TextInput style={{ fontSize: 16 }}
+                            placeholder='Rate'
+                            keyboardType={'numeric'}
+                            onChangeText={(price) => this.setState({ price })}
+                            ref={ref => this.ref = ref}
+                            value={this.state.price}
+
+                        ></TextInput>
+                        <View style={{ marginBottom: 2 }} />
+                    </View>
+                    <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
+                    <TextInput style={{ fontSize: 16 }}
+                            placeholder='Total'
+                            keyboardType={'numeric'}
+                            defaultValue='Total'
+                            //onChangeText={(qty) => this.setState({ qty, results: this.state.price * this.state.qty })}
+                            ref={ref => this.ref = ref}
+                            //value={this.state.results}
+                            editable={false}
+                        ></TextInput>
                         {/* <Text style={{ fontSize: 16 }}>
                             
                          </Text> */}
@@ -344,24 +358,36 @@ class RequestPayment extends Component {
                                            ))}
                                             </ScrollView>
 
-                    <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                                            <View style={{ flexDirection: "row", justifyContent: "center" }}><Text>Total: {this.state.total}</Text></View>
 
+                    <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                            {/* <Text>"Total ", {this.state.total}</Text> */}
+                            
                         <TouchableOpacity
                             style={{ alignSelf: 'center', alignContent: 'center', backgroundColor: '#FF3301', height: 40, width: 100, borderRadius: 20, justifyContent: "center" }}
                             onPress={() => {
+                                if(this.state.item == "" || this.state.price == 0 || this.state.qty == 0){
+                                    console.log("empty")
+                                    ToastAndroid.show('Add an Item', ToastAndroid.SHORT);
+                                }
+                                else{
                                 let b = this.state.bills;
                                 var aa = this.state.title;
                                 var ab = this.state.qty;
                                 var ac = this.state.price;
                                 var ae = this.state.pkr;
                                 var result = ac * ab;
-                                this.setState({val: result})
+                                var totall = this.state.total + (this.state.qty * this.state.price);
+                                this.setState({
+                                    val: result,
+                                    total: totall
+                                })
                                 this.handlePress();
                                 n = n + 1
                                 b.push({ item: aa, price: ac, qty: ab, pkr: result });
                                 this.setState({ bills: b, title:'', qty: '', price: '' })
-                                console.log("arr from button", this.state.bills)
-                                
+                                console.log("arr from button", this.state.bills, this.state.qty,this.state.price,this.state.total)
+                            }
                             }
                             }
                         >
@@ -369,6 +395,10 @@ class RequestPayment extends Component {
 
                             {/* <AntDesign name='pluscircle' size={20} color='#FF3301' /> */}
                         </TouchableOpacity>
+                        
+{/*                         
+                        <Text>Total: {this.state.total}</Text>
+                         */}
                     </View>
                     
                 </View>
@@ -382,6 +412,7 @@ class RequestPayment extends Component {
                     /> */}
                     <TouchableOpacity
                         style={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10 }}
+                        disabled={this.state.disabledB}
                         onPress={() => {
                             // if (this.state.check == true) {
                             //     // let b = this.state.bills;
@@ -402,15 +433,17 @@ class RequestPayment extends Component {
                             // else {
                                 this.props.navigation.navigate('GenerateBill', {
                                     bill: this.state.bills,
-                                    project: this.state.selectedValue
+                                    project: this.state.selectedValue,
+                                    total: this.state.total
                                 })
                                this.setState({bill: ''})
 
                             // }
                         }}
                     >
+                        
                         <Text
-                            style={{ fontSize: 20, alignSelf: "center", color: "white" }}
+                            style={{ alignSelf: 'center', color: '#FFF', alignContent: 'center', justifyContent: "center" }}
                         >Generate Bill</Text>
                     </TouchableOpacity>
                 </View>
