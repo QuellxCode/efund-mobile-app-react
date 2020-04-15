@@ -15,8 +15,9 @@ import NotificationScreen from '../screens/MainFlow/NotificationScreen';
 import SettingsScreen from '../screens/MainFlow/SettingsScreen';
 import ClaimDropDown from "../screens/MainFlow/ClaimDropDown";
 import MenuDrawer from "../components/MenuDrawer";
-import Notification from "../screens/MainFlow/Notification"
-import NotificationNew from "../screens/MainFlow/NotificationsNew"
+import Notification from "../screens/MainFlow/Notification";
+import NotificationNew from "../screens/MainFlow/NotificationsNew";
+import NotificationDeta from "../screens/MainFlow/NotificationDetail";
 
 const AppNavigator = createSwitchNavigator({
     loginFlow: createStackNavigator({
@@ -51,11 +52,19 @@ const AppNavigator = createSwitchNavigator({
                 headerShown: false
             }
         }),
-        Notification: NotificationNew,
+        notify: createStackNavigator({
+            Notification: NotificationNew,
+            NotificationDeta: NotificationDeta,
+        },
+        {
+            initialRouteName: 'Notification',
+            defaultNavigationOptions: {
+                headerShown: false
+            }
+        }),
         GeneratePayOrder: GeneratePayOrderScreen,
         Reports: ReportsScreen,
         Wallet: WalletScreen,
-        Notifications: NotificationScreen,
         Settings: SettingsScreen
     },
     {

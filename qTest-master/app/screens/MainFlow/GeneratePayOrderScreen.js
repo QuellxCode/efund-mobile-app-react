@@ -389,7 +389,7 @@ class GeneratePayOrderScreen extends Component {
                                     
                                 <Text style={{ fontSize: 18, marginBottom: 10, marginLeft: 8 }}>Description:</Text>
                                 <Input
-                                    placeholder='Please add the name fo the relevant company from which you want to purchase cement.'
+                                    placeholder='Please add the name for the relevant company from which you want to purchase cement.'
                                     autoCapitalize='none'
                                     autoCompleteType='off'
                                     keyboardType='default'

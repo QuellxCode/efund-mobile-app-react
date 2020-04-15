@@ -93,7 +93,7 @@ const Header = ({navigation}) => {
         {/* <Text style={{color:"white",}}>1</Text> */}
 
       <TouchableOpacity
-        onPress={()=>{navigation.navigate("Notification")}}
+        onPress={()=>{navigation.navigate("notify")}}
         >
             <Text style={{color:"white", position:'absolute', alignSelf:'flex-end', marginTop:-10}}>{selected}</Text>
      <MaterialCommunityIcons name='bell' color='white' size={30} style={{marginRight:2}}/>
