@@ -11,7 +11,7 @@ class NotifierDetaler extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            // data_: this.props.navigation.state.params.bill,
+            data_: this.props.navigation.state.params.allData,
             data_project: this.props.navigation.state.params.project,
             visible: false,
             visibleB: false,
@@ -68,6 +68,8 @@ class NotifierDetaler extends Component {
             console.log("ALL",this.state.all)
             console.log("Specific",this.state.specif)
             console.log("Detailed",this.state.detailed)
+            console.log("AAAAA", this.state.data_)
+            console.log("Sdasdasd", this.txt(this.state.data_.message))
             // console.log("aabe",json.notification[3].message[0].pkr)
             // console.log("dasdatsd", this.state.all)
             // console.log("dasdatsd", this.state.all.length)
@@ -86,8 +88,9 @@ class NotifierDetaler extends Component {
           });
       }
 
-    director_accept(item) {
-        console.log('dddd', item);
+    director_accept() {
+      this.setState({ visible: true })
+        // console.log('dddd', item);
         fetch('http://efundapp.herokuapp.com/api/purchase/director-accept', {
           method: 'Post',
           headers: {
@@ -96,10 +99,10 @@ class NotifierDetaler extends Component {
             'X-Auth-Token': this.state.User.token,
           },
           body: JSON.stringify({
-            details: item,
-            project: this.state.project,
-            purchaserName: this.state.purchaserName,
-            purchaserID: this.state.purchaserID,
+            details: this.state.data_.message,
+            project: this.state.data_.project,
+            purchaserName: this.state.data_.purchaserName,
+            purchaserID: this.state.data_.purchaserID,
           }),
         })
           .then(response => response.json())
@@ -127,7 +130,8 @@ class NotifierDetaler extends Component {
             console.error(error);
           });
       }
-      sup_accept(item) {
+      sup_accept() {
+        this.setState({ visible: true })
         fetch('http://efundapp.herokuapp.com/api/purchase/accept-notification', {
           method: 'Post',
           headers: {
@@ -136,10 +140,10 @@ class NotifierDetaler extends Component {
             'X-Auth-Token': this.state.User.token,
           },
           body: JSON.stringify({
-            details: item,
-            project: this.state.project,
-            purchaserName: this.state.purchaserName,
-            purchaserID: this.state.purchaserID,
+            details: this.state.data_.message,
+            project: this.state.data_.project,
+            purchaserName: this.state.data_.purchaserName,
+            purchaserID: this.state.data_.purchaserID,
           }),
         })
           .then(response => response.json())
@@ -166,9 +170,7 @@ class NotifierDetaler extends Component {
         );
       };
       reject_ok() {
-        // console.log("item::::"+this.state.items)
-        // console.log("itemssss::::"+this.state.project)
-        // console.log("msg"+this.state.Msg)
+        this.setState({ visibleB: true })
         fetch('http://efundapp.herokuapp.com/api/purchase/reject-notification', {
           method: 'Post',
           headers: {
@@ -177,11 +179,11 @@ class NotifierDetaler extends Component {
             'X-Auth-Token': this.state.User.token,
           },
           body: JSON.stringify({
-            details: this.state.items,
-            project: this.state.project,
-            message: this.state.Msg,
-            purchaserName: this.state.purchaserName,
-            purchaserID: this.state.purchaserID,
+            details: this.state.data_.message,
+            project: this.state.data_.project,
+            message: this.state.description,
+            purchaserName: this.state.data_.purchaserName,
+            purchaserID: this.state.data_.purchaserID,
           }),
         })
           .then(response => response.json())
@@ -209,6 +211,13 @@ class NotifierDetaler extends Component {
         this.props.navigation.replace('Notification')
         this.props.navigation.navigate('Home')
     }
+    onClickButtonB () {
+      this.setState({
+          visibleB: false
+      })
+      this.props.navigation.replace('Notification')
+      this.props.navigation.navigate('Home')
+  }
 
 
     handlePress = async () => {
@@ -222,6 +231,7 @@ class NotifierDetaler extends Component {
 
       
     render() {
+      if (this.state.User.roles == 'Supervisor') {
         return (
             <View style={{ flex: 1 }}>
                 <Header />
@@ -248,7 +258,7 @@ class NotifierDetaler extends Component {
                                 <Text>Total</Text>
                             </View>
                         </View>
-                        <FlatList
+                        {/* <FlatList
                             style={{ flexGrow: 0 }}
                             data={this.state.data_}
                             keyExtractor={(item) => item.number}
@@ -271,7 +281,10 @@ class NotifierDetaler extends Component {
                                     </View>
                                 );
                             }}
-                        />
+                        /> */}
+                        <View>
+                                      <Text>{this.txt(this.state.data_.message)}</Text>
+                                          </View>
                     <Text style={{alignSelf:'flex-end', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth:1, marginRight:'5.5%'}}>{this.state.totall}</Text>
                     </View>
                 </View>
@@ -282,14 +295,14 @@ class NotifierDetaler extends Component {
                         title='Accept'
                         buttonStyle={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10 }}
                         containerStyle={{ marginHorizontal: 10 }}
-                        onPress={() => { this.handlePress(), { visible: true } }}
+                        onPress={() => { this.sup_accept(), { visible: true } }}
                     />
                 
                     <Button
                         title='Reject'
                         buttonStyle={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10 }}
                         containerStyle={{ marginHorizontal: 10 }}
-                        onPress={() => { this.handlePressB(), { visibleB: true } }}
+                        onPress={() => { this.reject_ok(), { visibleB: true } }}
                     />
                
                 </View>
@@ -330,13 +343,132 @@ class NotifierDetaler extends Component {
                             <Button
                                 title='OK'
                                 buttonStyle={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 0, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, }}
-                                onPress={() => this.onClickButton()}
+                                onPress={() => this.onClickButtonB()}
                             />
                         </View>
                     </View>
                 </Modal>
             </View>
         );
+                          }
+
+                          else{
+                            return (
+                              <View style={{ flex: 1 }}>
+                                  <Header />
+                                  <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
+                                      <View style={[MainFlowStyles.cardStyle, { paddingTop: 10, paddingBottom: 10, flex: 1 }]}>
+                          <Text style={{fontSize: 20,
+                          fontWeight: 'bold',
+                          alignSelf: 'center',
+                          marginBottom: 20}}>
+                              {this.state.specif.project_name}
+                              </Text>
+                  
+                                          <View style={{ flexDirection: 'row', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth: 1 }}>
+                                              <View style={MainFlowStyles.billHeadingStyle}>
+                                                  <Text>Item Name</Text>
+                                              </View>
+                                              <View style={MainFlowStyles.billHeadingStyle}>
+                                                  <Text>Quantity</Text>
+                                              </View>
+                                              <View style={MainFlowStyles.billHeadingStyle}>
+                                                  <Text>Rate</Text>
+                                              </View>
+                                              <View style={MainFlowStyles.billHeadingStyle}>
+                                                  <Text>Total</Text>
+                                              </View>
+                                          </View>
+                                          <FlatList
+                                              style={{ flexGrow: 0 }}
+                                              data={this.state.data_}
+                                              keyExtractor={(item) => item.number}
+                                              showsVerticalScrollIndicator={false}
+                                              renderItem={({ item }) => {
+                                                  return (
+                                                      <View style={{ flexDirection: 'row', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth: 1 }}>
+                                                          <View style={MainFlowStyles.billHeadingStyle}>
+                                                              <Text>{item.item}</Text>
+                                                          </View>
+                                                          <View style={MainFlowStyles.billHeadingStyle}>
+                                                              <Text>{item.qty}</Text>
+                                                          </View>
+                                                          <View style={MainFlowStyles.billHeadingStyle}>
+                                                              <Text>{item.price}</Text>
+                                                          </View>
+                                                          <View style={MainFlowStyles.billHeadingStyle}>
+                                                              <Text>{item.qty * item.price}</Text>
+                                                          </View>
+                                                      </View>
+                                                  );
+                                              }}
+                                          />
+                                      <Text style={{alignSelf:'flex-end', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth:1, marginRight:'5.5%'}}>{this.state.totall}</Text>
+                                      </View>
+                                  </View>
+                  
+                                  <View style={{flexDirection: "row", marginBottom: 20, marginTop: 10, marginHorizontal: "25%", elevation: 5 }}>
+                  
+                                      <Button
+                                          title='Accept'
+                                          buttonStyle={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10 }}
+                                          containerStyle={{ marginHorizontal: 10 }}
+                                          onPress={() => { this.director_accept(), { visible: true } }}
+                                      />
+                                  
+                                      <Button
+                                          title='Reject'
+                                          buttonStyle={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10 }}
+                                          containerStyle={{ marginHorizontal: 10 }}
+                                          onPress={() => { this.reject_ok(), { visibleB: true } }}
+                                      />
+                                 
+                                  </View>
+                  
+                                  <Modal animationType='fade' transparent={true} visible={this.state.visible}>
+                                      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.7)' }}>
+                                          <View style={{ backgroundColor: 'white', paddingTop: 10, borderRadius: 20, width: width * 0.8 }}>
+                                              <View style={{ alignSelf: 'center', padding: 20 }}>
+                                                  <FontAwesome name='send' color='#FF3301' size={50} />
+                                              </View>
+                                              <Text style={{ alignSelf: 'center', fontSize: 16, fontWeight: 'bold', color: '#FF3301', paddingBottom: 40 }}>Request Sent To Director</Text>
+                                              <Button
+                                                  title='OK'
+                                                  buttonStyle={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 0, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, }}
+                                                  onPress={() => this.onClickButton()}
+                                              />
+                                          </View>
+                                      </View>
+                                  </Modal>
+                  
+                                  <Modal animationType='fade' transparent={true} visible={this.state.visibleB}>
+                                      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.7)' }}>
+                                          <View style={{ backgroundColor: 'white', paddingTop: 10, borderRadius: 20, width: width * 0.8 }}>
+                                              <View style={{ alignSelf: 'center', padding: 20 }}>
+                                                  <FontAwesome name='send' color='#FF3301' size={50} />
+                                              </View>
+                                              <Text style={{ alignSelf: 'center', fontSize: 16, fontWeight: 'bold', color: '#FF3301', paddingBottom: 40 }}>Request Rejected</Text>
+                                              <Input
+                                                      placeholder='Enter Your Reason for Rejection.'
+                                                      autoCapitalize='none'
+                                                      autoCompleteType='off'
+                                                      keyboardType='default'
+                                                      // inputStyle={{ fontSize: 14, paddingBottom: 50, textAlignVertical: 'top' }}
+                                                      // inputContainerStyle={{ borderColor: '#FF3301', borderWidth: 1, borderRadius: 0 }}
+                                                      multiline
+                                                      onChangeText={(value) => this.setState({ description: value })}
+                                                  />
+                                              <Button
+                                                  title='OK'
+                                                  buttonStyle={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 0, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, }}
+                                                  onPress={() => this.onClickButtonB()}
+                                              />
+                                          </View>
+                                      </View>
+                                  </Modal>
+                              </View>
+                          );
+                          }
     }
 }
 export default NotifierDetaler;
