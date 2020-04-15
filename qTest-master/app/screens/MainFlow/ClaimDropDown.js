@@ -27,6 +27,8 @@ export default class ClaimDropDown extends Component {
       project_name: '',
       project_id: '',
       Category: [],
+      Category2: [],
+      Category3:[],
       selectedValue: '',
       selectedProject: '',
       User: [],
@@ -39,12 +41,13 @@ export default class ClaimDropDown extends Component {
       orderss: [],
       response_: '',
       data: '',
+      ctgdata: '',
       pickerValue: '',
     };
     this.list = React.createRef();
   }
   claim_handlePress = async () => {
-    console.log("claimcall")
+    console.log('claimcall');
     var aa = this.state.title;
     var ab = this.state.qty;
     var ac = this.state.price;
@@ -68,19 +71,19 @@ export default class ClaimDropDown extends Component {
     //             }
     //         ]
     //     }
-     var data = {
-            // "payment": "50000",
-            "project": project,
-            "details": [
-                {
-                    "item": aa,
-                    "qty": ab,
-                    "price": ac,
-                    "pkr": result,
-                    "category": cat,
-                }
-            ]
-        }
+    var data = {
+      // "payment": "50000",
+      project: project,
+      details: [
+        {
+          item: aa,
+          qty: ab,
+          price: ac,
+          pkr: result,
+          category: cat,
+        },
+      ],
+    };
     if (data.details[0].item == '') {
       console.log('nt call a api');
     } else {
@@ -103,6 +106,40 @@ export default class ClaimDropDown extends Component {
           console.error(error);
         });
     }
+  };
+  claim_ctg() {
+   var array = [];
+    fetch('http://efundapp.herokuapp.com/api/chart', {
+      method: 'Get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token': this.state.User.token,
+      },
+    })
+      .then(response => response.json())
+      .then(json => {
+        // this.setState({ctgdata: json.chart[0].items[0].item_name});
+        // console.log("ctg",JSON.stringify(this.state.ctgdata))
+       this.setState({Category3:json.chart[0].items});
+         var v =this.state.Category3
+         var chat=json.chart
+        //  console.log("vvv",v.length)
+        //  console.log("chat",chat.length)
+         for (let i = 0; i < v.length; i++) {
+         for (let j = 0; j < chat.length; j++) {
+          //console.log('<aa>', json.chart[j].items[i].item_name);
+            array.push({
+              item_name:json.chart[j].items[i].item_name
+            });
+         }
+         }
+          this.setState({Category2: array});
+          console.log('<aa>', this.state.Category2);
+      })
+      .catch(error => {
+        console.error(error);
+      });
   }
   async componentDidMount() {
     try {
@@ -131,7 +168,7 @@ export default class ClaimDropDown extends Component {
         this.setState({data: json.project});
         var v = this.state.data.length;
         for (let i = 0; i < v; i++) {
-          console.log('v:' + json.project[i].project_name);
+          //console.log('v:' + json.project[i].project_name);
           thisdata.push({
             project_name: json.project[i].project_name,
             project_id: json.project[i]._id,
@@ -143,6 +180,7 @@ export default class ClaimDropDown extends Component {
       .catch(error => {
         console.error(error);
       });
+    //this.claim_ctg();
   }
   render_1 = ({item}) => (
     <KeyboardAvoidingView>
@@ -434,10 +472,10 @@ export default class ClaimDropDown extends Component {
                 });
                 this.setState({bills: b});
                 this.props.navigation.navigate('ClaimPayment', {
-                    ID:this.state.ID,
-                    data: this.state.bills,
-                    data1: this.state.selectedValue,
-                    data_ctg: this.state.ctg,
+                  ID: this.state.ID,
+                  data: this.state.bills,
+                  data1: this.state.selectedValue,
+                  data_ctg: this.state.ctg,
                 });
               }}>
               <Text style={{fontSize: 20, alignSelf: 'center', color: 'white'}}>

@@ -128,15 +128,12 @@ export default class Notification extends Component {
         this.setState({
           data: json.notification,
         });
-        console.log("aabe",json.notification[3].message[0].pkr)
+        console.log("aabe",JSON.stringify(json.notification))
         var v = this.state.data.length;
         for (let i = 0; i < v; i++) {
-          // arr.push(json.notification[i].message,json.notification[i].project
-         // arry.push(json.notification[i].project);
           arr.push(json.notification[i].message);
         }
         this.setState({dada:arr})
-        // console.log('dada arr', JSON.stringify(arr));
       })
       .catch(error => {
         console.error(error);
@@ -257,83 +254,86 @@ export default class Notification extends Component {
  str = str.replace("/ ",":")
 return str
   }  
-
-
-  render() {
-   
-    if (this.state.User.roles == 'Supervisor') {
+   render() {
+    if (this.state.User.roles == "Supervisor") {
       return (
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <Header />
-          <Text style={{fontSize: 30, color: 'red', alignSelf: 'center'}}>
+          <Text style={{ fontSize: 30, color: "red", alignSelf: "center" }}>
             Notification
           </Text>
-          <View style={{flex: 1, marginHorizontal: 20, marginTop: 30}}>
+          <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
             <FlatList
               data={this.state.data}
               ItemSeparatorComponent={this.FlatListItemSeparator}
               keyExtractor={(a, b) => b.toString()}
-              renderItem={({item, index,}) => (
-                <View style={{backgroundColor: 'white', padding: 10}}>
-                  <View style={{flexDirection: 'column'}}>
+              renderItem={({ item, index }) => (
+                <View style={{ backgroundColor: "white", padding: 10 }}>
+                  <View style={{ flexDirection: "column" }}>
                     <Text
                       style={{
                         fontSize: 20,
-                        color: 'white',
-                        backgroundColor: '#FF3301',
-                        marginLeft: '1%',
+                        color: "white",
+                        backgroundColor: "#FF3301",
+                        marginLeft: "1%",
                         height: 50,
                         width: 300,
                         padding: 10,
-                      }}>
+                      }}
+                    >
                       {/* Purchaser Name:{item.purchaserName} */}
-                      {index+1}
+                      {index + 1}
                     </Text>
-                      <Text
+                    <Text
                       style={{
                         fontSize: 20,
-                        color: 'white',
-                        backgroundColor: '#FF3301',
-                        marginLeft: '1%',
+                        color: "white",
+                        backgroundColor: "#FF3301",
+                        marginLeft: "1%",
                         height: 50,
-                        marginTop:1,
+                        marginTop: 1,
                         width: 300,
                         padding: 10,
-                      }}>
+                      }}
+                    >
                       Purchaser Name:{item.purchaserName}
                     </Text>
                     <Text
                       style={{
                         fontSize: 20,
-                        color: 'white',
+                        color: "white",
                         marginTop: 1,
                         padding: 10,
-                        backgroundColor: '#FF3301',
-                        marginLeft: '1%',
+                        backgroundColor: "#FF3301",
+                        marginLeft: "1%",
                         height: 50,
                         width: 300,
-                      }}>
+                      }}
+                    >
                       Status : {item.notification_status}
                     </Text>
                     <Text
                       style={{
                         fontSize: 15,
-                        color: 'white',
-                        backgroundColor: '#FF3301',
+                        color: "white",
+                        backgroundColor: "#FF3301",
                         marginTop: 1,
-                        marginLeft: '1%',
+                        marginLeft: "1%",
                         height: 120,
                         padding: 10,
                         width: 300,
-                      }}>
-                    Detail: {this.txt(item.message)}
+                      }}
+                    >
+                      Detail: {item.message}
+                      {/* Detail: {this.txt(item.message)} */}
                     </Text>
                   </View>
                   <View
-                    style={{flexDirection: 'row', justifyContent: 'center'}}>
+                    style={{ flexDirection: "row", justifyContent: "center" }}
+                  >
                     <TouchableOpacity
                       style={{
-                        backgroundColor: '#FF3301',
+                        backgroundColor: "#FF3301",
                         padding: 14,
                         margin: 10,
                         borderRadius: 10,
@@ -347,19 +347,21 @@ return str
                           purchaserName: item.purchaserName,
                         }),
                           this.sup_accept(item.message);
-                      }}>
+                      }}
+                    >
                       <Text
                         style={{
                           fontSize: 15,
-                          color: '#fff',
-                          alignSelf: 'center',
-                        }}>
+                          color: "#fff",
+                          alignSelf: "center",
+                        }}
+                      >
                         Accept
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={{
-                        backgroundColor: '#FF3301',
+                        backgroundColor: "#FF3301",
                         padding: 14,
                         borderRadius: 10,
                         margin: 10,
@@ -374,153 +376,185 @@ return str
                           purchaserID: item.purchaserID,
                           purchaserName: item.purchaserName,
                         });
-                      }}>
+                      }}
+                    >
                       <Text
                         style={{
                           fontSize: 15,
-                          color: '#fff',
-                          alignSelf: 'center',
-                        }}>
+                          color: "#fff",
+                          alignSelf: "center",
+                        }}
+                      >
                         Reject
                       </Text>
                     </TouchableOpacity>
+                    <FlatList
+                     data={item.message}
+                     keyExtractor={(a, b) => b.toString()}
+                      renderItem={({item2, index}) => ( //use item2 instead of item
+                        <View>
+                          <Text
+                            style={{
+                              fontSize: 10,
+                              color: "white",
+                              backgroundColor: "#FF3301",
+                              marginTop: 1,
+                              marginLeft: "1%",
+                              height: 50,
+                              padding: 10,
+                              width: 300,
+                            }}
+                          >
+                          {item2}
+                          </Text>
+                         </View>
+                      )}
+                    />
                   </View>
-
-                  <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={this.state.Requestvisible}>
-                    <View
-                      style={{
-                        flex: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                      }}>
-                      <View
-                        style={{
-                          backgroundColor: 'white',
-                          paddingTop: 10,
-                          borderRadius: 20,
-                          width: width * 0.8,
-                        }}>
-                        <View style={{alignSelf: 'center', padding: 20}}>
-                          <FontAwesome name="send" color="#FF3301" size={50} />
-                        </View>
-                        <Text
-                          style={{
-                            alignSelf: 'center',
-                            fontSize: 16,
-                            fontWeight: 'bold',
-                            color: '#FF3301',
-                            paddingBottom: 40,
-                          }}>
-                          Best your approval is Accepted!
-                        </Text>
-                        <Button
-                          title="OK"
-                          buttonStyle={{
-                            backgroundColor: '#FF3301',
-                            padding: 14,
-                            borderRadius: 0,
-                            borderBottomLeftRadius: 10,
-                            borderBottomRightRadius: 10,
-                          }}
-                          onPress={() => this.setState({Requestvisible: false})}
-                        />
-                      </View>
-                    </View>
-                  </Modal>
-                  <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={this.state.visible}>
-                    <View
-                      style={{
-                        flex: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                      }}>
-                      <View
-                        style={{
-                          backgroundColor: 'white',
-                          paddingTop: 10,
-                          borderRadius: 20,
-                          width: width * 0.8,
-                        }}>
-                        <View style={{alignSelf: 'center', padding: 20}}>
-                          <FontAwesome name="send" color="#FF3301" size={50} />
-                        </View>
-                        <TextInput
-                          placeholder="Why you are rejected this approval"
-                          onChangeText={Msg => this.setState({Msg})}
-                          style={{
-                            alignSelf: 'center',
-                            fontSize: 16,
-                            fontWeight: 'bold',
-                            color: '#FF3301',
-                            paddingBottom: 40,
-                          }}
-                        />
-                        <Button
-                          title="OK"
-                          buttonStyle={{
-                            backgroundColor: '#FF3301',
-                            padding: 14,
-                            borderRadius: 0,
-                            borderBottomLeftRadius: 10,
-                            borderBottomRightRadius: 10,
-                          }}
-                          onPress={() => this.reject_ok()}
-                        />
-                      </View>
-                    </View>
-                  </Modal>
                 </View>
               )}
-            />
+            /> 
+            <Modal
+              animationType="fade"
+              transparent={true}
+              visible={this.state.Requestvisible}
+            >
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "rgba(0, 0, 0, 0.7)",
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: "white",
+                    paddingTop: 10,
+                    borderRadius: 20,
+                    width: width * 0.8,
+                  }}
+                >
+                  <View style={{ alignSelf: "center", padding: 20 }}>
+                    <FontAwesome name="send" color="#FF3301" size={50} />
+                  </View>
+                  <Text
+                    style={{
+                      alignSelf: "center",
+                      fontSize: 16,
+                      fontWeight: "bold",
+                      color: "#FF3301",
+                      paddingBottom: 40,
+                    }}
+                  >
+                    Best your approval is Accepted!
+                  </Text>
+                  <Button
+                    title="OK"
+                    buttonStyle={{
+                      backgroundColor: "#FF3301",
+                      padding: 14,
+                      borderRadius: 0,
+                      borderBottomLeftRadius: 10,
+                      borderBottomRightRadius: 10,
+                    }}
+                    onPress={() => this.setState({ Requestvisible: false })}
+                  />
+                </View>
+              </View>
+            </Modal>
+            <Modal
+              animationType="fade"
+              transparent={true}
+              visible={this.state.visible}
+            >
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "rgba(0, 0, 0, 0.7)",
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: "white",
+                    paddingTop: 10,
+                    borderRadius: 20,
+                    width: width * 0.8,
+                  }}
+                >
+                  <View style={{ alignSelf: "center", padding: 20 }}>
+                    <FontAwesome name="send" color="#FF3301" size={50} />
+                  </View>
+                  <TextInput
+                    placeholder="Why you are rejected this approval"
+                    onChangeText={(Msg) => this.setState({ Msg })}
+                    style={{
+                      alignSelf: "center",
+                      fontSize: 16,
+                      fontWeight: "bold",
+                      color: "#FF3301",
+                      paddingBottom: 40,
+                    }}
+                  />
+                  <Button
+                    title="OK"
+                    buttonStyle={{
+                      backgroundColor: "#FF3301",
+                      padding: 14,
+                      borderRadius: 0,
+                      borderBottomLeftRadius: 10,
+                      borderBottomRightRadius: 10,
+                    }}
+                    onPress={() => this.reject_ok()}
+                  />
+                </View>
+              </View>
+            </Modal>
           </View>
         </View>
       );
-    } else if (this.state.User.roles == 'Purchaser') {
+    } else if (this.state.User.roles == "Purchaser") {
       return (
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <Header />
-          <Text style={{fontSize: 30, color: 'red', alignSelf: 'center'}}>
-            Notification{' '}
+          <Text style={{ fontSize: 30, color: "red", alignSelf: "center" }}>
+            Notification{" "}
           </Text>
-          <View style={{flex: 1, marginHorizontal: 20, marginTop: 30}}>
+          <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
             <FlatList
               data={this.state.data}
               ItemSeparatorComponent={this.FlatListItemSeparator}
               keyExtractor={(a, b) => b.toString()}
-              renderItem={({item, index}) => (
-                <View style={{backgroundColor: 'white', padding: 10}}>
-                  <View style={{flexDirection: 'column'}}>
+              renderItem={({ item, index }) => (
+                <View style={{ backgroundColor: "white", padding: 10 }}>
+                  <View style={{ flexDirection: "column" }}>
                     <Text
                       style={{
                         fontSize: 30,
-                        marginLeft: '1%',
-                        color: 'white',
-                        backgroundColor: '#FF3301',
+                        marginLeft: "1%",
+                        color: "white",
+                        backgroundColor: "#FF3301",
                         padding: 10,
                         height: 60,
                         width: 300,
-                      }}>
+                      }}
+                    >
                       Reason:
                     </Text>
                     <Text
                       style={{
                         fontSize: 20,
-                        color: 'white',
-                        backgroundColor: '#FF3301',
+                        color: "white",
+                        backgroundColor: "#FF3301",
                         marginTop: 1,
                         padding: 10,
-                        marginLeft: '1%',
+                        marginLeft: "1%",
                         height: 100,
                         width: 300,
-                      }}>
+                      }}
+                    >
                       {item.message}
                     </Text>
                   </View>
@@ -532,50 +566,53 @@ return str
       );
     } else {
       return (
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <Header />
-          <Text style={{fontSize: 30, color: 'red', alignSelf: 'center'}}>
+          <Text style={{ fontSize: 30, color: "red", alignSelf: "center" }}>
             Notification
           </Text>
-          <View style={{flex: 1, marginHorizontal: 20, marginTop: 30}}>
+          <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
             <FlatList
               data={this.state.data}
               ItemSeparatorComponent={this.FlatListItemSeparator}
               keyExtractor={(a, b) => b.toString()}
-              renderItem={({item, index}) => (
-                <View style={{backgroundColor: 'white', padding: 10}}>
-                  <View style={{flexDirection: 'column'}}>
+              renderItem={({ item, index }) => (
+                <View style={{ backgroundColor: "white", padding: 10 }}>
+                  <View style={{ flexDirection: "column" }}>
                     <Text
                       style={{
                         fontSize: 15,
-                        color: 'white',
-                        backgroundColor: '#FF3301',
-                        marginLeft: '1%',
+                        color: "white",
+                        backgroundColor: "#FF3301",
+                        marginLeft: "1%",
                         padding: 10,
                         height: 50,
                         width: 300,
-                      }}>
+                      }}
+                    >
                       Purchaser Name:{item.purchaserName}
                     </Text>
                     <Text
                       style={{
                         fontSize: 15,
-                        color: 'white',
+                        color: "white",
                         padding: 10,
                         marginTop: 2,
-                        backgroundColor: '#FF3301',
-                        marginLeft: '1%',
+                        backgroundColor: "#FF3301",
+                        marginLeft: "1%",
                         height: 150,
                         width: 300,
-                      }}>
+                      }}
+                    >
                       Request: {item.message}
                     </Text>
                   </View>
                   <View
-                    style={{flexDirection: 'row', justifyContent: 'center'}}>
+                    style={{ flexDirection: "row", justifyContent: "center" }}
+                  >
                     <TouchableOpacity
                       style={{
-                        backgroundColor: '#FF3301',
+                        backgroundColor: "#FF3301",
                         padding: 14,
                         margin: 10,
                         borderRadius: 10,
@@ -589,19 +626,21 @@ return str
                           purchaserName: item.purchaserName,
                         }),
                           this.director_accept(item.message);
-                      }}>
+                      }}
+                    >
                       <Text
                         style={{
                           fontSize: 15,
-                          color: '#fff',
-                          alignSelf: 'center',
-                        }}>
+                          color: "#fff",
+                          alignSelf: "center",
+                        }}
+                      >
                         Accept
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={{
-                        backgroundColor: '#FF3301',
+                        backgroundColor: "#FF3301",
                         padding: 14,
                         borderRadius: 10,
                         margin: 10,
@@ -614,13 +653,15 @@ return str
                           items: item.message,
                           project: item.project,
                         });
-                      }}>
+                      }}
+                    >
                       <Text
                         style={{
                           fontSize: 15,
-                          color: '#fff',
-                          alignSelf: 'center',
-                        }}>
+                          color: "#fff",
+                          alignSelf: "center",
+                        }}
+                      >
                         Reject
                       </Text>
                     </TouchableOpacity>
@@ -628,44 +669,50 @@ return str
                   <Modal
                     animationType="fade"
                     transparent={true}
-                    visible={this.state.Requestvisible}>
+                    visible={this.state.Requestvisible}
+                  >
                     <View
                       style={{
                         flex: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                      }}>
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "rgba(0, 0, 0, 0.7)",
+                      }}
+                    >
                       <View
                         style={{
-                          backgroundColor: 'white',
+                          backgroundColor: "white",
                           paddingTop: 10,
                           borderRadius: 20,
                           width: width * 0.8,
-                        }}>
-                        <View style={{alignSelf: 'center', padding: 20}}>
+                        }}
+                      >
+                        <View style={{ alignSelf: "center", padding: 20 }}>
                           <FontAwesome name="send" color="#FF3301" size={50} />
                         </View>
                         <Text
                           style={{
-                            alignSelf: 'center',
+                            alignSelf: "center",
                             fontSize: 16,
-                            fontWeight: 'bold',
-                            color: '#FF3301',
+                            fontWeight: "bold",
+                            color: "#FF3301",
                             paddingBottom: 40,
-                          }}>
+                          }}
+                        >
                           Best your approval is Accepted!
                         </Text>
                         <Button
                           title="OK"
                           buttonStyle={{
-                            backgroundColor: '#FF3301',
+                            backgroundColor: "#FF3301",
                             padding: 14,
                             borderRadius: 0,
                             borderBottomLeftRadius: 10,
                             borderBottomRightRadius: 10,
                           }}
-                          onPress={() => this.setState({Requestvisible: false})}
+                          onPress={() =>
+                            this.setState({ Requestvisible: false })
+                          }
                         />
                       </View>
                     </View>
@@ -673,39 +720,42 @@ return str
                   <Modal
                     animationType="fade"
                     transparent={true}
-                    visible={this.state.visible}>
+                    visible={this.state.visible}
+                  >
                     <View
                       style={{
                         flex: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                      }}>
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "rgba(0, 0, 0, 0.7)",
+                      }}
+                    >
                       <View
                         style={{
-                          backgroundColor: 'white',
+                          backgroundColor: "white",
                           paddingTop: 10,
                           borderRadius: 20,
                           width: width * 0.8,
-                        }}>
-                        <View style={{alignSelf: 'center', padding: 20}}>
+                        }}
+                      >
+                        <View style={{ alignSelf: "center", padding: 20 }}>
                           <FontAwesome name="send" color="#FF3301" size={50} />
                         </View>
                         <TextInput
                           placeholder="Why you are rejected this approval"
-                          onChangeText={Msg => this.setState({Msg})}
+                          onChangeText={(Msg) => this.setState({ Msg })}
                           style={{
-                            alignSelf: 'center',
+                            alignSelf: "center",
                             fontSize: 16,
-                            fontWeight: 'bold',
-                            color: '#FF3301',
+                            fontWeight: "bold",
+                            color: "#FF3301",
                             paddingBottom: 40,
                           }}
                         />
                         <Button
                           title="OK"
                           buttonStyle={{
-                            backgroundColor: '#FF3301',
+                            backgroundColor: "#FF3301",
                             padding: 14,
                             borderRadius: 0,
                             borderBottomLeftRadius: 10,
@@ -719,44 +769,48 @@ return str
                   <Modal
                     animationType="fade"
                     transparent={true}
-                    visible={this.state.Isvisible}>
+                    visible={this.state.Isvisible}
+                  >
                     <View
                       style={{
                         flex: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                      }}>
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "rgba(0, 0, 0, 0.7)",
+                      }}
+                    >
                       <View
                         style={{
-                          backgroundColor: 'white',
+                          backgroundColor: "white",
                           paddingTop: 10,
                           borderRadius: 20,
                           width: width * 0.8,
-                        }}>
-                        <View style={{alignSelf: 'center', padding: 20}}>
+                        }}
+                      >
+                        <View style={{ alignSelf: "center", padding: 20 }}>
                           <FontAwesome name="send" color="#FF3301" size={50} />
                         </View>
                         <Text
                           style={{
-                            alignSelf: 'center',
+                            alignSelf: "center",
                             fontSize: 16,
-                            fontWeight: 'bold',
-                            color: '#FF3301',
+                            fontWeight: "bold",
+                            color: "#FF3301",
                             paddingBottom: 40,
-                          }}>
+                          }}
+                        >
                           Approval is Accepted by Director!
                         </Text>
                         <Button
                           title="OK"
                           buttonStyle={{
-                            backgroundColor: '#FF3301',
+                            backgroundColor: "#FF3301",
                             padding: 14,
                             borderRadius: 0,
                             borderBottomLeftRadius: 10,
                             borderBottomRightRadius: 10,
                           }}
-                          onPress={() => this.setState({Isvisible: false})}
+                          onPress={() => this.setState({ Isvisible: false })}
                         />
                       </View>
                     </View>
