@@ -218,6 +218,13 @@ class NotificationsNewScreen extends Component {
         return str
           }  
 
+          split(date){
+              var sp = date;
+              var spq = sp.split('T')
+              var spqw = spq[0]
+              return spqw
+          }
+
     render() {
         if (this.state.User.roles == 'Supervisor') {
         return (
@@ -281,7 +288,7 @@ class NotificationsNewScreen extends Component {
                                                     <View>
                                                         <AntDesign name='calendar' size={20} color='#FF3301' />
                                                     </View>
-                                                    <Text> {item.date}</Text>
+                                                    <Text> {this.split(item.date)}</Text>
                                                 </View>
 
                                                 {/* <View style={{ width: (width - 50) / 3, alignItems: 'center' }}>
