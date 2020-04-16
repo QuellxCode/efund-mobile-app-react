@@ -113,7 +113,6 @@ class ReportsScreen extends Component {
       .then(json => {
         this.setState({weekly: json.report});
         console.log('week', this.state.weekly);
-        //console.log("datey",this.state.weekly[0])
       })
       .catch(error => {
         console.error(error);
@@ -483,31 +482,44 @@ class ReportsScreen extends Component {
                         show Details:{this.state.details[index]}
                       </Text>
                     </View>
-                  </View>
-
-                  {/* <FlatList
+                    <View style={{ flexDirection: 'row', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth: 1 }}>
+                            <View style={MainFlowStyles.billHeadingStyle}>
+                                <Text>Item Name</Text>
+                            </View>
+                            <View style={MainFlowStyles.billHeadingStyle}>
+                                <Text>Quantity</Text>
+                            </View>
+                            <View style={MainFlowStyles.billHeadingStyle}>
+                                <Text>Rate</Text>
+                            </View>
+                            <View style={MainFlowStyles.billHeadingStyle}>
+                                <Text>Total</Text>
+                            </View>
+                        </View>
+                  <FlatList
                      data={item.details}
-                    //  keyExtractor={(a, b) => b.toString()}
-                      keyExtractor={(item2, index2) => index.toString()}
-                      renderItem={({item2, index2}) => ( //use item2 instead of item
-                        <View>
-                          <Text
-                            style={{
-                              fontSize: 20,
-                              color: "white",
-                              backgroundColor: "#FF3301",
-                              marginTop: 1,
-                              marginLeft: "1%",
-                              height: 50,
-                              padding: 10,
-                              width: 300,
-                            }}
-                          >
-                         aaaa: {item2.price}
-                          </Text>
-                         </View>
-                      )}
-                    /> */}
+                     keyExtractor={(item) => item.number}
+            showsVerticalScrollIndicator={false}
+            renderItem={({item}) => {
+              return(
+                <View style={{ flexDirection: 'row', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth: 1 }}>
+                <View style={MainFlowStyles.billHeadingStyle}>
+                    <Text>{item.item}</Text>
+                </View>
+                <View style={MainFlowStyles.billHeadingStyle}>
+                    <Text>{item.qty}</Text>
+                </View>
+                <View style={MainFlowStyles.billHeadingStyle}>
+                    <Text>{item.price}</Text>
+                </View>
+                <View style={MainFlowStyles.billHeadingStyle}>
+                    <Text>{item.pkr}</Text>
+                </View>
+            </View>
+              );
+            }}
+                    />
+                    </View>
                 </View>
               );
             }}
