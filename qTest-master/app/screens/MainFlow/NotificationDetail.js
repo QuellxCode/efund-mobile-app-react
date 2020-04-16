@@ -21,6 +21,8 @@ class NotifierDetaler extends Component {
             data: '',
             myToken: '',
             notification: '',
+            notification_id: '',
+            Requestvisible: false,
             total: 0,
             // totall: this.props.navigation.state.params.total,
             all: [],
@@ -29,6 +31,7 @@ class NotifierDetaler extends Component {
             description: '',
             purchaseID: this.props.navigation.state.params.purchase,
             newDetail: [],
+            stat: this.props.navigation.state.params.stat,
         }
     }
 
@@ -64,9 +67,11 @@ class NotifierDetaler extends Component {
         .then(json => {
           this.setState({
             newDetail: json.purchase.details,
+            // stat: json.purchase.payment_status,
           });
           console.log("Hello",json)
           console.log("Hello",this.state.newDetail)
+          console.log("stat", this.state.stat)
         })
         .catch(error => {
           console.error(error);
@@ -181,6 +186,7 @@ class NotifierDetaler extends Component {
               notification_id: json.notificationID,
               Requestvisible: true,
             });
+            console.log("myresponse", this.state.notification_id)
             this.director_notification(this.state.notification_id);
           })
           .catch(error => {
@@ -436,7 +442,9 @@ class NotifierDetaler extends Component {
                                       <Text style={{alignSelf:'flex-end', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth:1, marginRight:'5.5%'}}>{this.state.totall}</Text>
                                       </View>
                                   </View>
-                  
+                  {
+                    (this.state.stat == "Pending") &&
+                 <View>
                                   <View style={{flexDirection: "row", marginBottom: 20, marginTop: 10, marginHorizontal: "25%", elevation: 5 }}>
                   
                                       <Button
@@ -496,6 +504,8 @@ class NotifierDetaler extends Component {
                                           </View>
                                       </View>
                                   </Modal>
+                                  </View>
+                                   }
                               </View>
                           );
                           }

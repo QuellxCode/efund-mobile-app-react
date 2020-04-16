@@ -464,7 +464,7 @@ class NotificationsNewScreen extends Component {
                                         showsVerticalScrollIndicator={false}
                                         renderItem={({ item, index }) => {
                                             return (
-                                                <TouchableOpacity onPress={() => this.props.navigation.navigate("NotificationDeta", {project:item.project, allData:item, purchase: item.request})} >
+                                                <TouchableOpacity onPress={() => this.props.navigation.navigate("NotificationDeta", {project:item.project, allData:item, purchase: item.request, stat: item.payment})} >
                                                 <View style={{ marginBottom: this.state.selectedAll ? (index === this.state.all.length - 1 ? 20 : 0) : (this.state.selectedApproved ? (index === this.state.approved.length - 1 ? 20 : 0) : (index === this.state.rejected.length - 1 ? 20 : 0)) }}>
                                                     <View style={[MainFlowStyles.cardStyle, { marginBottom: 20, marginHorizontal: 5, marginTop: index === 0 ? 20 : 0, flex: 1, borderColor: item.payment == "Rejected" ? 'red' : item.payment == "Approved" ? 'green': 'grey', borderWidth:2 }]}>
                                                         <View style={{ padding: 10 }}>

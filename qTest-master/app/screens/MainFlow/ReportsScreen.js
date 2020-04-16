@@ -17,17 +17,19 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import DatePicker from 'react-native-datepicker';
 import moment from 'react-moment';
+import ExpanableList from 'react-native-expandable-section-flatlist';
+
 const {width, height} = Dimensions.get('window');
 
 class ReportsScreen extends Component {
   constructor(props) {
     super(props);
-    if( Platform.OS === 'android' )
-        {
+    // if( Platform.OS === 'android' )
+    //     {
  
-          UIManager.setLayoutAnimationEnabledExperimental(true);
+    //       UIManager.setLayoutAnimationEnabledExperimental(true);
  
-        }
+    //     }
     this.state = {
       selectedDaily: true,
       selectedWeekly: false,
@@ -46,39 +48,40 @@ class ReportsScreen extends Component {
         {date: 'Jan 01, 2020', bNumber: '01', status: 'Pending'},
         {date: 'Jan 01, 2020', bNumber: '02', status: 'Rejected'},
       ],
-      textLayoutHeight: 0,
-           updatedHeight: 0, 
-           expand: false,
-           buttonText : 'Show Details'
+      // textLayoutHeight: 0,
+      //      updatedHeight: 0, 
+      //      expand: false,
+           buttonText : 'Show Details',
+           viewdata: false
     };
   }
 
-  expand_collapse_Function =()=>
-  {
-      LayoutAnimation.configureNext( LayoutAnimation.Presets.easeInEaseOut );
+  // expand_collapse_Function =()=>
+  // {
+  //     LayoutAnimation.configureNext( LayoutAnimation.Presets.easeInEaseOut );
 
-      if( this.state.expand == false )
-      {
-          this.setState({ 
-            updatedHeight: this.state.textLayoutHeight, 
-            expand: true, 
-            buttonText: 'Hide Details' 
-          }); 
-      }
-      else
-      {
-          this.setState({ 
-            updatedHeight: 0, 
-            expand: false, 
-            buttonText: 'Show Details' 
-          });
-      }
-  }
+  //     if( this.state.expand == false )
+  //     {
+  //         this.setState({ 
+  //           updatedHeight: this.state.textLayoutHeight, 
+  //           expand: true, 
+  //           buttonText: 'Hide Details' 
+  //         }); 
+  //     }
+  //     else
+  //     {
+  //         this.setState({ 
+  //           updatedHeight: 0, 
+  //           expand: false, 
+  //           buttonText: 'Show Details' 
+  //         });
+  //     }
+  // }
 
-  getHeight(height)
-  {
-      this.setState({ textLayoutHeight: height });
-  }
+  // getHeight(height)
+  // {
+  //     this.setState({ textLayoutHeight: height });
+  // }
 
   async componentDidMount() {
     var that = this;
@@ -121,6 +124,7 @@ class ReportsScreen extends Component {
       .then(json => {
         this.setState({daily: json.report});
         console.log("daily", this.state.daily)
+        console.log("daily", json)
         //console.log('daily life', this.state.daily);
         // for (let i = 0; i < this.state.daily.length; i++) {
         //   thisarr.push({
@@ -188,7 +192,11 @@ class ReportsScreen extends Component {
     var sp = date;
     var spq = sp.split('T');
     var spqw = spq[0];
-    return spqw;
+   // console.log(spqw)
+    var sqwww = spqw.split('-');
+   // console.log(sqwww)
+    var qwert = sqwww[2]+'-'+sqwww[1]+'-'+sqwww[0];
+    return qwert;
   }
   details(item) {
     console.log('fuc', JSON.parse(item));
@@ -508,28 +516,19 @@ class ReportsScreen extends Component {
                         borderBottomWidth: 1,
                       }}
                     />
-                    <View
-                      style={{
-                        padding: 10,
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                      }}>
-                        <TouchableOpacity onPress={ this.expand_collapse_Function }>
-                      <Text
-                        style={{
-                          color: '#FF3301',
-                          fontWeight: 'bold',
-                          fontSize: 16,
-                          marginRight: 10,
-                        }}>
-                        {this.state.buttonText}
-                        show Details:
-                      </Text>
-                      </TouchableOpacity>
-                    </View>
-                    <View style = {{ height: this.state.updatedHeight, overflow: 'hidden' }}>
-                      <View onLayout = {( value ) => this.getHeight( value.nativeEvent.layout.height )}>
-                    <View style={{ flexDirection: 'row', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth: 1 }}>
+                    <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center' }}>
+                      <TouchableOpacity onPress={() => this.setState({viewdata: !this.state.viewdata})}>
+                    <Text style={{ color: '#FF3301', fontWeight: 'bold', fontSize: 16, marginRight: 10 }}>{this.state.viewdata ? "Hide Details" : "Show Details"}</Text>
+                                            {/* <View style={{ justifyContent: 'flex-end', marginBottom: 4 }}>
+                                                <FontAwesome name='chevron-down' size={12} color='#FF3301' />
+                                            </View> */}
+                                            </TouchableOpacity>
+                                        </View>
+                    {/* <View style = {{ height: this.state.updatedHeight, overflow: 'hidden' }}>
+                      <View onLayout = {( value ) => this.getHeight( value.nativeEvent.layout.height )}> */}
+                    {/* <View style={{ flexDirection: 'row', borderBottomColor: '#FFC1B2', borderBottomWidth: 1 }}> */}
+                 {(this.state.viewdata == true) &&
+                 <View> 
                     <View
                       style={{
                         flexDirection: 'row',
@@ -581,9 +580,10 @@ class ReportsScreen extends Component {
                         );
                       }}
                     />
-                    </View>
-                    </View>
-                    </View>
+                    </View>}
+                    {/* </View> */}
+                    {/* </View>
+                    </View> */}
                   </View>
                 </View>
               );
