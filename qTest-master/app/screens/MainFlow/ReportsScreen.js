@@ -95,9 +95,9 @@ class ReportsScreen extends Component {
       });
   }
   weekly(date1) {
-    this.setState({nextdate:date1})
-    console.log("first",this.state.date)
-    console.log("next",this.state.nextdate)
+    this.setState({nextdate: date1});
+    console.log('first', this.state.date);
+    console.log('next', this.state.nextdate);
     fetch('http://efundapp.herokuapp.com/api/reports/weekly', {
       method: 'Post',
       headers: {
@@ -108,7 +108,6 @@ class ReportsScreen extends Component {
       body: JSON.stringify({
         sDate: this.state.date,
         eDate: this.state.nextdate,
-
       }),
     })
       .then(response => response.json())
@@ -144,12 +143,15 @@ class ReportsScreen extends Component {
     console.log('datedyy', datee);
     this.setState({next: datee});
   }
-split(date){
-              var sp = date;
-              var spq = sp.split('T')
-              var spqw = spq[0]
-              return spqw
-          }
+  split(date) {
+    var sp = date;
+    var spq = sp.split('T');
+    var spqw = spq[0];
+    return spqw;
+  }
+  details(item) {
+    console.log('fuc', JSON.parse(item));
+  }
   render() {
     return (
       <View>
@@ -220,7 +222,6 @@ split(date){
                 <View style={{flex: 1}} />
               </View>
             </TouchableOpacity>
-
             <TouchableOpacity
               style={MainFlowStyles.tabStyles}
               onPress={() =>
@@ -257,84 +258,89 @@ split(date){
           <View>
             {this.state.selectedWeekly == true && (
               <View>
-              <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-               <Text
-                        style={{
-                          color: '#FF3301',
-                          fontWeight: 'bold',
-                          fontSize: 16,
-                          marginTop:10,
-                          marginRight: 5,
-                        }}>
-                        First Date
-                      </Text>
-                <DatePicker
-                  style={{width: 200}}
-                  date={this.state.date}
-                  mode="date"
-                  placeholder={this.state.date}
-                  format="YYYY-MM-DD"
-                  // minDate="2016-05-01"
-                  // maxDate="2016-06-01"
-                  confirmBtnText="Confirm"
-                  cancelBtnText="Cancel"
-                  customStyles={{
-                    dateIcon: {
-                      position: 'absolute',
-                      left: 0,
-                      top: 4,
-                      marginLeft: 0,
-                    },
-                    dateInput: {
-                      marginLeft: 36,
-                    },
-                    // ... You can check the source to find the other keys.
-                  }}
-                  onDateChange={date => {
-                    this.setState({date: date, disabled: false});
-                    //console.log('date', this.state.date);
-                    this.addDays(this.state.date);
-                  }}
-                />
-                </View>
-                 <View style={{flexDirection: 'row', justifyContent: 'center',marginTop:10}}>
+                <View style={{flexDirection: 'row', justifyContent: 'center'}}>
                   <Text
-                        style={{
-                          color: '#FF3301',
-                          fontWeight: 'bold',
-                          fontSize: 16,
-                          marginTop:10,
-                          marginRight: 5,
-                        }}>
-                       Last Date
-                      </Text>
-                <DatePicker
-                  style={{width: 200}}
-                  date={this.state.nextdate}
-                  mode="date"
-                  disabled={this.state.disabled}
-                  placeholder={this.state.nextdate}
-                  format="YYYY-MM-DD"
-                  minDate={this.state.date}
-                  maxDate={this.state.next}
-                  confirmBtnText="Confirm"
-                  cancelBtnText="Cancel"
-                  customStyles={{
-                    dateIcon: {
-                      position: 'absolute',
-                      left: 0,
-                      top: 4,
-                      marginLeft: 0,
-                    },
-                    dateInput: {
-                      marginLeft: 36,
-                    },
-                  }}
-                  onDateChange={date => {
-                    this.weekly(date)
-                    // this.setState({nextdate: date});
-                  }}
-                />
+                    style={{
+                      color: '#FF3301',
+                      fontWeight: 'bold',
+                      fontSize: 16,
+                      marginTop: 10,
+                      marginRight: 5,
+                    }}>
+                    First Date
+                  </Text>
+                  <DatePicker
+                    style={{width: 200}}
+                    date={this.state.date}
+                    mode="date"
+                    placeholder={this.state.date}
+                    format="YYYY-MM-DD"
+                    // minDate="2016-05-01"
+                    // maxDate="2016-06-01"
+                    confirmBtnText="Confirm"
+                    cancelBtnText="Cancel"
+                    customStyles={{
+                      dateIcon: {
+                        position: 'absolute',
+                        left: 0,
+                        top: 4,
+                        marginLeft: 0,
+                      },
+                      dateInput: {
+                        marginLeft: 36,
+                      },
+                      // ... You can check the source to find the other keys.
+                    }}
+                    onDateChange={date => {
+                      this.setState({date: date, disabled: false});
+                      //console.log('date', this.state.date);
+                      this.addDays(this.state.date);
+                    }}
+                  />
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    marginTop: 10,
+                  }}>
+                  <Text
+                    style={{
+                      color: '#FF3301',
+                      fontWeight: 'bold',
+                      fontSize: 16,
+                      marginTop: 10,
+                      marginRight: 5,
+                    }}>
+                    Last Date
+                  </Text>
+                  <DatePicker
+                    style={{width: 200}}
+                    date={this.state.nextdate}
+                    mode="date"
+                    disabled={this.state.disabled}
+                    placeholder={this.state.nextdate}
+                    format="YYYY-MM-DD"
+                    minDate={this.state.date}
+                    maxDate={this.state.next}
+                    confirmBtnText="Confirm"
+                    cancelBtnText="Cancel"
+                    customStyles={{
+                      dateIcon: {
+                        position: 'absolute',
+                        left: 0,
+                        top: 4,
+                        marginLeft: 0,
+                      },
+                      dateInput: {
+                        marginLeft: 36,
+                      },
+                    }}
+                    onDateChange={date => {
+                      this.weekly(date);
+                      // this.setState({nextdate: date});
+                    }}
+                  />
                 </View>
                 {/* <View style={{flexDirection: 'row', justifyContent: 'center',alignContent:"center",alignItems:"center"}}>
                   <TouchableOpacity
@@ -360,8 +366,7 @@ split(date){
                     </Text>
                   </TouchableOpacity>
                 </View> */}
-            </View>
-
+              </View>
             )}
           </View>
           <FlatList
@@ -475,7 +480,7 @@ split(date){
                           fontSize: 16,
                           marginRight: 10,
                         }}>
-                        show Details
+                        show Details:{this.state.details[index]}
                       </Text>
                     </View>
                     <View style={{ flexDirection: 'row', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth: 1 }}>
