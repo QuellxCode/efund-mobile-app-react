@@ -79,6 +79,7 @@ class ReportsScreen extends Component {
       .then(response => response.json())
       .then(json => {
         this.setState({daily: json.report});
+        console.log("daily", this.state.daily)
         //console.log('daily life', this.state.daily);
         // for (let i = 0; i < this.state.daily.length; i++) {
         //   thisarr.push({
@@ -417,13 +418,13 @@ split(date){
                           </View>
                           <Text> {this.split(item.date)}</Text>
                         </View>
-                        <View
+                        {/* <View
                           style={{
                             flexDirection: 'row',
                             width: (width - 50) / 3,
                           }}>
                           <View />
-                        </View>
+                        </View> */}
 
                         <View
                           style={{
@@ -443,9 +444,9 @@ split(date){
                           <Text
                             style={{
                               color:
-                                item.payment_status === 'Pending'
+                                item.payment_status === 'Approved'
                                   ? '#26FF26'
-                                  : item.status === 'Rejected'
+                                  : item.payment_status === 'Rejected'
                                   ? 'red'
                                   : 'grey',
                               fontSize: 14,

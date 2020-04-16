@@ -35,7 +35,8 @@ class RequestPayment extends Component {
             results: 0,
             val: 0,
             disabledB: true,
-            total: 0
+            total: 0,
+            purchaseID: '',
         };
         this.list = React.createRef();
     }
@@ -121,8 +122,10 @@ class RequestPayment extends Component {
                     console.log(json)
                     this.setState({ 
                         response_: json,
-                        disabledB: false
+                        disabledB: false,
+                        purchaseID: json.purchaseID
                     })
+                    console.log("adasda", this.state.purchaseID)
                 })
                 .catch(error => {
                     console.error(error);
@@ -434,7 +437,8 @@ class RequestPayment extends Component {
                                 this.props.navigation.navigate('GenerateBill', {
                                     bill: this.state.bills,
                                     project: this.state.selectedValue,
-                                    total: this.state.total
+                                    total: this.state.total,
+                                    purchase: this.state.purchaseID
                                 })
                                this.setState({bill: ''})
 

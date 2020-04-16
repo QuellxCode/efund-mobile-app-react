@@ -22,6 +22,7 @@ class GenerateBillScreen extends Component {
             notification: '',
             total: 0,
             totall: this.props.navigation.state.params.total,
+            purchaseID: this.props.navigation.state.params.purchase,
         }
     }
 
@@ -108,10 +109,10 @@ class GenerateBillScreen extends Component {
                 'X-Auth-Token': this.state.User.token,
             },
             body: JSON.stringify({
-                "details": this.state.data_
-                ,"project": this.state.data_project,
-                 "notification_status":"RequestPayment"
-
+                "details": this.state.data_,
+                "project": this.state.data_project,
+                "notification_status": "RequestPayment",
+                "request" : this.state.purchaseID
             })
         })
             .then(response => response.json())
