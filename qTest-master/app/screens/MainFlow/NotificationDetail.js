@@ -27,6 +27,8 @@ class NotifierDetaler extends Component {
             specif: [],
             detailed:[],
             description: '',
+            purchaseID: this.props.navigation.state.params.purchase,
+            newDetail: [],
         }
     }
 
@@ -45,6 +47,30 @@ class NotifierDetaler extends Component {
         } catch (error) {
           console.log('error getting data');
         }
+    }
+
+    get_Detailed() {
+      var arr = [];
+      var arry = [];
+      fetch('http://efundapp.herokuapp.com/api/purchase/get-purchase/'+this.state.purchaseID, {
+        method: 'Get',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'X-Auth-Token': this.state.User.token,
+        },
+      })
+        .then(response => response.json())
+        .then(json => {
+          this.setState({
+            newDetail: json.purchase.details,
+          });
+          console.log("Hello",json)
+          console.log("Hello",this.state.newDetail)
+        })
+        .catch(error => {
+          console.error(error);
+        });
     }
 
     get_notification() {
@@ -70,6 +96,7 @@ class NotifierDetaler extends Component {
             console.log("Detailed",this.state.detailed)
             console.log("AAAAA", this.state.data_)
             console.log("Sdasdasd", this.txt(this.state.data_.message))
+            console.log("SSasadda", this.state.purchaseID)
             // console.log("aabe",json.notification[3].message[0].pkr)
             // console.log("dasdatsd", this.state.all)
             // console.log("dasdatsd", this.state.all.length)
@@ -81,7 +108,7 @@ class NotifierDetaler extends Component {
             // }
             // this.setState({dada:arr})
             // console.log('dada arr', JSON.stringify(arr));
-            // this.dataCheck();
+            this.get_Detailed();
           })
           .catch(error => {
             console.error(error);
@@ -103,6 +130,7 @@ class NotifierDetaler extends Component {
             project: this.state.data_.project,
             purchaserName: this.state.data_.purchaserName,
             purchaserID: this.state.data_.purchaserID,
+            request: this.state.purchaseID
           }),
         })
           .then(response => response.json())
@@ -144,6 +172,7 @@ class NotifierDetaler extends Component {
             project: this.state.data_.project,
             purchaserName: this.state.data_.purchaserName,
             purchaserID: this.state.data_.purchaserID,
+            request: this.state.purchaseID
           }),
         })
           .then(response => response.json())
@@ -184,6 +213,7 @@ class NotifierDetaler extends Component {
             message: this.state.description,
             purchaserName: this.state.data_.purchaserName,
             purchaserID: this.state.data_.purchaserID,
+            request: this.state.purchaseID
           }),
         })
           .then(response => response.json())
@@ -258,9 +288,9 @@ class NotifierDetaler extends Component {
                                 <Text>Total</Text>
                             </View>
                         </View>
-                        {/* <FlatList
+                        <FlatList
                             style={{ flexGrow: 0 }}
-                            data={this.state.data_}
+                            data={this.state.newDetail}
                             keyExtractor={(item) => item.number}
                             showsVerticalScrollIndicator={false}
                             renderItem={({ item }) => {
@@ -281,10 +311,10 @@ class NotifierDetaler extends Component {
                                     </View>
                                 );
                             }}
-                        /> */}
-                        <View>
+                        />
+                        {/* <View>
                                       <Text>{this.txt(this.state.data_.message)}</Text>
-                                          </View>
+                                          </View> */}
                     <Text style={{alignSelf:'flex-end', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth:1, marginRight:'5.5%'}}>{this.state.totall}</Text>
                     </View>
                 </View>
@@ -381,7 +411,7 @@ class NotifierDetaler extends Component {
                                           </View>
                                           <FlatList
                                               style={{ flexGrow: 0 }}
-                                              data={this.state.data_}
+                                              data={this.state.newDetail}
                                               keyExtractor={(item) => item.number}
                                               showsVerticalScrollIndicator={false}
                                               renderItem={({ item }) => {
@@ -431,7 +461,7 @@ class NotifierDetaler extends Component {
                                               <View style={{ alignSelf: 'center', padding: 20 }}>
                                                   <FontAwesome name='send' color='#FF3301' size={50} />
                                               </View>
-                                              <Text style={{ alignSelf: 'center', fontSize: 16, fontWeight: 'bold', color: '#FF3301', paddingBottom: 40 }}>Request Sent To Director</Text>
+                                              <Text style={{ alignSelf: 'center', fontSize: 16, fontWeight: 'bold', color: '#FF3301', paddingBottom: 40 }}>Request Sent To Accountant</Text>
                                               <Button
                                                   title='OK'
                                                   buttonStyle={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 0, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, }}

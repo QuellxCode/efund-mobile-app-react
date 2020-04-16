@@ -173,6 +173,7 @@ class GeneratePayOrderScreen extends Component {
         this.setState({
             banks: responseJson.bank
          })
+         console.log("dsfaf",this.state.banks)
          this._getPayee();
         })
        .catch(error=>console.log(error))

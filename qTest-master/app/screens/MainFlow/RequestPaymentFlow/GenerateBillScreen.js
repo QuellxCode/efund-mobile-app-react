@@ -15,6 +15,7 @@ class GenerateBillScreen extends Component {
             data_project: this.props.navigation.state.params.project,
             visible: false,
             response_: '',
+            resp: '',
             token: '',
             User: [],
             data: '',
@@ -22,7 +23,7 @@ class GenerateBillScreen extends Component {
             notification: '',
             total: 0,
             totall: this.props.navigation.state.params.total,
-            purchaseID: this.props.navigation.state.params.purchase,
+            purchaseID: '',
         }
     }
 
@@ -67,6 +68,36 @@ class GenerateBillScreen extends Component {
     //         .catch((error) => { console.log(error) });
 
     // }
+
+    handlePressfirst = async () => {
+            fetch('http://efundapp.herokuapp.com/api/purchase/post', {
+                method: 'Post',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-Auth-Token': this.state.User.token,
+                },
+                body: JSON.stringify({
+                    "project": this.state.data_project,
+                     "details": this.state.data_
+                })
+            })
+                .then(response => response.json())
+                .then(json => {
+                    console.log(json)
+                    this.setState({ 
+                        resp: json,
+                        // disabledB: false,
+                        purchaseID: json.purchaseID
+                    })
+                    console.log("adasda", this.state.purchaseID)
+                    this.handlePress();
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+    }
+
     get_notifiaction(n_id) {
         console.log("this.your notify id"+n_id)
         fetch('http://efundapp.herokuapp.com/api/notification/'+n_id, {
@@ -173,7 +204,7 @@ class GenerateBillScreen extends Component {
                                 );
                             }}
                         />
-                    <Text style={{alignSelf:'flex-end', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth:1, marginRight:'5.5%'}}>{this.state.totall}</Text>
+                    <Text style={{alignSelf:'flex-end', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth:1, marginRight:'5%'}}>{this.state.totall}</Text>
                     </View>
                 </View>
                 <View style={{ marginHorizontal: 20, marginBottom: 20, marginTop: 10, elevation: 5 }}>
@@ -181,7 +212,7 @@ class GenerateBillScreen extends Component {
                         title='Forward Request'
                         buttonStyle={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10 }}
                         containerStyle={{ marginHorizontal: 10 }}
-                        onPress={() => { this.handlePress(), { visible: true } }}
+                        onPress={() => { this.handlePressfirst(), { visible: true } }}
                     />
                 </View>
                 <Modal animationType='fade' transparent={true} visible={this.state.visible}>

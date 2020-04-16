@@ -28,6 +28,8 @@ class RequestPayment extends Component {
             Category: [],
             selectedValue: null,
             selectedProject: "",
+            selVal: '',
+            selProj: '',
             pkkr: '',
             User: '',
             data: '',
@@ -37,6 +39,8 @@ class RequestPayment extends Component {
             disabledB: true,
             total: 0,
             purchaseID: '',
+            proj: '',
+            show: false,
         };
         this.list = React.createRef();
     }
@@ -65,8 +69,12 @@ class RequestPayment extends Component {
         })
             .then(response => response.json())
             .then(json => {
-                this.setState({ data: json.project })
-                console.log("ffffff")
+                this.setState({ 
+                    data: json.project, 
+                    proj: json.project,
+                    show: true
+                })
+                console.log("ffffff", this.state.proj)
                 var v = this.state.data.length
                 for (let i = 0; i < v; i++) {
                     console.log('v:' + json.project[i].project_name)
@@ -84,6 +92,12 @@ class RequestPayment extends Component {
             });
 
     }
+
+    loadProjects() {
+        return this.state.proj.map(proj => (
+           <Picker.Item label={proj.project_name} value={proj._id} />
+        ))
+      }
 
     handlePress = async () => {
         var aa = this.state.title;
@@ -186,22 +200,45 @@ class RequestPayment extends Component {
     //         </View>
     //     </KeyboardAvoidingView>
     // )
+
+    activate_(){
+        if(this.state.bills != []){
+            this.state.disabledB = false;
+        }
+    }
+
+    onValueChange (value) {
+        this.setState({
+          selVal : value
+        });
+        this.state.selProj = value
+        console.log(this.state.selProj)
+    }  
+
     render() {
-        const PickerItems = this.state.Category.map((element, index) => (
-            <Picker.Item
-                key={"pick" + element.project_name}
-                label={"" + "  " + element.project_name}
-                value={element.project_id}
-                prompt='Options'
-            />
-        ));
+        // const PickerItems = this.state.Category.map((element, index) => (
+        //     <Picker.Item
+        //         key={"pick" + element.project_name}
+        //         label={"" + "  " + element.project_name}
+        //         value={element.project_id}
+        //         prompt='Options'
+        //     />
+        // ));
+
+        if(this.state.show === false){
+            return(
+                <View/>
+            )
+        }
+        else{
+
         return (
             
             <View style={{ flex: 1 }}>
                 <Header />
                 <Text style={{ fontWeight: 'bold', fontSize: 30, alignSelf: 'center', color: '#FF3301' }}>Select Project</Text>
                 <View style={{ borderColor: '#FF3301', borderWidth: 1, width: 250, height: 50, borderRadius: 30, justifyContent: 'center', alignSelf: 'center', marginTop: 10 }}>
-                    <Picker
+                    {/* <Picker
                         selectedValue={this.state.selectedValue}
                         prompt="Select Project"
                         style={{
@@ -222,9 +259,18 @@ class RequestPayment extends Component {
 
                         }}
                     >
-                        {/* <Picker.Item label='   Select Project' value='' /> */}
                         {PickerItems}
-                    </Picker>
+                    </Picker> */}
+
+                                <Picker
+                                    selectedValue={this.state.selVal}
+                                    // onValueChange={(itemValue, itemIndex) => 
+                                    //     this.setState({selectedBank: itemValue})}>
+                                    onValueChange={this.onValueChange.bind(this)}>
+                                       <Picker.Item label='Select a Project' value='' />
+                                    {this.loadProjects()}
+                                </Picker>
+
                 </View>
                 {/* {this.state.bills.map((item, index) => ( */}
                 {/* ))}    */}
@@ -320,7 +366,7 @@ class RequestPayment extends Component {
                                     ref={ref => this.ref = ref}
             
                                 ></TextInput> */}
-                                    <Text>{item.price}</Text>
+                                    <Text>{item.qty}</Text>
 
                                 <View style={{ marginBottom: 2 }} />
                             </View>
@@ -332,7 +378,7 @@ class RequestPayment extends Component {
                                     ref={ref => this.ref = ref}
             
                                 ></TextInput> */}
-                                    <Text>{item.qty}</Text>
+                                    <Text>{item.price}</Text>
 
                                 <View style={{ marginBottom: 2 }} />
                             </View>
@@ -385,10 +431,11 @@ class RequestPayment extends Component {
                                     val: result,
                                     total: totall
                                 })
-                                this.handlePress();
+                                // this.handlePress();
                                 n = n + 1
                                 b.push({ item: aa, price: ac, qty: ab, pkr: result });
                                 this.setState({ bills: b, title:'', qty: '', price: '' })
+                                this.activate_();
                                 console.log("arr from button", this.state.bills, this.state.qty,this.state.price,this.state.total)
                             }
                             }
@@ -436,7 +483,7 @@ class RequestPayment extends Component {
                             // else {
                                 this.props.navigation.navigate('GenerateBill', {
                                     bill: this.state.bills,
-                                    project: this.state.selectedValue,
+                                    project: this.state.selProj,
                                     total: this.state.total,
                                     purchase: this.state.purchaseID
                                 })
@@ -456,6 +503,7 @@ class RequestPayment extends Component {
             
             
         );
+                    }
     }
 }
 export default RequestPayment;
