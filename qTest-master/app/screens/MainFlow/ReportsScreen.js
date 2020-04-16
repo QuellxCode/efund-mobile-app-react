@@ -7,6 +7,9 @@ import {
   FlatList,
   AsyncStorage,
   Picker,
+  UIManager,
+  LayoutAnimation,
+  Platform
 } from 'react-native';
 import Header from '../../components/Header';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
@@ -19,6 +22,12 @@ const {width, height} = Dimensions.get('window');
 class ReportsScreen extends Component {
   constructor(props) {
     super(props);
+    if( Platform.OS === 'android' )
+        {
+ 
+          UIManager.setLayoutAnimationEnabledExperimental(true);
+ 
+        }
     this.state = {
       selectedDaily: true,
       selectedWeekly: false,
@@ -37,8 +46,40 @@ class ReportsScreen extends Component {
         {date: 'Jan 01, 2020', bNumber: '01', status: 'Pending'},
         {date: 'Jan 01, 2020', bNumber: '02', status: 'Rejected'},
       ],
+      textLayoutHeight: 0,
+           updatedHeight: 0, 
+           expand: false,
+           buttonText : 'Show Details'
     };
   }
+
+  expand_collapse_Function =()=>
+  {
+      LayoutAnimation.configureNext( LayoutAnimation.Presets.easeInEaseOut );
+
+      if( this.state.expand == false )
+      {
+          this.setState({ 
+            updatedHeight: this.state.textLayoutHeight, 
+            expand: true, 
+            buttonText: 'Hide Details' 
+          }); 
+      }
+      else
+      {
+          this.setState({ 
+            updatedHeight: 0, 
+            expand: false, 
+            buttonText: 'Show Details' 
+          });
+      }
+  }
+
+  getHeight(height)
+  {
+      this.setState({ textLayoutHeight: height });
+  }
+
   async componentDidMount() {
     var that = this;
     var date = new Date().getDate(); //Current Date
@@ -473,6 +514,7 @@ class ReportsScreen extends Component {
                         flexDirection: 'row',
                         justifyContent: 'center',
                       }}>
+                        <TouchableOpacity onPress={ this.expand_collapse_Function }>
                       <Text
                         style={{
                           color: '#FF3301',
@@ -480,9 +522,12 @@ class ReportsScreen extends Component {
                           fontSize: 16,
                           marginRight: 10,
                         }}>
-                        show Details:{this.state.details[index]}
+                        {this.state.buttonText}
                       </Text>
+                      </TouchableOpacity>
                     </View>
+                    <View style = {{ height: this.state.updatedHeight, overflow: 'hidden' }}>
+                      <View onLayout = {( value ) => this.getHeight( value.nativeEvent.layout.height )}>
                     <View style={{ flexDirection: 'row', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth: 1 }}>
                             <View style={MainFlowStyles.billHeadingStyle}>
                                 <Text>Item Name</Text>
@@ -520,6 +565,8 @@ class ReportsScreen extends Component {
               );
             }}
                     />
+                    </View>
+                    </View>
                     </View>
                 </View>
               );
