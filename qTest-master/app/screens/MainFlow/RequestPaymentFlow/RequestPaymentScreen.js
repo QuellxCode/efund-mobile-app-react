@@ -76,7 +76,7 @@ class RequestPayment extends Component {
                     });
                 }
                 this.setState({ Category: thisdata })
-                console.log("aaa" + JSON.stringify(this.state.Category));
+                console.log("aaaaaa" + JSON.stringify(this.state.Category));
             })
 
             .catch(error => {
@@ -200,18 +200,18 @@ class RequestPayment extends Component {
             <View style={{ flex: 1 }}>
                 <Header />
                 <Text style={{ fontWeight: 'bold', fontSize: 30, alignSelf: 'center', color: '#FF3301' }}>Select Project</Text>
-                <View style={{ borderColor: '#FF3301', borderWidth: 1, width: 250, height: 50, borderRadius: 30, justifyContent: 'center', alignSelf: 'center', marginTop: 10 }}>
+                <View style={{ borderColor: '#FF3301' }}>
                     <Picker
                         selectedValue={this.state.selectedValue}
                         prompt="Select Project"
                         style={{
-                            width: 200, height: 50,
+                            width: 600, height: 50,
                             alignSelf: 'center',
+                            alignContent:"center",
+                            justifyContent:'center',
                             marginTop: 1,
-                            borderWidth: 2
-                            , color: '#FF3301',
-                            //alignSelf: 'flex-end',
-                            // flexDirection: "row-reverse",
+                            borderWidth: 2,
+                            color: '#FF3301',
                             borderColor: 'red',
                             fontSize: 30
                         }}

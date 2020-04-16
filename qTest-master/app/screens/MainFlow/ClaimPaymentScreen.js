@@ -31,7 +31,6 @@ class ClaimPaymentScreen extends Component {
   // var that = this;
   // var token =
   // console.log(token)
-
   async componentDidMount() {
     try {
       const value = await AsyncStorage.getItem('User');

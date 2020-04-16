@@ -55,34 +55,18 @@ export default class ClaimDropDown extends Component {
     var ac = this.state.price;
     var result = ac * ab;
     var project = this.state.selectedValue;
-    var cat = this.state.ctg;
-    // var name=this.state.User.name
-    // console.log(name);
-    //console.log("a",aa,"b",ab,"c",ac,"d",result,"pe",project,'cat',cat)
-    // var data = {
-    //         "payment": result,
-    //         "project": project,
-    //         "purchaser":name,
-    //         "details": [
-    //             {
-    //               "title": aa,
-    //               "quantity": ab,
-    //               "price": ac,
-    //               "total_price": result,
-    //               "category": cat,
-    //             }
-    //         ]
-    //     }
+    var cat = this.state.selectedCtg;
+    console.log("a",aa,"b",ab,"c",ac,"d",result,"pe",project,'cat',cat)
     var data = {
       // "payment": "50000",
-      project: project,
-      details: [
+      "project": project,
+      "details": [
         {
-          item: aa,
-          qty: ab,
-          price: ac,
-          pkr: result,
-          category: cat,
+          "item": aa,
+          "qty": ab,
+          "price": ac,
+          "pkr": result,
+          "category": cat,
         },
       ],
     };
@@ -123,7 +107,7 @@ export default class ClaimDropDown extends Component {
       .then(json => {
         var v = this.state.Category3;
         var chat = json.chart;
-        console.log('chat', chat.length);
+        // console.log('chat', chat.length);
         for (let j = 0; j < chat.length; j++) {
           var ll = json.chart[j].items.length;
           for (let kk = 0; kk < ll; kk++) {
@@ -279,7 +263,7 @@ export default class ClaimDropDown extends Component {
       <Picker.Item
         key={'pick' + element2.item_name}
         label={'' + '    ' + element2.item_name}
-        value={element2.id}
+        value={element2.item_name}
         prompt="Options"
       />
     ));
@@ -378,7 +362,7 @@ export default class ClaimDropDown extends Component {
             <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
               <View style={{flexDirection: 'row'}}>
                 <Picker
-                  selectedValue={this.state.selectedId}
+                  selectedValue={this.state.selectedCtg}
                   prompt="Select Category"
                   style={{
                     width: 50,
@@ -393,7 +377,7 @@ export default class ClaimDropDown extends Component {
                     this.setState({selectedCtg: itemValue});
                     this.setState({selectedId: itemValue});
                     console.log(
-                      'selected:value of project' + this.state.selectedId,
+                      'selected: catogry' + this.state.selectedCtg,
                     );
                   }}>
                   {CtgItems}
@@ -488,6 +472,7 @@ export default class ClaimDropDown extends Component {
                             style={{
                               width: 50,
                               alignSelf: 'flex-end',
+                              placeholder:"qty",
                               zIndex: 5,
                               marginTop: 1,
                               borderWidth: 1,
@@ -498,8 +483,8 @@ export default class ClaimDropDown extends Component {
                               this.setState({selectedCtg: itemValue});
                               this.setState({selectedId: itemValue});
                               console.log(
-                                'selected:value of project' +
-                                  this.state.selectedId,
+                                'selected: ctg' +
+                                  this.state.selectedCtg,
                               );
                             }}>
                             {CtgItems}
@@ -541,7 +526,7 @@ export default class ClaimDropDown extends Component {
                 var ac = this.state.price;
                 var ae = this.state.pkr;
                 var result = ac * ab;
-                var cat = this.state.ctg;
+                var cat = this.state.selectedCtg;
                 this.claim_handlePress();
                 b.push({
                   item: aa,
@@ -585,7 +570,7 @@ export default class ClaimDropDown extends Component {
                 var ab = this.state.qty;
                 var ac = this.state.price;
                 var result = ac * ab;
-                var cat = this.state.ctg;
+                var cat = this.state.selectedCtg;
                 this.claim_handlePress();
                 b.push({
                   item: aa,
@@ -599,7 +584,7 @@ export default class ClaimDropDown extends Component {
                   ID: this.state.ID,
                   data: this.state.bills,
                   data1: this.state.selectedValue,
-                  data_ctg: this.state.ctg,
+                  data_ctg: this.state.selectedCtg,
                 });
               }}>
               <Text
