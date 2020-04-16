@@ -27,10 +27,12 @@ export default class ClaimDropDown extends Component {
       project_name: '',
       project_id: '',
       Category: [],
-      Category2: [],
-      Category3:[],
+      CategoryCtg: [],
+      Category3: [],
       selectedValue: '',
       selectedProject: '',
+      selectedCtg: '',
+      selectedId: '',
       User: [],
       bills: [],
       qty: 0,
@@ -108,7 +110,7 @@ export default class ClaimDropDown extends Component {
     }
   };
   claim_ctg() {
-   var array = [];
+    var array = [];
     fetch('http://efundapp.herokuapp.com/api/chart', {
       method: 'Get',
       headers: {
@@ -119,23 +121,21 @@ export default class ClaimDropDown extends Component {
     })
       .then(response => response.json())
       .then(json => {
-        // this.setState({ctgdata: json.chart[0].items[0].item_name});
-        // console.log("ctg",JSON.stringify(this.state.ctgdata))
-       this.setState({Category3:json.chart[0].items});
-         var v =this.state.Category3
-         var chat=json.chart
-        //  console.log("vvv",v.length)
-        //  console.log("chat",chat.length)
-         for (let i = 0; i < v.length; i++) {
-         for (let j = 0; j < chat.length; j++) {
-          //console.log('<aa>', json.chart[j].items[i].item_name);
+        var v = this.state.Category3;
+        var chat = json.chart;
+        console.log('chat', chat.length);
+        for (let j = 0; j < chat.length; j++) {
+          var ll = json.chart[j].items.length;
+          for (let kk = 0; kk < ll; kk++) {
+            // console.log("hay i aam",json.chart[j].items[kk].item_name)
             array.push({
-              item_name:json.chart[j].items[i].item_name
+              item_name: json.chart[j].items[kk].item_name,
+              id: json.chart[j].items[kk]._id,
             });
-         }
-         }
-          this.setState({Category2: array});
-          console.log('<aa>', this.state.Category2);
+          }
+        }
+        this.setState({CategoryCtg: array});
+        //console.log('<aRa>', JSON.stringify(this.state.CategoryCtg));
       })
       .catch(error => {
         console.error(error);
@@ -168,19 +168,20 @@ export default class ClaimDropDown extends Component {
         this.setState({data: json.project});
         var v = this.state.data.length;
         for (let i = 0; i < v; i++) {
-          //console.log('v:' + json.project[i].project_name);
+          // console.log('valuesss:' + JSON.stringify(json.project[i]));
           thisdata.push({
             project_name: json.project[i].project_name,
             project_id: json.project[i]._id,
           });
         }
         this.setState({Category: thisdata});
+        console.log('valuesss:', JSON.stringify(this.state.Category));
       })
 
       .catch(error => {
         console.error(error);
       });
-    //this.claim_ctg();
+    this.claim_ctg();
   }
   render_1 = ({item}) => (
     <KeyboardAvoidingView>
@@ -228,17 +229,25 @@ export default class ClaimDropDown extends Component {
         <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
           <View style={{flexDirection: 'row'}}>
             <Picker
-              selectedValue={this.state.ctg}
-              prompt="Select Category"
-              mode="dropdown"
-              style={{height: 20, width: 30}}
+              selectedValue={this.state.selectedId}
+              prompt="Select ctg"
+              style={{
+                width: 50,
+                alignSelf: 'flex-end',
+                zIndex: 5,
+                marginTop: 1,
+                borderWidth: 1,
+                color: '#FF3301',
+                fontSize: 12,
+              }}
               onValueChange={(itemValue, itemIndex) => {
-                console.log('itemvali' + itemValue);
-                this.setState({ctg: itemValue});
+                this.setState({selectedCtg: itemValue});
+                this.setState({selectedId: itemValue});
+                console.log(
+                  'selected:value of project' + this.state.selectedId,
+                );
               }}>
-              <Picker.Item label="Fouji cement" value="Fouji cement" />
-              <Picker.Item label="Bestway cemment" value="Bestway cemment" />
-              <Picker.Item label="Kohat cement" value="Kohat cement" />
+              {CtgItems}
             </Picker>
             <View style={{justifyContent: 'flex-end', marginBottom: 2}} />
           </View>
@@ -263,6 +272,14 @@ export default class ClaimDropDown extends Component {
         key={'pick' + element.project_name}
         label={'' + '    ' + element.project_name}
         value={element.project_id}
+        prompt="Options"
+      />
+    ));
+    const CtgItems = this.state.CategoryCtg.map((element2, index) => (
+      <Picker.Item
+        key={'pick' + element2.item_name}
+        label={'' + '    ' + element2.item_name}
+        value={element2.id}
         prompt="Options"
       />
     ));
@@ -361,20 +378,25 @@ export default class ClaimDropDown extends Component {
             <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
               <View style={{flexDirection: 'row'}}>
                 <Picker
-                  selectedValue={this.state.ctg}
+                  selectedValue={this.state.selectedId}
                   prompt="Select Category"
-                  mode="dropdown"
-                  style={{height: 20, width: 20}}
+                  style={{
+                    width: 50,
+                    alignSelf: 'flex-end',
+                    zIndex: 5,
+                    marginTop: 1,
+                    borderWidth: 1,
+                    color: '#FF3301',
+                    fontSize: 12,
+                  }}
                   onValueChange={(itemValue, itemIndex) => {
-                    this.setState({ctg: itemValue});
-                    console.log('itemvali' + itemValue);
+                    this.setState({selectedCtg: itemValue});
+                    this.setState({selectedId: itemValue});
+                    console.log(
+                      'selected:value of project' + this.state.selectedId,
+                    );
                   }}>
-                  <Picker.Item label="Fouji cement" value="Fouji cement" />
-                  <Picker.Item
-                    label="Bestway cemment"
-                    value="Bestway cemment"
-                  />
-                  <Picker.Item label="Kohat cement" value="Kohat cement" />
+                  {CtgItems}
                 </Picker>
                 <View style={{justifyContent: 'flex-end', marginBottom: 2}} />
               </View>
@@ -398,7 +420,109 @@ export default class ClaimDropDown extends Component {
               onContentSizeChange={() =>
                 this.list.current.scrollToEnd({animated: false})
               }
-              renderItem={this.render_1}
+              renderItem={({item, index}) => {
+                return (
+                  <KeyboardAvoidingView>
+                    <View
+                      style={[
+                        MainFlowStyles.cardStyle,
+                        {
+                          padding: 10,
+                          flexDirection: 'row',
+                          justifyContent: 'space-around',
+                          marginBottom: 20,
+                          marginHorizontal: 3,
+                        },
+                      ]}>
+                      <Text style={{fontWeight: 'bold', fontSize: 16}} />
+                      <View
+                        style={{
+                          borderBottomColor: '#FFCBBE',
+                          borderBottomWidth: 1,
+                        }}>
+                        <TextInput
+                          style={{fontSize: 16}}
+                          placeholder="Item"
+                          onChangeText={title => this.setState({title})}
+                          ref={ref => (this.ref = ref)}
+                        />
+                        <View style={{marginBottom: 2}} />
+                      </View>
+                      <View
+                        style={{
+                          borderBottomColor: '#FFCBBE',
+                          borderBottomWidth: 1,
+                        }}>
+                        <TextInput
+                          style={{fontSize: 16}}
+                          placeholder="price"
+                          keyboardType={'numeric'}
+                          onChangeText={price => this.setState({price})}
+                          ref={ref => (this.ref = ref)}
+                        />
+                        <View style={{marginBottom: 2}} />
+                      </View>
+                      <View
+                        style={{
+                          borderBottomColor: '#FFCBBE',
+                          borderBottomWidth: 1,
+                        }}>
+                        <TextInput
+                          style={{fontSize: 16}}
+                          placeholder="qty"
+                          keyboardType={'numeric'}
+                          onChangeText={qty => this.setState({qty})}
+                          ref={ref => (this.ref = ref)}
+                        />
+                        <View style={{marginBottom: 2}} />
+                      </View>
+                      <View
+                        style={{
+                          borderBottomColor: '#FFCBBE',
+                          borderBottomWidth: 1,
+                        }}>
+                        <View style={{flexDirection: 'row'}}>
+                          <Picker
+                            selectedValue={this.state.selectedId}
+                            prompt="Select Category"
+                            style={{
+                              width: 50,
+                              alignSelf: 'flex-end',
+                              zIndex: 5,
+                              marginTop: 1,
+                              borderWidth: 1,
+                              color: '#FF3301',
+                              fontSize: 12,
+                            }}
+                            onValueChange={(itemValue, itemIndex) => {
+                              this.setState({selectedCtg: itemValue});
+                              this.setState({selectedId: itemValue});
+                              console.log(
+                                'selected:value of project' +
+                                  this.state.selectedId,
+                              );
+                            }}>
+                            {CtgItems}
+                          </Picker>
+                          <View
+                            style={{
+                              justifyContent: 'flex-end',
+                              marginBottom: 2,
+                            }}
+                          />
+                        </View>
+                        <View style={{marginBottom: 2}} />
+                      </View>
+                      {/* <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
+          <Text style={{fontSize: 16}}>
+            {this.state.price * this.state.qty}
+          </Text>
+          <View style={{marginBottom: 2}} />
+        </View> */}
+                    </View>
+                  </KeyboardAvoidingView>
+                );
+              }}
             />
             <TouchableOpacity
               style={{
@@ -478,7 +602,13 @@ export default class ClaimDropDown extends Component {
                   data_ctg: this.state.ctg,
                 });
               }}>
-              <Text style={{ alignSelf: 'center', color: '#FFF', alignContent: 'center', justifyContent: "center" }}>
+              <Text
+                style={{
+                  alignSelf: 'center',
+                  color: '#FFF',
+                  alignContent: 'center',
+                  justifyContent: 'center',
+                }}>
                 Add Image
               </Text>
             </TouchableOpacity>

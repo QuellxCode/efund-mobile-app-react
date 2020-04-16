@@ -60,7 +60,7 @@ import Icon_FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 const Header = ({navigation}) => {
 
   const [NotifyHide, setnewsNotifyHide] = useState(false);
-  const [selected, setselected] = useState(1);
+  const [selected, setselected] = useState('.');
 
   // useEffect(() => {
   //   if(NotifyHide == true){
