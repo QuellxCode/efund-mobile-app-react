@@ -207,13 +207,24 @@ const Supervisor = () => {
         if (notification != undefined && notification != null) {
             const a = notification.length - 1
             const aa = notification[a].to;
+            
             if (user.user_id === aa) {
-                localNotify.showNotification(
-                    1,
-                    'Bill is Added!',
-                    '', // data
-                    '', // option
-                );
+               
+                if(notification.notification_status === 'RequestPayment'){
+                    localNotify.showNotification(
+                        1,
+                        'Bill is Added!',
+                        '', // data
+                        '', // option
+                    );
+                }else{
+                    localNotify.showNotification(
+                        1,
+                        'A new Claim Payment Request!',
+                        '', // data
+                        '', // option
+                    );
+                }
             }
         }
     }, [length])
