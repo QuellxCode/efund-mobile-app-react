@@ -18,6 +18,7 @@ import MenuDrawer from "../components/MenuDrawer";
 import Notification from "../screens/MainFlow/Notification";
 import NotificationNew from "../screens/MainFlow/NotificationsNew";
 import NotificationDeta from "../screens/MainFlow/NotificationDetail";
+import EditableForm from "../screens/MainFlow/Editableform";
 
 const AppNavigator = createSwitchNavigator({
     loginFlow: createStackNavigator({
@@ -55,6 +56,7 @@ const AppNavigator = createSwitchNavigator({
         notify: createStackNavigator({
             Notification: NotificationNew,
             NotificationDeta: NotificationDeta,
+            EditableForm: EditableForm,
         },
         {
             initialRouteName: 'Notification',
