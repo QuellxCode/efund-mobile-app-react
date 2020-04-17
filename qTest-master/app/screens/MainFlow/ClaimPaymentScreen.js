@@ -71,6 +71,7 @@ class ClaimPaymentScreen extends Component {
     }
   }
   notification_send = async () => {
+    console.log("send notificatoion")
     fetch('http://efundapp.herokuapp.com/api/purchase/send-notification', {
       method: 'Post',
       headers: {
@@ -80,13 +81,14 @@ class ClaimPaymentScreen extends Component {
       },
       body: JSON.stringify({
         details: this.state.data_,
+        request:this.state.ID,
         project: this.state.Selected_Proj,
         notification_status: 'ClaimRequest',
       }),
     })
       .then(response => response.json())
       .then(json => {
-        console.log(JSON.stringify(json));      
+        console.log("snd notification",json);      
         this.setState({response_: json.notificationID});
         this.setState({visible: false});
         this.props.navigation.replace('ClaimDropDown')
@@ -97,12 +99,7 @@ class ClaimPaymentScreen extends Component {
       });
   };
   submit() {
-    console.log('submit');
-    formdata.append('file', {
-      uri: this.state.image,
-      type: 'image/jpeg',
-      name: 'image${moment()}',
-    });
+    console.log("taa",this.state.ID);
     fetch(
       'http://efundapp.herokuapp.com/api/purchase/claimimage/' + this.state.ID,
       {
@@ -133,12 +130,18 @@ class ClaimPaymentScreen extends Component {
         image: res.uri,
         chek: true,
       });
+        formdata.append('file', {
+       uri: this.state.image,
+       type: 'image/jpeg',
+       name: 'image${moment()}',
+    });
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
       } else {
         throw err;
       }
     }
+  
   }
   render() {
     return (
