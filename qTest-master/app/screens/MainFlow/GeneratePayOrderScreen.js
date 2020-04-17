@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, AsyncStorage, ToastAndroid, Picker, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, AsyncStorage, ToastAndroid, Picker, StyleSheet, Modal, Dimensions } from 'react-native';
 import Header from '../../components/Header';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -14,7 +14,9 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-import RNPickerSelect from 'react-native-picker-select';
+// import RNPickerSelect from 'react-native-picker-select';
+
+const { width, height } = Dimensions.get('window');
 
 class GeneratePayOrderScreen extends Component {
     constructor(props) {
@@ -57,7 +59,10 @@ class GeneratePayOrderScreen extends Component {
       });
       }
       if(this.state.change === true){
-        this.props.navigation.navigate("Home");
+        this.state.details = []
+        console.log(this.state.details)
+        //this.props.navigation.replace("GeneratePayOrder");
+        this.props.navigation.goBack();
     this.setState({change: false});
     }
     }
@@ -168,6 +173,7 @@ class GeneratePayOrderScreen extends Component {
         this.setState({
             banks: responseJson.bank
          })
+         console.log("dsfaf",this.state.banks)
          this._getPayee();
         })
        .catch(error=>console.log(error))
@@ -244,7 +250,7 @@ class GeneratePayOrderScreen extends Component {
             <View style={{ flex: 1 }}>
                 <Header />
                 <ScrollView>
-                <CustomModal isVisible={this.state.isVisible}>
+                {/* <CustomModal isVisible={this.state.isVisible}>
                 <View style={{ flex: 1 }}>
                 <View style={{marginVertical:70}}/>
                   <View style={styles.modalMainContainer}> 
@@ -266,7 +272,27 @@ class GeneratePayOrderScreen extends Component {
                     />
                   </View>
                 </View>
-              </CustomModal>
+              </CustomModal> */}
+              <Modal animationType='fade' transparent={true} visible={this.state.isVisible}>
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.7)' }}>
+                        <View style={{ backgroundColor: 'white', paddingTop: 10, borderRadius: 20, width: width * 0.8 }}>
+                            <View style={{ alignSelf: 'center', padding: 20 }}>
+                                <FontAwesome name='send' color='#FF3301' size={50} />
+                            </View>
+                            <Text style={{ alignSelf: 'center', fontSize: 16, fontWeight: 'bold', color: '#FF3301', paddingBottom: 40 }}>Pay Order Generated Successfully And Sent To Accountant</Text>
+                            <Button
+                                title='OK'
+                                buttonStyle={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 0, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, }}
+                                onPress={() => {
+                                  this.setState({
+                                    isVisible:false,
+                                    change: true
+                                  })
+                                }}
+                            />
+                        </View>
+                    </View>
+                </Modal>
                     <View style={MainFlowStyles.containerStyle}>
                         {/* <Text style={MainFlowStyles.headerTextStyle}>Pay Orders</Text> */}
                         <View style={[MainFlowStyles.cardStyle]}>
@@ -364,7 +390,7 @@ class GeneratePayOrderScreen extends Component {
                                     
                                 <Text style={{ fontSize: 18, marginBottom: 10, marginLeft: 8 }}>Description:</Text>
                                 <Input
-                                    placeholder='Please add the name fo the relevant company from which you want to purchase cement.'
+                                    placeholder='Please add the name for the relevant company from which you want to purchase cement.'
                                     autoCapitalize='none'
                                     autoCompleteType='off'
                                     keyboardType='default'

@@ -25,7 +25,6 @@ public class MainApplication extends Application implements ReactApplication {
         public boolean getUseDeveloperSupport() {
           return BuildConfig.DEBUG;
         }
-
         @Override
         protected List<ReactPackage> getPackages() {
           @SuppressWarnings("UnnecessaryLocalVariable")
@@ -34,7 +33,11 @@ public class MainApplication extends Application implements ReactApplication {
           // packages.add(new MyReactNativePackage());
           // packages.add(new ReactNativePushNotificationPackage());
           // packages.add(new RNFirebasePackage());
+<<<<<<< HEAD
           // packages.add(new RNFirebaseMessagingPackage());
+=======
+          //packages.add(new RNFirebaseMessagingPackage());
+>>>>>>> 7dfaa85929b405206e8e549548b0828cf3e477ec
           new ReactNativePushNotificationPackage();
           new RNFirebasePackage();
           new RNFirebaseMessagingPackage();

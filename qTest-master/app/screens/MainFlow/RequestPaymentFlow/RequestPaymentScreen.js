@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, StyleSheet, Button, Constants, FlatList, Text, TouchableO, TextInput, KeyboardAvoidingView, Picker, AsyncStorage , ScrollView} from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Button, Constants, FlatList, Text, TouchableO, TextInput, KeyboardAvoidingView, Picker, AsyncStorage , ScrollView, ToastAndroid} from 'react-native';
 import Header from '../../../components/Header';
 import CustomButton from '../../../components/CustomButton';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -28,18 +28,23 @@ class RequestPayment extends Component {
             Category: [],
             selectedValue: null,
             selectedProject: "",
+            selVal: '',
+            selProj: '',
             pkkr: '',
             User: '',
             data: '',
             check: true,
             results: 0,
             val: 0,
+            disabledB: true,
+            total: 0,
+            purchaseID: '',
+            proj: '',
+            show: false,
         };
         this.list = React.createRef();
     }
     async componentDidMount() {
-          this.checkPermission();
-
         try {
             const value = await AsyncStorage.getItem('User');
             const val = JSON.parse(value)
@@ -54,7 +59,7 @@ class RequestPayment extends Component {
         }
         var thisdata = []
         var arr = []
-        fetch('http://efundapp.herokuapp.com/api/project/', {
+        fetch('http://efundapp.herokuapp.com/api/project', {
             method: 'Get',
             headers: {
                 'Accept': 'application/json',
@@ -64,7 +69,12 @@ class RequestPayment extends Component {
         })
             .then(response => response.json())
             .then(json => {
-                this.setState({ data: json.project })
+                this.setState({ 
+                    data: json.project, 
+                    proj: json.project,
+                    show: true
+                })
+                console.log("ffffff", this.state.proj)
                 var v = this.state.data.length
                 for (let i = 0; i < v; i++) {
                     console.log('v:' + json.project[i].project_name)
@@ -74,49 +84,20 @@ class RequestPayment extends Component {
                     });
                 }
                 this.setState({ Category: thisdata })
-                //console.log("aaa" + JSON.stringify(this.state.Category));
+                console.log("aaaaaa" + JSON.stringify(this.state.Category));
             })
 
             .catch(error => {
-                console.error(error);
+                console.log(error);
             });
 
     }
-  //1
-async checkPermission() {
-  const enabled = await firebase.messaging().hasPermission();
-  if (enabled) {
-      this.getToken();
-  } else {
-      this.requestPermission();
-  }
-}
-  //3
-async getToken() {
-  let fcmToken = await AsyncStorage.getItem('fcmToken');
-  if (!fcmToken) {
-      fcmToken = await firebase.messaging().getToken();
-      if (fcmToken) {
-          // user has a device token
-          await AsyncStorage.setItem('fcmToken', fcmToken);
-          console.log("??",fcmToken)
+
+    loadProjects() {
+        return this.state.proj.map(proj => (
+           <Picker.Item label={proj.project_name} value={proj._id} />
+        ))
       }
-  }
-}
-
-  //2
-async requestPermission() {
-  try {
-      await firebase.messaging().requestPermission();
-      // User has authorised
-      this.getToken();
-  } catch (error) {
-      // User has rejected permissions
-      console.log('permission rejected');
-  }
-}
-
-
 
     handlePress = async () => {
         var aa = this.state.title;
@@ -124,19 +105,19 @@ async requestPermission() {
         var ac = this.state.price;
         var project = this.state.selectedValue;
         var r = this.state.price * this.state.qty
-        var data = {
-            "payment": "50000",
+         var data = {
+            // "payment": "50000",
             "project": project,
             "details": [
                 {
-                    "item_name": aa,
-                    "item_quantity": ab,
-                    "item_price": ac,
-                    "total_price": r
+                    "item": aa,
+                    "qty": ab,
+                    "price": ac,
+                    "pkr": r
                 }
             ]
         }
-        if (data.details[0].item_name == '') {
+        if (data.details[0].item == '') {
             console.log('nt call a api')
 
         }
@@ -153,7 +134,12 @@ async requestPermission() {
                 .then(response => response.json())
                 .then(json => {
                     console.log(json)
-                    this.setState({ response_: json })
+                    this.setState({ 
+                        response_: json,
+                        disabledB: false,
+                        purchaseID: json.purchaseID
+                    })
+                    console.log("adasda", this.state.purchaseID)
                 })
                 .catch(error => {
                     console.error(error);
@@ -214,44 +200,77 @@ async requestPermission() {
     //         </View>
     //     </KeyboardAvoidingView>
     // )
+
+    activate_(){
+        if(this.state.bills != []){
+            this.state.disabledB = false;
+        }
+    }
+
+    onValueChange (value) {
+        this.setState({
+          selVal : value
+        });
+        this.state.selProj = value
+        console.log(this.state.selProj)
+    }  
+
     render() {
-        const PickerItems = this.state.Category.map((element, index) => (
-            <Picker.Item
-                key={"pick" + element.project_name}
-                label={"" + "    " + element.project_name}
-                value={element.project_id}
-                prompt='Options'
-            />
-        ));
+        // const PickerItems = this.state.Category.map((element, index) => (
+        //     <Picker.Item
+        //         key={"pick" + element.project_name}
+        //         label={"" + "  " + element.project_name}
+        //         value={element.project_id}
+        //         prompt='Options'
+        //     />
+        // ));
+
+        if(this.state.show === false){
+            return(
+                <View/>
+            )
+        }
+        else{
+
         return (
             
             <View style={{ flex: 1 }}>
                 <Header />
                 <Text style={{ fontWeight: 'bold', fontSize: 30, alignSelf: 'center', color: '#FF3301' }}>Select Project</Text>
                 <View style={{ borderColor: '#FF3301', borderWidth: 1, width: 250, height: 50, borderRadius: 30, justifyContent: 'center', alignSelf: 'center', marginTop: 10 }}>
-                    <Picker
+                    {/* <Picker
                         selectedValue={this.state.selectedValue}
                         prompt="Select Project"
                         style={{
-                            width: 200, height: 50,
+                            width: 600, height: 50,
                             alignSelf: 'center',
+                            alignContent:"center",
+                            justifyContent:'center',
                             marginTop: 1,
-                            borderWidth: 2
-                            , color: '#FF3301',
-                            //alignSelf: 'flex-end',
-                            // flexDirection: "row-reverse",
+                            borderWidth: 2,
+                            color: '#FF3301',
                             borderColor: 'red',
                             fontSize: 30
                         }}
                         onValueChange={(itemValue, itemIndex) => {
                             this.setState({ selectedValue: itemValue })
+                            this.setState({selectedProject: itemValue});
                             console.log("selected:val" + this.state.selectedValue)
 
                         }}
                     >
-                        {/* <Picker.Item label='   Select Project' value='' /> */}
                         {PickerItems}
-                    </Picker>
+                    </Picker> */}
+
+                                <Picker
+                                    selectedValue={this.state.selVal}
+                                    // onValueChange={(itemValue, itemIndex) => 
+                                    //     this.setState({selectedBank: itemValue})}>
+                                    onValueChange={this.onValueChange.bind(this)}>
+                                       <Picker.Item label='Select a Project' value='' />
+                                    {this.loadProjects()}
+                                </Picker>
+
                 </View>
                 {/* {this.state.bills.map((item, index) => ( */}
                 {/* ))}    */}
@@ -269,18 +288,7 @@ async requestPermission() {
                     </View>
                     <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
                         <TextInput style={{ fontSize: 16 }}
-                            placeholder='price'
-                            keyboardType={'numeric'}
-                            onChangeText={(price) => this.setState({ price })}
-                            ref={ref => this.ref = ref}
-                            value={this.state.price}
-
-                        ></TextInput>
-                        <View style={{ marginBottom: 2 }} />
-                    </View>
-                    <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-                        <TextInput style={{ fontSize: 16 }}
-                            placeholder='qty'
+                            placeholder='Qty'
                             keyboardType={'numeric'}
                             onChangeText={(qty) => this.setState({ qty, results: this.state.price * this.state.qty })}
                             ref={ref => this.ref = ref}
@@ -290,6 +298,26 @@ async requestPermission() {
                         <View style={{ marginBottom: 2 }} />
                     </View>
                     <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
+                    <TextInput style={{ fontSize: 16 }}
+                            placeholder='Rate'
+                            keyboardType={'numeric'}
+                            onChangeText={(price) => this.setState({ price })}
+                            ref={ref => this.ref = ref}
+                            value={this.state.price}
+
+                        ></TextInput>
+                        <View style={{ marginBottom: 2 }} />
+                    </View>
+                    <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
+                    <TextInput style={{ fontSize: 16 }}
+                            placeholder='Total'
+                            keyboardType={'numeric'}
+                            defaultValue='Total'
+                            //onChangeText={(qty) => this.setState({ qty, results: this.state.price * this.state.qty })}
+                            ref={ref => this.ref = ref}
+                            //value={this.state.results}
+                            editable={false}
+                        ></TextInput>
                         {/* <Text style={{ fontSize: 16 }}>
                             
                          </Text> */}
@@ -338,7 +366,7 @@ async requestPermission() {
                                     ref={ref => this.ref = ref}
             
                                 ></TextInput> */}
-                                    <Text>{item.price}</Text>
+                                    <Text>{item.qty}</Text>
 
                                 <View style={{ marginBottom: 2 }} />
                             </View>
@@ -350,7 +378,7 @@ async requestPermission() {
                                     ref={ref => this.ref = ref}
             
                                 ></TextInput> */}
-                                    <Text>{item.qty}</Text>
+                                    <Text>{item.price}</Text>
 
                                 <View style={{ marginBottom: 2 }} />
                             </View>
@@ -379,24 +407,37 @@ async requestPermission() {
                                            ))}
                                             </ScrollView>
 
-                    <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                                            <View style={{ flexDirection: "row", justifyContent: "center" }}><Text>Total: {this.state.total}</Text></View>
 
+                    <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                            {/* <Text>"Total ", {this.state.total}</Text> */}
+                            
                         <TouchableOpacity
                             style={{ alignSelf: 'center', alignContent: 'center', backgroundColor: '#FF3301', height: 40, width: 100, borderRadius: 20, justifyContent: "center" }}
                             onPress={() => {
+                                if(this.state.item == "" || this.state.price == 0 || this.state.qty == 0){
+                                    console.log("empty")
+                                    ToastAndroid.show('Add an Item', ToastAndroid.SHORT);
+                                }
+                                else{
                                 let b = this.state.bills;
                                 var aa = this.state.title;
                                 var ab = this.state.qty;
                                 var ac = this.state.price;
                                 var ae = this.state.pkr;
                                 var result = ac * ab;
-                                this.setState({val: result})
-                                this.handlePress();
+                                var totall = this.state.total + (this.state.qty * this.state.price);
+                                this.setState({
+                                    val: result,
+                                    total: totall
+                                })
+                                // this.handlePress();
                                 n = n + 1
-                                b.push({ number: n, item: aa, price: ac, qty: ab, pkr: result });
+                                b.push({ item: aa, price: ac, qty: ab, pkr: result });
                                 this.setState({ bills: b, title:'', qty: '', price: '' })
-                                console.log("arr from button", this.state.bills)
-                                
+                                this.activate_();
+                                console.log("arr from button", this.state.bills, this.state.qty,this.state.price,this.state.total)
+                            }
                             }
                             }
                         >
@@ -404,6 +445,10 @@ async requestPermission() {
 
                             {/* <AntDesign name='pluscircle' size={20} color='#FF3301' /> */}
                         </TouchableOpacity>
+                        
+{/*                         
+                        <Text>Total: {this.state.total}</Text>
+                         */}
                     </View>
                     
                 </View>
@@ -417,31 +462,39 @@ async requestPermission() {
                     /> */}
                     <TouchableOpacity
                         style={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10 }}
+                        disabled={this.state.disabledB}
                         onPress={() => {
-                            if (this.state.check == true) {
-                                let b = this.state.bills;
-                                var aa = this.state.title;
-                                var ab = this.state.qty;
-                                var ac = this.state.price;
-                                var ae = this.state.pkr;
-                                var result = ac * ab
-                                b.push({ title: aa, price: ac, qty: ab, pkr: result });
-                                this.setState({ bills: b, check: false })
+                            // if (this.state.check == true) {
+                            //     // let b = this.state.bills;
+                            //     // var aa = this.state.title;
+                            //     // var ab = this.state.qty;
+                            //     // var ac = this.state.price;
+                            //     // var ae = this.state.pkr;
+                            //     // var result = ac * ab
+                            //     // b.push({ title: aa, price: ac, qty: ab, pkr: result });
+                            //     //  this.setState({ bills: b, check: false })
+                            //      this.handlePress();
+                            //     this.props.navigation.navigate('', {
+                            //         bill: this.state.bills,
+                            //         project: this.state.selectedValue
+                            //     })
+                            //     this.setState({bill: ''})
+                            // }
+                            // else {
                                 this.props.navigation.navigate('GenerateBill', {
                                     bill: this.state.bills,
-                                    project: this.state.selectedValue
+                                    project: this.state.selProj,
+                                    total: this.state.total,
+                                    purchase: this.state.purchaseID
                                 })
-                            }
-                            else {
-                                this.props.navigation.navigate('GenerateBill', {
-                                    bill: this.state.bills,
-                                    project: this.state.selectedValue
-                                })
-                            }
+                               this.setState({bill: ''})
+
+                            // }
                         }}
                     >
+                        
                         <Text
-                            style={{ fontSize: 20, alignSelf: "center", color: "white" }}
+                            style={{ alignSelf: 'center', color: '#FFF', alignContent: 'center', justifyContent: "center" }}
                         >Generate Bill</Text>
                     </TouchableOpacity>
                 </View>
@@ -450,6 +503,7 @@ async requestPermission() {
             
             
         );
+                    }
     }
 }
 export default RequestPayment;

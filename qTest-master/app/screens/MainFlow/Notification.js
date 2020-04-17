@@ -19,7 +19,9 @@ import firebase from 'react-native-firebase';
 import {notificationManager} from '../../screens/MainFlow/RequestPaymentFlow/RemotePushController';
 const {width, height} = Dimensions.get('window');
 const message = new firebase.messaging.RemoteMessage()
-  .setMessageId('cBDaDPlGeNzfHel7VRUxk2:APA91bG0HnCCDddqaZIx06Fu5IpVIiDhVviZyWl9EFX-WWL3yjaT6SHKQei1Okcg12XFnqhkYD7fwWyTHsySAIheFZWoHpIHvmusA0ZabLcefhxjZZXFkAF7z05hEh_5D4ch6f0jhza9')
+  .setMessageId(
+    'cBDaDPlGeNzfHel7VRUxk2:APA91bG0HnCCDddqaZIx06Fu5IpVIiDhVviZyWl9EFX-WWL3yjaT6SHKQei1Okcg12XFnqhkYD7fwWyTHsySAIheFZWoHpIHvmusA0ZabLcefhxjZZXFkAF7z05hEh_5D4ch6f0jhza9',
+  )
   .setTo('senderId@gcm.googleapis.com')
   .setData({
     key1: 'value1',
@@ -66,6 +68,7 @@ export default class Notification extends Component {
       notification_id: '',
       token: '',
       arraySize: '',
+      Isvisible: false,
     };
     this.list = React.createRef();
   }
@@ -84,17 +87,17 @@ export default class Notification extends Component {
     } catch (error) {
       console.log('error getting data');
     }
-    firebase
-      .messaging()
-      .getToken()
-      .then(fcmToken => {
-        if (fcmToken) {
-          console.log('fcmtokem', fcmToken);
-          firebase.messaging().sendMessage(message);
-        } else {
-          console.log('no fcmtokem');
-        }
-      });
+    // firebase
+    //   .messaging()
+    //   .getToken()
+    //   .then(fcmToken => {
+    //     if (fcmToken) {
+    //       console.log('fcmtokem', fcmToken);
+    //       firebase.messaging().sendMessage(message);
+    //     } else {
+    //       console.log('no fcmtokem');
+    //     }
+    //   });
     // PushNotification.configure({
     //   onRegister: function(token) {
     //     console.log('TOKENe:', token);
@@ -122,52 +125,22 @@ export default class Notification extends Component {
     })
       .then(response => response.json())
       .then(json => {
-        this.setState({data: json.notification});
-        console.log('data102', JSON.stringify(this.state.data));
-        // const a = this.state.data.length - 1;
-        // console.log('datalen', this.state.data.length);
-        // console.log('a', a);
-        // console.log('a1', 'h');
-        //console.log('last string', this.state.data[a].to);
-        // const aa = this.state.data[a].to;
-        // if (this.state.data != undefined && this.state.data != null) {
-        //   console.log('last string aa', aa);
-        //   if (this.state.User.user_id === aa) {
-        //     //localNotify.showNotification(1, 'Request Payment Rejected');
-        //   }
-        // }
+        this.setState({
+          data: json.notification,
+        });
+        console.log("aabe",JSON.stringify(json.notification))
+        var v = this.state.data.length;
+        for (let i = 0; i < v; i++) {
+          arr.push(json.notification[i].message);
+        }
+        this.setState({dada:arr})
       })
       .catch(error => {
         console.error(error);
       });
   }
-  // push_notification(token) {
-  //   fetch('https://exp.host/--/api/v2/push/send', {
-  //     method: 'POST',
-  //     headers: {
-  //       Accept: 'application/json',
-  //       'Content-Type': 'application/json',
-  //       'accept-encoding': 'gzip, deflate',
-  //       host: 'exp.host',
-  //     },
-  //     body: JSON.stringify({
-  //       to: token,
-  //       title: 'New Notification',
-  //       body: 'Request Payment Notification from supervisor',
-  //       priority: 'high',
-  //       sound: 'default',
-  //       channelId: 'default',
-  //     }),
-  //   })
-  //     .then(response => response.json())
-  //     .then(responseJson => {
-  //       console.log('noti' + JSON.stringify(responseJson));
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //     });
-  // }
-  director_accept() {
+  director_accept(item) {
+    console.log('dddd', item);
     fetch('http://efundapp.herokuapp.com/api/purchase/director-accept', {
       method: 'Post',
       headers: {
@@ -184,7 +157,7 @@ export default class Notification extends Component {
     })
       .then(response => response.json())
       .then(json => {
-        console.log('response:' + JSON.stringify(json));
+        this.setState({Isvisible: true});
       })
       .catch(error => {
         console.error(error);
@@ -202,16 +175,12 @@ export default class Notification extends Component {
       .then(response => response.json())
       .then(json => {
         this.setState({token: json.mobileToken});
-        //this.push_notification(this.state.token);
       })
       .catch(error => {
         console.error(error);
       });
   }
   sup_accept(item) {
-    // console.log("item::::"+item)
-    // console.log("itemssss::::"+this.state.project)
-    // console.log("accepted_item" + item)
     fetch('http://efundapp.herokuapp.com/api/purchase/accept-notification', {
       method: 'Post',
       headers: {
@@ -228,13 +197,11 @@ export default class Notification extends Component {
     })
       .then(response => response.json())
       .then(json => {
-        //console.log("responseSSSS:" + JSON.stringify(json))
         this.setState({
           notification_id: json.notificationID,
           Requestvisible: true,
         });
         this.director_notification(this.state.notification_id);
-        // console.log("new + +id"+JSON.stringify(json))
       })
       .catch(error => {
         console.error(error);
@@ -279,68 +246,94 @@ export default class Notification extends Component {
       });
     this.setState({visible: false});
   }
-  render() {
-    if (this.state.User.roles == 'Supervisor') {
+
+  txt(item) {
+    var str = item;
+ str = str.replace(/[^a-zA-Z0-9]/g, ' ');
+ str = str.replace(/  +/g, ' ') 
+ str = str.replace("/ ",":")
+return str
+  }  
+   render() {
+    if (this.state.User.roles == "Supervisor") {
       return (
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <Header />
-          <Text style={{fontSize: 30, color: 'red', alignSelf: 'center'}}>
+          <Text style={{ fontSize: 30, color: "red", alignSelf: "center" }}>
             Notification
           </Text>
-          <View style={{flex: 1, marginHorizontal: 20, marginTop: 30}}>
+          <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
             <FlatList
               data={this.state.data}
               ItemSeparatorComponent={this.FlatListItemSeparator}
               keyExtractor={(a, b) => b.toString()}
-              renderItem={({item, index}) => (
-                <View style={{backgroundColor: 'white', padding: 10}}>
-                  <View style={{flexDirection: 'column'}}>
+              renderItem={({ item, index }) => (
+                <View style={{ backgroundColor: "white", padding: 10 }}>
+                  <View style={{ flexDirection: "column" }}>
                     <Text
                       style={{
-                        fontSize: 10,
-                        color: 'blue',
-                        marginLeft: '1%',
+                        fontSize: 20,
+                        color: "white",
+                        backgroundColor: "#FF3301",
+                        marginLeft: "1%",
                         height: 50,
                         width: 300,
-                      }}>
-                      Status :  {item.notification_status}
+                        padding: 10,
+                      }}
+                    >
+                      {/* Purchaser Name:{item.purchaserName} */}
+                      {index + 1}
                     </Text>
                     <Text
                       style={{
-                        fontSize: 10,
-                        color: 'blue',
-                        marginLeft: '1%',
+                        fontSize: 20,
+                        color: "white",
+                        backgroundColor: "#FF3301",
+                        marginLeft: "1%",
                         height: 50,
+                        marginTop: 1,
                         width: 300,
-                      }}>
-                      Purchaser Id :{item.purchaserID}
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 10,
-                        color: 'blue',
-                        marginLeft: '1%',
-                        height: 50,
-                        width: 300,
-                      }}>
-                      Request : {item.message}
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 10,
-                        color: 'blue',
-                        marginLeft: '1%',
-                        height: 50,
-                        width: 300,
-                      }}>
+                        padding: 10,
+                      }}
+                    >
                       Purchaser Name:{item.purchaserName}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        color: "white",
+                        marginTop: 1,
+                        padding: 10,
+                        backgroundColor: "#FF3301",
+                        marginLeft: "1%",
+                        height: 50,
+                        width: 300,
+                      }}
+                    >
+                      Status : {item.notification_status}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        color: "white",
+                        backgroundColor: "#FF3301",
+                        marginTop: 1,
+                        marginLeft: "1%",
+                        height: 120,
+                        padding: 10,
+                        width: 300,
+                      }}
+                    >
+                      Detail: {item.message}
+                      {/* Detail: {this.txt(item.message)} */}
                     </Text>
                   </View>
                   <View
-                    style={{flexDirection: 'row', justifyContent: 'center'}}>
+                    style={{ flexDirection: "row", justifyContent: "center" }}
+                  >
                     <TouchableOpacity
                       style={{
-                        backgroundColor: '#FF3301',
+                        backgroundColor: "#FF3301",
                         padding: 14,
                         margin: 10,
                         borderRadius: 10,
@@ -354,19 +347,21 @@ export default class Notification extends Component {
                           purchaserName: item.purchaserName,
                         }),
                           this.sup_accept(item.message);
-                      }}>
+                      }}
+                    >
                       <Text
                         style={{
                           fontSize: 15,
-                          color: '#fff',
-                          alignSelf: 'center',
-                        }}>
+                          color: "#fff",
+                          alignSelf: "center",
+                        }}
+                      >
                         Accept
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={{
-                        backgroundColor: '#FF3301',
+                        backgroundColor: "#FF3301",
                         padding: 14,
                         borderRadius: 10,
                         margin: 10,
@@ -381,147 +376,185 @@ export default class Notification extends Component {
                           purchaserID: item.purchaserID,
                           purchaserName: item.purchaserName,
                         });
-                      }}>
+                      }}
+                    >
                       <Text
                         style={{
                           fontSize: 15,
-                          color: '#fff',
-                          alignSelf: 'center',
-                        }}>
+                          color: "#fff",
+                          alignSelf: "center",
+                        }}
+                      >
                         Reject
                       </Text>
                     </TouchableOpacity>
+                    <FlatList
+                     data={item.message}
+                     keyExtractor={(a, b) => b.toString()}
+                      renderItem={({item2, index}) => ( //use item2 instead of item
+                        <View>
+                          <Text
+                            style={{
+                              fontSize: 10,
+                              color: "white",
+                              backgroundColor: "#FF3301",
+                              marginTop: 1,
+                              marginLeft: "1%",
+                              height: 50,
+                              padding: 10,
+                              width: 300,
+                            }}
+                          >
+                          {item2}
+                          </Text>
+                         </View>
+                      )}
+                    />
                   </View>
-                  <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={this.state.Requestvisible}>
-                    <View
-                      style={{
-                        flex: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                      }}>
-                      <View
-                        style={{
-                          backgroundColor: 'white',
-                          paddingTop: 10,
-                          borderRadius: 20,
-                          width: width * 0.8,
-                        }}>
-                        <View style={{alignSelf: 'center', padding: 20}}>
-                          <FontAwesome name="send" color="#FF3301" size={50} />
-                        </View>
-                        <Text
-                          style={{
-                            alignSelf: 'center',
-                            fontSize: 16,
-                            fontWeight: 'bold',
-                            color: '#FF3301',
-                            paddingBottom: 40,
-                          }}>
-                          Best your approval is Accepted!
-                        </Text>
-                        <Button
-                          title="OK"
-                          buttonStyle={{
-                            backgroundColor: '#FF3301',
-                            padding: 14,
-                            borderRadius: 0,
-                            borderBottomLeftRadius: 10,
-                            borderBottomRightRadius: 10,
-                          }}
-                          onPress={() => this.setState({Requestvisible: false})}
-                        />
-                      </View>
-                    </View>
-                  </Modal>
-                  <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={this.state.visible}>
-                    <View
-                      style={{
-                        flex: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                      }}>
-                      <View
-                        style={{
-                          backgroundColor: 'white',
-                          paddingTop: 10,
-                          borderRadius: 20,
-                          width: width * 0.8,
-                        }}>
-                        <View style={{alignSelf: 'center', padding: 20}}>
-                          <FontAwesome name="send" color="#FF3301" size={50} />
-                        </View>
-                        <TextInput
-                          placeholder="Why you are rejected this approval"
-                          onChangeText={Msg => this.setState({Msg})}
-                          style={{
-                            alignSelf: 'center',
-                            fontSize: 16,
-                            fontWeight: 'bold',
-                            color: '#FF3301',
-                            paddingBottom: 40,
-                          }}
-                        />
-                        <Button
-                          title="OK"
-                          buttonStyle={{
-                            backgroundColor: '#FF3301',
-                            padding: 14,
-                            borderRadius: 0,
-                            borderBottomLeftRadius: 10,
-                            borderBottomRightRadius: 10,
-                          }}
-                          onPress={() => this.reject_ok()}
-                        />
-                      </View>
-                    </View>
-                  </Modal>
                 </View>
               )}
-            />
+            /> 
+            <Modal
+              animationType="fade"
+              transparent={true}
+              visible={this.state.Requestvisible}
+            >
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "rgba(0, 0, 0, 0.7)",
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: "white",
+                    paddingTop: 10,
+                    borderRadius: 20,
+                    width: width * 0.8,
+                  }}
+                >
+                  <View style={{ alignSelf: "center", padding: 20 }}>
+                    <FontAwesome name="send" color="#FF3301" size={50} />
+                  </View>
+                  <Text
+                    style={{
+                      alignSelf: "center",
+                      fontSize: 16,
+                      fontWeight: "bold",
+                      color: "#FF3301",
+                      paddingBottom: 40,
+                    }}
+                  >
+                    Best your approval is Accepted!
+                  </Text>
+                  <Button
+                    title="OK"
+                    buttonStyle={{
+                      backgroundColor: "#FF3301",
+                      padding: 14,
+                      borderRadius: 0,
+                      borderBottomLeftRadius: 10,
+                      borderBottomRightRadius: 10,
+                    }}
+                    onPress={() => this.setState({ Requestvisible: false })}
+                  />
+                </View>
+              </View>
+            </Modal>
+            <Modal
+              animationType="fade"
+              transparent={true}
+              visible={this.state.visible}
+            >
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "rgba(0, 0, 0, 0.7)",
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: "white",
+                    paddingTop: 10,
+                    borderRadius: 20,
+                    width: width * 0.8,
+                  }}
+                >
+                  <View style={{ alignSelf: "center", padding: 20 }}>
+                    <FontAwesome name="send" color="#FF3301" size={50} />
+                  </View>
+                  <TextInput
+                    placeholder="Why you are rejected this approval"
+                    onChangeText={(Msg) => this.setState({ Msg })}
+                    style={{
+                      alignSelf: "center",
+                      fontSize: 16,
+                      fontWeight: "bold",
+                      color: "#FF3301",
+                      paddingBottom: 40,
+                    }}
+                  />
+                  <Button
+                    title="OK"
+                    buttonStyle={{
+                      backgroundColor: "#FF3301",
+                      padding: 14,
+                      borderRadius: 0,
+                      borderBottomLeftRadius: 10,
+                      borderBottomRightRadius: 10,
+                    }}
+                    onPress={() => this.reject_ok()}
+                  />
+                </View>
+              </View>
+            </Modal>
           </View>
         </View>
       );
-    } else if (this.state.User.roles == 'Purchaser') {
+    } else if (this.state.User.roles == "Purchaser") {
       return (
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <Header />
-          <Text style={{fontSize: 30, color: 'red', alignSelf: 'center'}}>
-            Notification{' '}
+          <Text style={{ fontSize: 30, color: "red", alignSelf: "center" }}>
+            Notification{" "}
           </Text>
-          <View style={{flex: 1, marginHorizontal: 20, marginTop: 30}}>
+          <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
             <FlatList
               data={this.state.data}
               ItemSeparatorComponent={this.FlatListItemSeparator}
               keyExtractor={(a, b) => b.toString()}
-              renderItem={({item, index}) => (
-                <View style={{backgroundColor: 'white', padding: 10}}>
-                  <View style={{flexDirection: 'column'}}>
+              renderItem={({ item, index }) => (
+                <View style={{ backgroundColor: "white", padding: 10 }}>
+                  <View style={{ flexDirection: "column" }}>
                     <Text
                       style={{
                         fontSize: 30,
-                        color: 'blue',
-                        marginLeft: '1%',
-                        height: 50,
+                        marginLeft: "1%",
+                        color: "white",
+                        backgroundColor: "#FF3301",
+                        padding: 10,
+                        height: 60,
                         width: 300,
-                      }}>
+                      }}
+                    >
                       Reason:
                     </Text>
                     <Text
                       style={{
                         fontSize: 20,
-                        color: 'red',
-                        marginLeft: '1%',
-                        height: 80,
+                        color: "white",
+                        backgroundColor: "#FF3301",
+                        marginTop: 1,
+                        padding: 10,
+                        marginLeft: "1%",
+                        height: 100,
                         width: 300,
-                      }}>
+                      }}
+                    >
                       {item.message}
                     </Text>
                   </View>
@@ -533,65 +566,53 @@ export default class Notification extends Component {
       );
     } else {
       return (
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <Header />
-          <Text style={{fontSize: 30, color: 'red', alignSelf: 'center'}}>
+          <Text style={{ fontSize: 30, color: "red", alignSelf: "center" }}>
             Notification
           </Text>
-          <View style={{flex: 1, marginHorizontal: 20, marginTop: 30}}>
+          <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
             <FlatList
               data={this.state.data}
               ItemSeparatorComponent={this.FlatListItemSeparator}
               keyExtractor={(a, b) => b.toString()}
-              renderItem={({item, index}) => (
-                <View style={{backgroundColor: 'white', padding: 10}}>
-                  <View style={{flexDirection: 'column'}}>
+              renderItem={({ item, index }) => (
+                <View style={{ backgroundColor: "white", padding: 10 }}>
+                  <View style={{ flexDirection: "column" }}>
                     <Text
                       style={{
-                        fontSize: 10,
-                        color: 'blue',
-                        marginLeft: '1%',
+                        fontSize: 15,
+                        color: "white",
+                        backgroundColor: "#FF3301",
+                        marginLeft: "1%",
+                        padding: 10,
                         height: 50,
                         width: 300,
-                      }}>
-                      Request: {item.message}
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 10,
-                        color: 'blue',
-                        marginLeft: '1%',
-                        height: 50,
-                        width: 300,
-                      }}>
-                      Purchaser Id:{item.purchaserID}
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 10,
-                        color: 'blue',
-                        marginLeft: '1%',
-                        height: 50,
-                        width: 300,
-                      }}>
-                      Project id:{item.project}
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 10,
-                        color: 'blue',
-                        marginLeft: '1%',
-                        height: 50,
-                        width: 300,
-                      }}>
+                      }}
+                    >
                       Purchaser Name:{item.purchaserName}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        color: "white",
+                        padding: 10,
+                        marginTop: 2,
+                        backgroundColor: "#FF3301",
+                        marginLeft: "1%",
+                        height: 150,
+                        width: 300,
+                      }}
+                    >
+                      Request: {item.message}
                     </Text>
                   </View>
                   <View
-                    style={{flexDirection: 'row', justifyContent: 'center'}}>
+                    style={{ flexDirection: "row", justifyContent: "center" }}
+                  >
                     <TouchableOpacity
                       style={{
-                        backgroundColor: '#FF3301',
+                        backgroundColor: "#FF3301",
                         padding: 14,
                         margin: 10,
                         borderRadius: 10,
@@ -605,19 +626,21 @@ export default class Notification extends Component {
                           purchaserName: item.purchaserName,
                         }),
                           this.director_accept(item.message);
-                      }}>
+                      }}
+                    >
                       <Text
                         style={{
                           fontSize: 15,
-                          color: '#fff',
-                          alignSelf: 'center',
-                        }}>
+                          color: "#fff",
+                          alignSelf: "center",
+                        }}
+                      >
                         Accept
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={{
-                        backgroundColor: '#FF3301',
+                        backgroundColor: "#FF3301",
                         padding: 14,
                         borderRadius: 10,
                         margin: 10,
@@ -630,13 +653,15 @@ export default class Notification extends Component {
                           items: item.message,
                           project: item.project,
                         });
-                      }}>
+                      }}
+                    >
                       <Text
                         style={{
                           fontSize: 15,
-                          color: '#fff',
-                          alignSelf: 'center',
-                        }}>
+                          color: "#fff",
+                          alignSelf: "center",
+                        }}
+                      >
                         Reject
                       </Text>
                     </TouchableOpacity>
@@ -644,44 +669,50 @@ export default class Notification extends Component {
                   <Modal
                     animationType="fade"
                     transparent={true}
-                    visible={this.state.Requestvisible}>
+                    visible={this.state.Requestvisible}
+                  >
                     <View
                       style={{
                         flex: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                      }}>
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "rgba(0, 0, 0, 0.7)",
+                      }}
+                    >
                       <View
                         style={{
-                          backgroundColor: 'white',
+                          backgroundColor: "white",
                           paddingTop: 10,
                           borderRadius: 20,
                           width: width * 0.8,
-                        }}>
-                        <View style={{alignSelf: 'center', padding: 20}}>
+                        }}
+                      >
+                        <View style={{ alignSelf: "center", padding: 20 }}>
                           <FontAwesome name="send" color="#FF3301" size={50} />
                         </View>
                         <Text
                           style={{
-                            alignSelf: 'center',
+                            alignSelf: "center",
                             fontSize: 16,
-                            fontWeight: 'bold',
-                            color: '#FF3301',
+                            fontWeight: "bold",
+                            color: "#FF3301",
                             paddingBottom: 40,
-                          }}>
+                          }}
+                        >
                           Best your approval is Accepted!
                         </Text>
                         <Button
                           title="OK"
                           buttonStyle={{
-                            backgroundColor: '#FF3301',
+                            backgroundColor: "#FF3301",
                             padding: 14,
                             borderRadius: 0,
                             borderBottomLeftRadius: 10,
                             borderBottomRightRadius: 10,
                           }}
-                          onPress={() => this.setState({Requestvisible: false})}
+                          onPress={() =>
+                            this.setState({ Requestvisible: false })
+                          }
                         />
                       </View>
                     </View>
@@ -689,45 +720,97 @@ export default class Notification extends Component {
                   <Modal
                     animationType="fade"
                     transparent={true}
-                    visible={this.state.visible}>
+                    visible={this.state.visible}
+                  >
                     <View
                       style={{
                         flex: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                      }}>
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "rgba(0, 0, 0, 0.7)",
+                      }}
+                    >
                       <View
                         style={{
-                          backgroundColor: 'white',
+                          backgroundColor: "white",
                           paddingTop: 10,
                           borderRadius: 20,
                           width: width * 0.8,
-                        }}>
-                        <View style={{alignSelf: 'center', padding: 20}}>
+                        }}
+                      >
+                        <View style={{ alignSelf: "center", padding: 20 }}>
                           <FontAwesome name="send" color="#FF3301" size={50} />
                         </View>
                         <TextInput
                           placeholder="Why you are rejected this approval"
-                          onChangeText={Msg => this.setState({Msg})}
+                          onChangeText={(Msg) => this.setState({ Msg })}
                           style={{
-                            alignSelf: 'center',
+                            alignSelf: "center",
                             fontSize: 16,
-                            fontWeight: 'bold',
-                            color: '#FF3301',
+                            fontWeight: "bold",
+                            color: "#FF3301",
                             paddingBottom: 40,
                           }}
                         />
                         <Button
                           title="OK"
                           buttonStyle={{
-                            backgroundColor: '#FF3301',
+                            backgroundColor: "#FF3301",
                             padding: 14,
                             borderRadius: 0,
                             borderBottomLeftRadius: 10,
                             borderBottomRightRadius: 10,
                           }}
                           onPress={() => this.reject_ok()}
+                        />
+                      </View>
+                    </View>
+                  </Modal>
+                  <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={this.state.Isvisible}
+                  >
+                    <View
+                      style={{
+                        flex: 1,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "rgba(0, 0, 0, 0.7)",
+                      }}
+                    >
+                      <View
+                        style={{
+                          backgroundColor: "white",
+                          paddingTop: 10,
+                          borderRadius: 20,
+                          width: width * 0.8,
+                        }}
+                      >
+                        <View style={{ alignSelf: "center", padding: 20 }}>
+                          <FontAwesome name="send" color="#FF3301" size={50} />
+                        </View>
+                        <Text
+                          style={{
+                            alignSelf: "center",
+                            fontSize: 16,
+                            fontWeight: "bold",
+                            color: "#FF3301",
+                            paddingBottom: 40,
+                          }}
+                        >
+                          Approval is Accepted by Director!
+                        </Text>
+                        <Button
+                          title="OK"
+                          buttonStyle={{
+                            backgroundColor: "#FF3301",
+                            padding: 14,
+                            borderRadius: 0,
+                            borderBottomLeftRadius: 10,
+                            borderBottomRightRadius: 10,
+                          }}
+                          onPress={() => this.setState({ Isvisible: false })}
                         />
                       </View>
                     </View>
@@ -750,5 +833,19 @@ export default class Notification extends Component {
 //     arry.push(json.notification[i].project)
 //     arr.push(json.notification[i].message)
 // }
+
+/////////////////////////////rehman////////////////////////////////
 // this.setState({ dada: arr })
 // this.setState({ project_data: arry})
+// const a = this.state.data.length - 1;
+// console.log('datalen', this.state.data.length);
+// console.log('a', a);
+// console.log('a1', 'h');
+//console.log('last string', this.state.data[a].to);
+// const aa = this.state.data[a].to;
+// if (this.state.data != undefined && this.state.data != null) {
+//   console.log('last string aa', aa);
+//   if (this.state.User.user_id === aa) {
+//     //localNotify.showNotification(1, 'Request Payment Rejected');
+//   }
+// }

@@ -263,8 +263,7 @@ class RequestPayment extends Component {
                                 var ae = this.state.pkr;
                                 var result = ac * ab
                                 this.handlePress();
-                                n = n + 1
-                                b.push({ number: n, item: aa, price: ac, qty: ab, pkr: result });
+                                b.push({ title: aa, price: ac, qty: ab, pkr: result });
                                 this.setState({ bills: b })
                                 console.log("arr", this.state.bills)
                             }

@@ -4,7 +4,9 @@ import Header from '../../../components/Header';
 import { Button } from 'react-native-elements';
 import MainFlowStyles from '../../../Styles/MainFlowStyles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
 const { width, height } = Dimensions.get('window');
+
 class GenerateBillScreen extends Component {
     constructor(props) {
         super(props);
@@ -13,11 +15,15 @@ class GenerateBillScreen extends Component {
             data_project: this.props.navigation.state.params.project,
             visible: false,
             response_: '',
+            resp: '',
             token: '',
             User: [],
             data: '',
             myToken: '',
             notification: '',
+            total: 0,
+            totall: this.props.navigation.state.params.total,
+            purchaseID: '',
         }
     }
 
@@ -62,6 +68,36 @@ class GenerateBillScreen extends Component {
     //         .catch((error) => { console.log(error) });
 
     // }
+
+    handlePressfirst = async () => {
+            fetch('http://efundapp.herokuapp.com/api/purchase/post', {
+                method: 'Post',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-Auth-Token': this.state.User.token,
+                },
+                body: JSON.stringify({
+                    "project": this.state.data_project,
+                     "details": this.state.data_
+                })
+            })
+                .then(response => response.json())
+                .then(json => {
+                    console.log(json)
+                    this.setState({ 
+                        resp: json,
+                        // disabledB: false,
+                        purchaseID: json.purchaseID
+                    })
+                    console.log("adasda", this.state.purchaseID)
+                    this.handlePress();
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+    }
+
     get_notifiaction(n_id) {
         console.log("this.your notify id"+n_id)
         fetch('http://efundapp.herokuapp.com/api/notification/'+n_id, {
@@ -83,6 +119,14 @@ class GenerateBillScreen extends Component {
                 console.error(error);
             });
     }
+
+    onClickButton () {
+        this.setState({
+            visible: false
+        })
+        this.props.navigation.replace('RequestPayment')
+        this.props.navigation.navigate('Home')
+    }
      handlePress = async () => {
         this.setState({ visible: true })
         console.log("data" + JSON.stringify(this.state.data_))
@@ -96,10 +140,10 @@ class GenerateBillScreen extends Component {
                 'X-Auth-Token': this.state.User.token,
             },
             body: JSON.stringify({
-                "details": this.state.data_
-                ,"project": this.state.data_project,
-                 "notification_status":"RequestPayment"
-
+                "details": this.state.data_,
+                "project": this.state.data_project,
+                "notification_status": "RequestPayment",
+                "request" : this.state.purchaseID
             })
         })
             .then(response => response.json())
@@ -127,10 +171,13 @@ class GenerateBillScreen extends Component {
                                 <Text>Item Name</Text>
                             </View>
                             <View style={MainFlowStyles.billHeadingStyle}>
-                                <Text>Price</Text>
+                                <Text>Quantity</Text>
                             </View>
                             <View style={MainFlowStyles.billHeadingStyle}>
-                                <Text>Quantity</Text>
+                                <Text>Rate</Text>
+                            </View>
+                            <View style={MainFlowStyles.billHeadingStyle}>
+                                <Text>Total</Text>
                             </View>
                         </View>
                         <FlatList
@@ -145,16 +192,19 @@ class GenerateBillScreen extends Component {
                                             <Text>{item.item}</Text>
                                         </View>
                                         <View style={MainFlowStyles.billHeadingStyle}>
-                                            <Text>{'Rs.' + item.price}</Text>
+                                            <Text>{item.qty}</Text>
                                         </View>
                                         <View style={MainFlowStyles.billHeadingStyle}>
-                                            <Text>{item.qty}</Text>
+                                            <Text>{item.price}</Text>
+                                        </View>
+                                        <View style={MainFlowStyles.billHeadingStyle}>
+                                            <Text>{item.qty * item.price}</Text>
                                         </View>
                                     </View>
                                 );
                             }}
                         />
-
+                    <Text style={{alignSelf:'flex-end', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth:1, marginRight:'5%'}}>{this.state.totall}</Text>
                     </View>
                 </View>
                 <View style={{ marginHorizontal: 20, marginBottom: 20, marginTop: 10, elevation: 5 }}>
@@ -162,7 +212,7 @@ class GenerateBillScreen extends Component {
                         title='Forward Request'
                         buttonStyle={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10 }}
                         containerStyle={{ marginHorizontal: 10 }}
-                        onPress={() => { this.handlePress(), { visible: true } }}
+                        onPress={() => { this.handlePressfirst(), { visible: true } }}
                     />
                 </View>
                 <Modal animationType='fade' transparent={true} visible={this.state.visible}>
@@ -175,7 +225,7 @@ class GenerateBillScreen extends Component {
                             <Button
                                 title='OK'
                                 buttonStyle={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 0, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, }}
-                                onPress={() => this.setState({ visible: false })}
+                                onPress={() => this.onClickButton()}
                             />
                         </View>
                     </View>

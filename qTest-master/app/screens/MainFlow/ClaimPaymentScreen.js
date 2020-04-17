@@ -5,16 +5,16 @@ import CustomButton from '../../components/CustomButton';
 import {Button} from 'react-native-elements';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import DocumentPicker from 'react-native-document-picker';
-
 const {width, height} = Dimensions.get('window');
 const formdata = new FormData();
 class ClaimPaymentScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data_: this.props.navigation.state.params.data1,
-      Selected_Proj: this.props.navigation.state.params.data2,
-      data_ctg: this.props.navigation.state.params.data3,
+      ID: this.props.navigation.state.params.ID,
+      data_: this.props.navigation.state.params.data,
+      Selected_Proj: this.props.navigation.state.params.data1,
+      //data_ctg: this.props.navigation.state.params.data_ctg,
       chek: false,
       User: '',
       response_: '',
@@ -31,11 +31,7 @@ class ClaimPaymentScreen extends Component {
   // var that = this;
   // var token =
   // console.log(token)
-
   async componentDidMount() {
-    this.retrieveData();
-  }
-  retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem('User');
       const val = JSON.parse(value);
@@ -47,11 +43,35 @@ class ClaimPaymentScreen extends Component {
     } catch (error) {
       console.log('error getting data');
     }
-  };
-  send_notification = async () => {
-    // console.log("dataas" + JSON.stringify(this.state.data_))
-    // console.log("sel_projects" + this.state.Selected_Proj)
-    // console.log("token",this.state.User.token)
+    console.log('userID:', this.state.ID);
+    this.picker_1();
+  }
+  //var arrey = JSON.stringify(this.state.data_);
+  // for (var i = 1; i < arrey.length; i++) {
+  //   formdata.append(arrey[i].item_name);
+  //   formdata.append(arrey[i].item_quantity);
+  //   formdata.append(arrey[i].item_price);
+  //   formdata.append(arrey[i].total_price);
+  //   formdata.append(arrey[i].category);
+  // }
+  // formdata.append('purchaser', JSON.stringify(this.state.User.name));
+  // formdata.append('payment', '30000');
+  // formdata.append('payment_status', '0');
+  // formdata.append('project', JSON.stringify(this.state.Selected_Proj));
+  // formdata.append('file', {
+  //   uri: this.state.image,
+  //   type: 'image/jpeg',
+  //   name: 'image${moment()}',
+  // });
+  displayuri() {
+    if (this.state.chek == false) {
+      return {uri: null};
+    } else {
+      return {uri: this.state.image};
+    }
+  }
+  notification_send = async () => {
+    console.log("send notificatoion")
     fetch('http://efundapp.herokuapp.com/api/purchase/send-notification', {
       method: 'Post',
       headers: {
@@ -61,63 +81,45 @@ class ClaimPaymentScreen extends Component {
       },
       body: JSON.stringify({
         details: this.state.data_,
+        request:this.state.ID,
         project: this.state.Selected_Proj,
-        notification_status:'ClaimPayment'
-
+        notification_status: 'ClaimRequest',
       }),
     })
       .then(response => response.json())
       .then(json => {
-        console.log(JSON.stringify(json));
+        console.log("snd notification",json);      
+        this.setState({response_: json.notificationID});
         this.setState({visible: false});
+        this.props.navigation.replace('ClaimDropDown')
+        this.props.navigation.navigate('Home')
       })
       .catch(error => {
         console.error(error);
       });
   };
-  api_claim() {
-      console.log("api call")
-    var arrey = JSON.stringify(this.state.data_);
-    for (var i = 1; i < arrey.length; i++) {
-      formdata.append(arrey[i].item_name);
-      formdata.append(arrey[i].item_quantity);
-      formdata.append(arrey[i].item_price);
-      formdata.append(arrey[i].total_price);
-      formdata.append(arrey[i].category);
-    }
-    formdata.append('purchaser', JSON.stringify(this.state.User.name));
-    formdata.append('payment', '30000');
-    formdata.append('payment_status', '0');
-    formdata.append('project', JSON.stringify(this.state.Selected_Proj));
-    formdata.append('file', {
-      uri: this.state.image,
-      type: 'image/jpeg',
-      name: 'image${moment()}',
-    });
-    fetch('http://efundapp.herokuapp.com/api/purchase/claimpayment', {
-      method: 'Post',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-        'X-Auth-Token': this.state.User.token,
+  submit() {
+    console.log("taa",this.state.ID);
+    fetch(
+      'http://efundapp.herokuapp.com/api/purchase/claimimage/' + this.state.ID,
+      {
+        method: 'Post',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+          'X-Auth-Token': this.state.User.token,
+        },
+        body: formdata,
       },
-      body: formdata,
-    })
+    )
       .then(response => response.json())
       .then(json => {
-        console.log(JSON.stringify(json));
+        console.log('image', json);
         this.setState({visible: true});
       })
       .catch(error => {
         console.error(error);
       });
-  }
-  displayuri() {
-    if (this.state.chek == false) {
-      return {uri: null};
-    } else {
-      return {uri: this.state.image};
-    }
   }
   async picker_1() {
     try {
@@ -128,19 +130,25 @@ class ClaimPaymentScreen extends Component {
         image: res.uri,
         chek: true,
       });
+        formdata.append('file', {
+       uri: this.state.image,
+       type: 'image/jpeg',
+       name: 'image${moment()}',
+    });
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
       } else {
         throw err;
       }
     }
+  
   }
   render() {
     return (
       <View>
         <Header />
         <View style={{marginHorizontal: 15, marginBottom: 20, marginTop: 10}}>
-          <Button
+          {/* <Button
             title="Pick Image"
             buttonStyle={{
               backgroundColor: '#FF3301',
@@ -152,9 +160,9 @@ class ClaimPaymentScreen extends Component {
               marginTop: 1,
             }}
             onPress={() => this.picker_1()}
-          />
+          /> */}
           <Image
-            style={{width: '100%', height: '67%'}}
+            style={{width: '40%', height: '40%'}}
             source={this.displayuri()}
           />
           <Button
@@ -166,9 +174,9 @@ class ClaimPaymentScreen extends Component {
               width: 250,
               height: 50,
               alignSelf: 'center',
-              marginTop: 5,
+              marginTop: 100,
             }}
-            onPress={() => this.api_claim()}
+            onPress={() => this.submit()}
           />
         </View>
         <Modal
@@ -212,7 +220,7 @@ class ClaimPaymentScreen extends Component {
                   borderBottomRightRadius: 10,
                 }}
                 onPress={() => {
-                  this.send_notification();
+                  this.notification_send();
                 }}
               />
             </View>

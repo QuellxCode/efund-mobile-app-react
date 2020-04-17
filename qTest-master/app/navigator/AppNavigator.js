@@ -1,5 +1,5 @@
 import React from 'react';
-import { createSwitchNavigator, createAppContainer } from "react-navigation";
+import { createSwitchNavigator, createAppContainer, NavigationActions } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import LoginScreen from "../screens/Auth/LoginScreen";
 import { createDrawerNavigator } from "react-navigation-drawer";
@@ -15,13 +15,12 @@ import NotificationScreen from '../screens/MainFlow/NotificationScreen';
 import SettingsScreen from '../screens/MainFlow/SettingsScreen';
 import ClaimDropDown from "../screens/MainFlow/ClaimDropDown";
 import MenuDrawer from "../components/MenuDrawer";
-import Notification from "../screens/MainFlow/Notification"
+import Notification from "../screens/MainFlow/Notification";
+import NotificationNew from "../screens/MainFlow/NotificationsNew";
+import NotificationDeta from "../screens/MainFlow/NotificationDetail";
+import EditableForm from "../screens/MainFlow/Editableform";
 
 const AppNavigator = createSwitchNavigator({
-    
-    
-    
-    
     loginFlow: createStackNavigator({
         Login: LoginScreen
     },
@@ -37,7 +36,6 @@ const AppNavigator = createSwitchNavigator({
             Projects: ProjectList,
             RequestPayment: RequestPaymentScreen,
             GenerateBill: GenerateBillScreen,
-           
         },
         {
             initialRouteName: 'RequestPayment',
@@ -55,11 +53,20 @@ const AppNavigator = createSwitchNavigator({
                 headerShown: false
             }
         }),
-        Notification: Notification,
+        notify: createStackNavigator({
+            Notification: NotificationNew,
+            NotificationDeta: NotificationDeta,
+            EditableForm: EditableForm,
+        },
+        {
+            initialRouteName: 'Notification',
+            defaultNavigationOptions: {
+                headerShown: false
+            }
+        }),
         GeneratePayOrder: GeneratePayOrderScreen,
         Reports: ReportsScreen,
         Wallet: WalletScreen,
-        Notifications: NotificationScreen,
         Settings: SettingsScreen
     },
     {
