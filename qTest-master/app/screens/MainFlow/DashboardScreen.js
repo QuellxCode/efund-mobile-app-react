@@ -225,6 +225,28 @@ const Supervisor = props => {
      });
 
     useEffect(() => {
+<<<<<<< HEAD
+        if (notification != undefined && notification != null) {
+            const a = notification.length - 1
+            const aa = notification[a].to;
+            
+            if (user.user_id === aa) {
+               
+                if(notification.notification_status === 'RequestPayment'){
+                    localNotify.showNotification(
+                        1,
+                        'Bill is Added!',
+                        '', // data
+                        '', // option
+                    );
+                }else{
+                    localNotify.showNotification(
+                        1,
+                        'A new Claim Payment Request!',
+                        '', // data
+                        '', // option
+                    );
+=======
            if(user != undefined && user != null){
             if (notification != undefined && notification != null && notification.length > 1) {
                 let a = notification.length - 1
@@ -262,6 +284,7 @@ const Supervisor = props => {
                     //        }
                      }
                     
+>>>>>>> 7dfaa85929b405206e8e549548b0828cf3e477ec
                 }
             }
   },[length])
