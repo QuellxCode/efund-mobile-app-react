@@ -12,7 +12,7 @@ class NotifierDetal extends Component {
         super(props);
         this.state = {
             data_: this.props.navigation.state.params.allData,
-            data_project: this.props.navigation.state.params.project,
+            data_project: '',
             visible: false,
             visibleB: false,
             response_: '',
@@ -45,7 +45,8 @@ class NotifierDetal extends Component {
               User: val,
             });
             console.log('userIdii', this.state.User.user_id);
-            this.get_notification();
+            // this.get_notification();
+            this.get_Detailed();
             // console.log("userId",this.state.User.user_id)
           }
         } catch (error) {
@@ -68,10 +69,13 @@ class NotifierDetal extends Component {
         .then(json => {
           this.setState({
             newDetail: json.purchase.details,
+            data_project: json.purchase.project
+
             // stat: json.purchase.payment_status,
           });
-          console.log("Hello",json)
-          console.log("Hello",this.state.newDetail)
+          this.get_notification();
+          console.log("Hello josn",json)
+          console.log("Hello detail",this.state.newDetail)
           console.log("stat", this.state.stat)
         })
         .catch(error => {

@@ -19,7 +19,8 @@ import Notification from "../screens/MainFlow/Notification";
 import NotificationNew from "../screens/MainFlow/NotificationsNew";
 import NotificationDeta from "../screens/MainFlow/NotificationDetail";
 import EditableForm from "../screens/MainFlow/Editableform";
-
+import EditRequestPaymentScreen from '../screens/MainFlow/RequestPaymentFlow/EditRequestPaymentScreen';
+import EditPage from '../screens/MainFlow/RequestPaymentFlow/EditPage';
 const AppNavigator = createSwitchNavigator({
     loginFlow: createStackNavigator({
         Login: LoginScreen
@@ -56,7 +57,9 @@ const AppNavigator = createSwitchNavigator({
         notify: createStackNavigator({
             Notification: NotificationNew,
             NotificationDeta: NotificationDeta,
-            EditableForm: EditableForm,
+            // EditableForm: EditableForm,
+            EditRequestPaymentScreen:EditRequestPaymentScreen,
+            EditPage: EditPage
         },
         {
             initialRouteName: 'Notification',

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, StyleSheet, Button, Constants, FlatList, Text, TouchableO, TextInput, KeyboardAvoidingView, Picker, AsyncStorage , ScrollView, ToastAndroid} from 'react-native';
+import { View, TouchableOpacity,Dimensions, StyleSheet, Button, Constants,Modal, FlatList, Text, TouchableO, TextInput, KeyboardAvoidingView, Picker, AsyncStorage , ScrollView, ToastAndroid} from 'react-native';
 import Header from '../../../components/Header';
 import CustomButton from '../../../components/CustomButton';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -11,10 +11,16 @@ var n = 0;
 var value = 0;
 const rs = 0;
 const result = 0;
-class RequestPayment extends Component {
+const { width, height } = Dimensions.get('window');
+class EditRequestPayment extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            data_: this.props.navigation.state.params.allData,
+            newItem:this.props.navigation.state.params.item,
+            newQty:this.props.navigation.state.params.qty,
+            newPrice:this.props.navigation.state.params.price,
+            data_project: '',
             bills: [],
             qty: 0,
             price: 0,
@@ -38,9 +44,28 @@ class RequestPayment extends Component {
             val: 0,
             disabledB: true,
             total: 0,
-            purchaseID: '',
             proj: '',
             show: false,
+            visible: false,
+            visibleB: false,
+            response_: '',
+            token: '',
+            User: [],
+            data: '',
+            myToken: '',
+            notification: '',
+            notification_id: '',
+            Requestvisible: false,
+            total: 0,
+            // totall: this.props.navigation.state.params.total,
+            all: [],
+            specif: [],
+            detailed:[],
+            description: '',
+            purchaseID: this.props.navigation.state.params.purchase,
+            newDetail: [],
+            stat: this.props.navigation.state.params.stat,
+            newArrayDetail:[]
         };
         this.list = React.createRef();
     }
@@ -52,13 +77,14 @@ class RequestPayment extends Component {
                 this.setState({
                     User: val,
                 })
-        
+                this.get_Detailed();
             }
         } catch (error) {
             console.log('error getting data')
         }
         var thisdata = []
         var arr = []
+        
         fetch('http://efundapp.herokuapp.com/api/project', {
             method: 'Get',
             headers: {
@@ -90,8 +116,85 @@ class RequestPayment extends Component {
             .catch(error => {
                 console.log(error);
             });
-
+           
     }
+
+    get_Detailed() {
+        var arr = [];
+        var arry = [];
+        fetch('http://efundapp.herokuapp.com/api/purchase/get-purchase/'+this.state.purchaseID, {
+          method: 'Get',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'X-Auth-Token': this.state.User.token,
+          },
+        })
+          .then(response => response.json())
+          .then(json => {
+            this.setState({
+              newDetail: json.purchase.details,
+              data_project: json.purchase.project
+  
+              // stat: json.purchase.payment_status,
+            });
+            this.get_notification();
+            console.log("Hello josn",json)
+            console.log("Hello detail",this.state.newDetail)
+            console.log("stat", this.state.stat) 
+            console.log('new States===========================', this.state.newItem)
+            console.log('new States===========================', this.state.newPrice)
+            console.log('new States===========================', this.state.newQty)
+
+
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
+  
+      get_notification() {
+        var arr = [];
+        var arry = [];
+        fetch('http://efundapp.herokuapp.com/api/project/'+this.state.data_project, {
+          method: 'Get',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'X-Auth-Token': this.state.User.token,
+          },
+        })
+          .then(response => response.json())
+          .then(json => {
+            this.setState({
+              all: json,
+              specif: json.project,
+              detailed: json.project.details
+            });
+            console.log("ALL",this.state.all)
+            console.log("Specific",this.state.specif)
+            console.log("Detailed",this.state.detailed)
+            console.log("AAAAA", this.state.data_)
+            // console.log("Sdasdasd", this.txt(this.state.data_.message))
+            console.log("SSasadda", this.state.purchaseID)
+            // console.log("aabe",json.notification[3].message[0].pkr)
+            // console.log("dasdatsd", this.state.all)
+            // console.log("dasdatsd", this.state.all.length)
+            // var v = this.state.all.length;
+            // for (let i = 0; i < v; i++) {
+            //   // arr.push(json.notification[i].message,json.notification[i].project
+            //  // arry.push(json.notification[i].project);
+            //   arr.push(json.notification[i].message);
+            // }
+            // this.setState({dada:arr})
+            // console.log('dada arr', JSON.stringify(arr));
+            this.get_Detailed();
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
+
 
     loadProjects() {
         return this.state.proj.map(proj => (
@@ -99,6 +202,7 @@ class RequestPayment extends Component {
         ))
       }
 
+      
     handlePress = async () => {
         var aa = this.state.title;
         var ab = this.state.qty;
@@ -215,8 +319,11 @@ class RequestPayment extends Component {
         console.log(this.state.selProj)
     }  
 
+
+
     render() {
-        // const PickerItems = this.state.Category.map((element, index) => (
+                  
+         // const PickerItems = this.state.Category.map((element, index) => (
         //     <Picker.Item
         //         key={"pick" + element.project_name}
         //         label={"" + "  " + element.project_name}
@@ -236,8 +343,10 @@ class RequestPayment extends Component {
             
             <View style={{ flex: 1 }}>
                 <Header />
-                <Text style={{ fontWeight: 'bold', fontSize: 30, alignSelf: 'center', color: '#FF3301' }}>Select Project</Text>
-                <View style={{ borderColor: '#FF3301', borderWidth: 1, width: 250, height: 50, borderRadius: 30, justifyContent: 'center', alignSelf: 'center', marginTop: 10 }}>
+                <Text style={{ fontWeight: 'bold', fontSize: 30, alignSelf: 'center', color: '#FF3301' }}>Project Name</Text>
+        <Text style={{ fontWeight: 'bold', fontSize: 24, alignSelf: 'center', color: 'black' }}>{this.state.specif.project_name}</Text>
+
+                {/* <View style={{ borderColor: '#FF3301', borderWidth: 1, width: 250, height: 50, borderRadius: 30, justifyContent: 'center', alignSelf: 'center', marginTop: 10 }}> */}
                     {/* <Picker
                         selectedValue={this.state.selectedValue}
                         prompt="Select Project"
@@ -262,7 +371,7 @@ class RequestPayment extends Component {
                         {PickerItems}
                     </Picker> */}
 
-                                <Picker
+                                {/* <Picker
                                     selectedValue={this.state.selVal}
                                     // onValueChange={(itemValue, itemIndex) => 
                                     //     this.setState({selectedBank: itemValue})}>
@@ -271,7 +380,7 @@ class RequestPayment extends Component {
                                     {this.loadProjects()}
                                 </Picker>
 
-                </View>
+                </View> */}
                 {/* {this.state.bills.map((item, index) => ( */}
                 {/* ))}    */}
                 <View style={[MainFlowStyles.cardStyle, { padding: 10, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10, marginHorizontal: 25, marginTop: 10 }]}>
@@ -308,7 +417,7 @@ class RequestPayment extends Component {
                         ></TextInput>
                         <View style={{ marginBottom: 2 }} />
                     </View>
-                    <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
+                    {/* <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
                     <TextInput style={{ fontSize: 16 }}
                             placeholder='Total'
                             keyboardType={'numeric'}
@@ -328,9 +437,9 @@ class RequestPayment extends Component {
                             ref={ref => this.ref = ref}
                             value={this.state.result}
 
-                        ></TextInput> */}
+                        ></TextInput> 
                         <View style={{ marginBottom: 2 }} />
-                    </View>
+                    </View> */}
                 </View>
                 <View style={{ flex: 1, marginHorizontal: 20, marginTop: 5 }}>
                     {/* <FlatList
@@ -343,12 +452,13 @@ class RequestPayment extends Component {
                         //renderItem={({ item }) => <Bill item={item} />}
                         renderItem={this.render_1}
                     /> */}
+                    
                     <ScrollView>
-                    {this.state.bills.map((item, index) =>(
+                    {this.state.newDetail.map((item, index) =>(
                        
                         <View style={[MainFlowStyles.cardStyle, { padding: 10, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20, marginHorizontal: 5 }]}>
             
-                    <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.number}</Text>
+                    {/* <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.number}</Text> */}
                             <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
                                 {/* <TextInput style={{ fontSize: 16 }}
                                     placeholder='Item'
@@ -402,17 +512,57 @@ class RequestPayment extends Component {
             
                                 <View style={{ marginBottom: 2 }} />
                             </View>
+                            <TouchableOpacity
+                        style={{ backgroundColor: '#FF3301', padding: 6, borderRadius: 4 }}
+                        onPress={() => this.props.navigation.navigate('EditPage')} 
+                        // disabled={this.state.disabledB}
+                        // onPress={() => {
+                        //     // if (this.state.check == true) {
+                        //     //     // let b = this.state.bills;
+                        //     //     // var aa = this.state.title;
+                        //     //     // var ab = this.state.qty;
+                        //     //     // var ac = this.state.price;
+                        //     //     // var ae = this.state.pkr;
+                        //     //     // var result = ac * ab
+                        //     //     // b.push({ title: aa, price: ac, qty: ab, pkr: result });
+                        //     //     //  this.setState({ bills: b, check: false })
+                        //     //      this.handlePress();
+                        //     //     this.props.navigation.navigate('', {
+                        //     //         bill: this.state.bills,
+                        //     //         project: this.state.selectedValue
+                        //     //     })
+                        //     //     this.setState({bill: ''})
+                        //     // }
+                        //     // else {
+                        //         this.props.navigation.navigate('GenerateBill', {
+                        //             bill: this.state.bills,
+                        //             project: this.state.selProj,
+                        //             total: this.state.total,
+                        //             purchase: this.state.purchaseID
+                        //         })
+                        //        this.setState({bill: ''})
+
+                        //     // }
+                        // }}
+                    >
+                        
+                        <Text
+                            style={{ alignSelf: 'center', color: '#FFF', alignContent: 'center', justifyContent: "center" }}
+                        >edit</Text>
+                    </TouchableOpacity>
                         </View>
                          
                                            ))}
                                             </ScrollView>
+                                        
 
-                                            <View style={{ flexDirection: "row", justifyContent: "center" }}><Text>Total: {this.state.total}</Text></View>
+ 
+                                            {/* <View style={{ flexDirection: "row", justifyContent: "center" }}><Text>Total: {this.state.total}</Text></View> */}
 
                     <View style={{ flexDirection: "row", justifyContent: "center" }}>
                             {/* <Text>"Total ", {this.state.total}</Text> */}
                             
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             style={{ alignSelf: 'center', alignContent: 'center', backgroundColor: '#FF3301', height: 40, width: 100, borderRadius: 20, justifyContent: "center" }}
                             onPress={() => {
                                 if(this.state.item == "" || this.state.price == 0 || this.state.qty == 0){
@@ -443,9 +593,9 @@ class RequestPayment extends Component {
                         >
                             <Text style={{ alignSelf: 'center', color: '#FFF', alignContent: 'center', justifyContent: "center" }}>Add New</Text>
 
-                            {/* <AntDesign name='pluscircle' size={20} color='#FF3301' /> */}
+                            {/* <AntDesign name='pluscircle' size={20} color='#FF3301' /> 
                         </TouchableOpacity>
-                        
+                         */}
 {/*                         
                         <Text>Total: {this.state.total}</Text>
                          */}
@@ -501,9 +651,8 @@ class RequestPayment extends Component {
                 
             </View>
             
-            
-        );
+        )
                     }
     }
 }
-export default RequestPayment;
+export default EditRequestPayment;

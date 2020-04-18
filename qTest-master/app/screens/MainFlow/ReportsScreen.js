@@ -52,7 +52,8 @@ class ReportsScreen extends Component {
       //      updatedHeight: 0, 
       //      expand: false,
            buttonText : 'Show Details',
-           viewdata: false
+           viewdata: '',
+           show: false
     };
   }
 
@@ -431,6 +432,8 @@ class ReportsScreen extends Component {
             keyExtractor={(item, index) => index.toString()}
             showsVerticalScrollIndicator={false}
             renderItem={({item, index}) => {
+              console.log('item from report', item._id)
+                
               return (
                 <View
                   style={{
@@ -517,8 +520,8 @@ class ReportsScreen extends Component {
                       }}
                     />
                     <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center' }}>
-                      <TouchableOpacity onPress={() => this.setState({viewdata: !this.state.viewdata})}>
-                    <Text style={{ color: '#FF3301', fontWeight: 'bold', fontSize: 16, marginRight: 10 }}>{this.state.viewdata ? "Hide Details" : "Show Details"}</Text>
+                      <TouchableOpacity onPress={() => this.setState({viewdata: item._id, show : !this.state.show})}>
+                    <Text style={{ color: '#FF3301', fontWeight: 'bold', fontSize: 16, marginRight: 10 }}>{this.state.show ? "Hide Details" : "Show Details"}</Text>
                                             {/* <View style={{ justifyContent: 'flex-end', marginBottom: 4 }}>
                                                 <FontAwesome name='chevron-down' size={12} color='#FF3301' />
                                             </View> */}
@@ -527,7 +530,7 @@ class ReportsScreen extends Component {
                     {/* <View style = {{ height: this.state.updatedHeight, overflow: 'hidden' }}>
                       <View onLayout = {( value ) => this.getHeight( value.nativeEvent.layout.height )}> */}
                     {/* <View style={{ flexDirection: 'row', borderBottomColor: '#FFC1B2', borderBottomWidth: 1 }}> */}
-                 {(this.state.viewdata == true) &&
+                 {(this.state.viewdata === item._id) && (this.state.show == true) &&
                  <View> 
                     <View
                       style={{
