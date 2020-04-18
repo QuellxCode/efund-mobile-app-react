@@ -18,9 +18,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import DatePicker from 'react-native-datepicker';
 import moment from 'react-moment';
 import ExpanableList from 'react-native-expandable-section-flatlist';
-
 const {width, height} = Dimensions.get('window');
-
 class ReportsScreen extends Component {
   constructor(props) {
     super(props);
