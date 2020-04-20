@@ -85,9 +85,11 @@ class NotifierDetaler extends Component {
       .then(json => {
         this.setState({
           newDetail: json.purchase.details,
-          imagePath: json.purchase.file,
           // stat: json.purchase.payment_status,
         });
+        if(this.state.notifystat == 'ClaimRequest'){
+          this.setState({imagePath: json.purchase.file,});
+        }
         console.log('Image Path', this.state.imagePath);
         console.log('Image Path ', json);
         // console.log('stat', this.state.stat);
@@ -157,6 +159,7 @@ class NotifierDetaler extends Component {
         purchaserName: this.state.data_.purchaserName,
         purchaserID: this.state.data_.purchaserID,
         request: this.state.purchaseID,
+        payment: "Approved"
       }),
     })
       .then(response => response.json())
@@ -199,6 +202,7 @@ class NotifierDetaler extends Component {
         purchaserName: this.state.data_.purchaserName,
         purchaserID: this.state.data_.purchaserID,
         request: this.state.purchaseID,
+        notification_status: this.state.notifystat
       }),
     })
       .then(response => response.json())
@@ -840,7 +844,7 @@ class NotifierDetaler extends Component {
                       source={{
                       uri:'http://efundapp.herokuapp.com/uploads/'+this.state.imagePath,
                       }}
-                      style={{height: 200, width: 290}}
+                      style={{height: 450, width: 250,alignSelf:'center'}}
                     />
                     <Button
                       title="OK"
