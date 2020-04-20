@@ -39,6 +39,7 @@ class NotifierDetaler extends Component {
       purchaseID: this.props.navigation.state.params.purchase,
       newDetail: [],
       stat: this.props.navigation.state.params.stat,
+      notifystat: this.props.navigation.state.params.notistat
     };
   }
 

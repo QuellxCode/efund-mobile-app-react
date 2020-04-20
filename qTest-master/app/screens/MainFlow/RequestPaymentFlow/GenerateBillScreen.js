@@ -204,7 +204,7 @@ class GenerateBillScreen extends Component {
                                 );
                             }}
                         />
-                    <Text style={{alignSelf:'flex-end', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth:1, marginRight:'5%'}}>{this.state.totall}</Text>
+                    <Text style={{alignSelf:'flex-end', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth:1, marginRight:'10%'}}>Grand Total: {this.state.totall}</Text>
                     </View>
                 </View>
                 <View style={{ marginHorizontal: 20, marginBottom: 20, marginTop: 10, elevation: 5 }}>
