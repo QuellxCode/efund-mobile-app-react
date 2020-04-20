@@ -6,6 +6,7 @@ import {
   FlatList,
   Modal,
   AsyncStorage,
+  Image,
 } from 'react-native';
 import Header from '../../components/Header';
 import {Button, Input} from 'react-native-elements';
@@ -22,6 +23,7 @@ class NotifierDetaler extends Component {
       data_project: this.props.navigation.state.params.project,
       visible: false,
       visibleB: false,
+      visibleImg: false,
       response_: '',
       token: '',
       User: [],
@@ -31,6 +33,7 @@ class NotifierDetaler extends Component {
       notification_id: '',
       Requestvisible: false,
       total: 0,
+      imagePath: '',
       // totall: this.props.navigation.state.params.total,
       all: [],
       specif: [],
@@ -39,7 +42,7 @@ class NotifierDetaler extends Component {
       purchaseID: this.props.navigation.state.params.purchase,
       newDetail: [],
       stat: this.props.navigation.state.params.stat,
-      notifystat: this.props.navigation.state.params.notistat
+      notifystat: this.props.navigation.state.params.notistat,
     };
   }
 
@@ -79,17 +82,17 @@ class NotifierDetaler extends Component {
       .then(json => {
         this.setState({
           newDetail: json.purchase.details,
+          imagePath: json.purchase.file,
           // stat: json.purchase.payment_status,
         });
-        console.log('Hello', json);
-        console.log('Hello', this.state.newDetail);
-        console.log('stat', this.state.stat);
+        console.log('Image Path', this.state.imagePath);
+        console.log('Image Path ', json);
+        // console.log('stat', this.state.stat);
       })
       .catch(error => {
         console.error(error);
       });
   }
-
   get_notification() {
     var arr = [];
     var arry = [];
@@ -111,12 +114,12 @@ class NotifierDetaler extends Component {
           specif: json.project,
           detailed: json.project.details,
         });
-        console.log('ALL', this.state.all);
-        console.log('Specific', this.state.specif);
-        console.log('Detailed', this.state.detailed);
-        console.log('AAAAA', this.state.data_);
-        console.log('Sdasdasd', this.txt(this.state.data_.message));
-        console.log('SSasadda', this.state.purchaseID);
+        // console.log('ALL', this.state.all);
+        // console.log('Specific', this.state.specif);
+        // console.log('Detailed', this.state.detailed);
+        // console.log('AAAAA', this.state.data_);
+        // console.log('Sdasdasd', this.txt(this.state.data_.message));
+        // console.log('SSasadda', this.state.purchaseID);
         // console.log("aabe",json.notification[3].message[0].pkr)
         // console.log("dasdatsd", this.state.all)
         // console.log("dasdatsd", this.state.all.length)
@@ -276,7 +279,9 @@ class NotifierDetaler extends Component {
   handlePressB = async () => {
     this.setState({visibleB: true});
   };
-
+  onClickButtonImg = async () => {
+    this.setState({visibleImg: false});
+  };
   render() {
     if (this.state.User.roles == 'Supervisor') {
       return (
@@ -366,145 +371,204 @@ class NotifierDetaler extends Component {
               </Text>
             </View>
           </View>
+
+          {this.state.notifystat == 'ClaimRequest' && (
+            <View style={{alignSelf: 'center', padding: 20}}>
+              <Button
+                buttonStyle={{
+                  backgroundColor: '#FF3301',
+                  padding: 14,
+                  borderRadius: 10,
+                }}
+                onPress={() => {
+                  this.setState({visibleImg: true});
+                }}
+                title="View Claim"
+              />
+            </View>
+          )}
           {this.state.stat == 'Pending' && (
             <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginBottom: 20,
-              marginTop: 10,
-              marginHorizontal: '25%',
-              elevation: 5,
-            }}>
-            <Button
-              title="Accept"
-              buttonStyle={{
-                backgroundColor: '#FF3301',
-                padding: 14,
-                borderRadius: 10,
-              }}
-              containerStyle={{marginHorizontal: 10}}
-              onPress={() => {
-                this.sup_accept(), {visible: true};
-              }}
-            />
-
-            <Button
-              title="Reject"
-              buttonStyle={{
-                backgroundColor: '#FF3301',
-                padding: 14,
-                borderRadius: 10,
-              }}
-              containerStyle={{marginHorizontal: 10}}
-              onPress={() => {
-                this.reject_ok(), {visibleB: true};
-              }}
-            />
-          </View>
-
-          <Modal
-            animationType="fade"
-            transparent={true}
-            visible={this.state.visible}>
-            <View
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'rgba(0, 0, 0, 0.7)',
-              }}>
               <View
                 style={{
-                  backgroundColor: 'white',
-                  paddingTop: 10,
-                  borderRadius: 20,
-                  width: width * 0.8,
+                  flexDirection: 'row',
+                  marginBottom: 20,
+                  marginTop: 10,
+                  marginHorizontal: '25%',
+                  elevation: 5,
                 }}>
-                <View style={{alignSelf: 'center', padding: 20}}>
-                  <FontAwesome name="send" color="#FF3301" size={50} />
-                </View>
-                <Text
-                  style={{
-                    alignSelf: 'center',
-                    fontSize: 16,
-                    fontWeight: 'bold',
-                    color: '#FF3301',
-                    paddingBottom: 40,
-                  }}>
-                  Request Sent To Director
-                </Text>
                 <Button
-                  title="OK"
+                  title="Accept"
                   buttonStyle={{
                     backgroundColor: '#FF3301',
                     padding: 14,
-                    borderRadius: 0,
-                    borderBottomLeftRadius: 10,
-                    borderBottomRightRadius: 10,
+                    borderRadius: 10,
                   }}
-                  onPress={() => this.onClickButton()}
+                  containerStyle={{marginHorizontal: 10}}
+                  onPress={() => {
+                    this.sup_accept(), {visible: true};
+                  }}
                 />
-              </View>
-            </View>
-          </Modal>
 
-          <Modal
-            animationType="fade"
-            transparent={true}
-            visible={this.state.visibleB}>
-            <View
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'rgba(0, 0, 0, 0.7)',
-              }}>
-              <View
-                style={{
-                  backgroundColor: 'white',
-                  paddingTop: 10,
-                  borderRadius: 20,
-                  width: width * 0.8,
-                }}>
-                <View style={{alignSelf: 'center', padding: 20}}>
-                  <FontAwesome name="send" color="#FF3301" size={50} />
-                </View>
-                <Text
-                  style={{
-                    alignSelf: 'center',
-                    fontSize: 16,
-                    fontWeight: 'bold',
-                    color: '#FF3301',
-                    paddingBottom: 40,
-                  }}>
-                  Request Rejected
-                </Text>
-                <Input
-                  placeholder="Enter Your Reason for Rejection."
-                  autoCapitalize="none"
-                  autoCompleteType="off"
-                  keyboardType="default"
-                  // inputStyle={{ fontSize: 14, paddingBottom: 50, textAlignVertical: 'top' }}
-                  // inputContainerStyle={{ borderColor: '#FF3301', borderWidth: 1, borderRadius: 0 }}
-                  multiline
-                  onChangeText={value => this.setState({description: value})}
-                />
                 <Button
-                  title="OK"
+                  title="Reject"
                   buttonStyle={{
                     backgroundColor: '#FF3301',
                     padding: 14,
-                    borderRadius: 0,
-                    borderBottomLeftRadius: 10,
-                    borderBottomRightRadius: 10,
+                    borderRadius: 10,
                   }}
-                  onPress={() => this.onClickButtonB()}
+                  containerStyle={{marginHorizontal: 10}}
+                  onPress={() => {
+                    this.reject_ok(), {visibleB: true};
+                  }}
                 />
               </View>
+
+              <Modal
+                animationType="fade"
+                transparent={true}
+                visible={this.state.visible}>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      paddingTop: 10,
+                      borderRadius: 20,
+                      width: width * 0.8,
+                    }}>
+                    <View style={{alignSelf: 'center', padding: 20}}>
+                      <FontAwesome name="send" color="#FF3301" size={50} />
+                    </View>
+                    <Text
+                      style={{
+                        alignSelf: 'center',
+                        fontSize: 16,
+                        fontWeight: 'bold',
+                        color: '#FF3301',
+                        paddingBottom: 40,
+                      }}>
+                      Request Sent To Director
+                    </Text>
+                    <Button
+                      title="OK"
+                      buttonStyle={{
+                        backgroundColor: '#FF3301',
+                        padding: 14,
+                        borderRadius: 0,
+                        borderBottomLeftRadius: 10,
+                        borderBottomRightRadius: 10,
+                      }}
+                      onPress={() => this.onClickButton()}
+                    />
+                  </View>
+                </View>
+              </Modal>
+
+              <Modal
+                animationType="fade"
+                transparent={true}
+                visible={this.state.visibleB}>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      paddingTop: 10,
+                      borderRadius: 20,
+                      width: width * 0.8,
+                    }}>
+                    <View style={{alignSelf: 'center', padding: 20}}>
+                      <FontAwesome name="send" color="#FF3301" size={50} />
+                    </View>
+                    <Text
+                      style={{
+                        alignSelf: 'center',
+                        fontSize: 16,
+                        fontWeight: 'bold',
+                        color: '#FF3301',
+                        paddingBottom: 40,
+                      }}>
+                      Request Rejected
+                    </Text>
+                    <Input
+                      placeholder="Enter Your Reason for Rejection."
+                      autoCapitalize="none"
+                      autoCompleteType="off"
+                      keyboardType="default"
+                      // inputStyle={{ fontSize: 14, paddingBottom: 50, textAlignVertical: 'top' }}
+                      // inputContainerStyle={{ borderColor: '#FF3301', borderWidth: 1, borderRadius: 0 }}
+                      multiline
+                      onChangeText={value =>
+                        this.setState({description: value})
+                      }
+                    />
+                    <Button
+                      title="OK"
+                      buttonStyle={{
+                        backgroundColor: '#FF3301',
+                        padding: 14,
+                        borderRadius: 0,
+                        borderBottomLeftRadius: 10,
+                        borderBottomRightRadius: 10,
+                      }}
+                      onPress={() => this.onClickButtonB()}
+                    />
+                  </View>
+                </View>
+              </Modal>
+              {/* new modal for image */}
+              <Modal
+                animationType="fade"
+                transparent={true}
+                visible={this.state.visibleImg}>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      paddingTop: 0,
+                      borderRadius: 20,
+                      width: width * 0.8,
+                    }}>
+                    {/* <View style={{alignSelf: 'center', padding: 20}}>
+                    </View> */}
+                    <Image
+                      source={{
+                      uri:'http://efundapp.herokuapp.com/uploads/'+this.state.imagePath,
+                      }}
+                      style={{height: 500, width: 300}}
+                    />
+                    <Button
+                      title="OK"
+                      buttonStyle={{
+                        backgroundColor: '#FF3301',
+                        padding: 14,
+                        borderRadius: 0,
+                        borderBottomLeftRadius: 10,
+                        borderBottomRightRadius: 10,
+                      }}
+                      onPress={() => this.onClickButtonImg()}
+                    />
+                  </View>
+                </View>
+              </Modal>
             </View>
-          </Modal>
-          </View>
           )}
         </View>
       );
@@ -593,6 +657,21 @@ class NotifierDetaler extends Component {
               </Text>
             </View>
           </View>
+          {this.state.notifystat == 'ClaimRequest' && (
+            <View style={{alignSelf: 'center', padding: 20}}>
+              <Button
+                buttonStyle={{
+                  backgroundColor: '#FF3301',
+                  padding: 14,
+                  borderRadius: 10,
+                }}
+                onPress={() => {
+                  this.setState({visibleImg: true});
+                }}
+                title="View Claim"
+              />
+            </View>
+          )}
           {this.state.stat == 'Pending' && (
             <View>
               <View
@@ -729,6 +808,46 @@ class NotifierDetaler extends Component {
                         borderBottomRightRadius: 10,
                       }}
                       onPress={() => this.onClickButtonB()}
+                    />
+                  </View>
+                </View>
+              </Modal>
+              <Modal
+                animationType="fade"
+                transparent={true}
+                visible={this.state.visibleImg}>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      paddingTop: 0,
+                      borderRadius: 20,
+                      width: width * 0.8,
+                    }}>
+                    {/* <View style={{alignSelf: 'center', padding: 20}}>
+                    </View> */}
+                    <Image
+                      source={{
+                        uri:'http://efundapp.herokuapp.com/uploads/image-1587363949403.jpg',
+                      }}
+                      style={{height: 200, width: 290}}
+                    />
+                    <Button
+                      title="OK"
+                      buttonStyle={{
+                        backgroundColor: '#FF3301',
+                        padding: 14,
+                        borderRadius: 0,
+                        borderBottomLeftRadius: 10,
+                        borderBottomRightRadius: 10,
+                      }}
+                      onPress={() => this.onClickButtonImg()}
                     />
                   </View>
                 </View>
