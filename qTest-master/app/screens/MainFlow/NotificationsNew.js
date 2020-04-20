@@ -305,7 +305,17 @@ class NotificationsNewScreen extends Component {
                                                     <Text style={{ fontSize: 16 }}>Refrence ID: {item.purchaserName}</Text>
                                                 </View>
                                             </View>
-                                            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Bill {index + 1}</Text>
+                                            <View style={{paddingTop:5}}/>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <View style={{ flexDirection: 'row', width: (width - 50) / 3 }}>
+                                                   
+                                                <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Bill {index + 1}</Text>
+                                                </View>
+
+                                                <View style={{ width: (width - 40) / 2, alignItems: 'flex-end', marginLeft:'10%' }}>
+                                                    <Text style={{ fontSize: 14 }}>{item.notification_status}</Text>
+                                                </View>
+                                            </View>
                                         </View>
                                         {/* <View style={{ borderBottomColor: '#FF3301', borderBottomWidth: 1 }} />
                                         <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center' }}>
@@ -492,7 +502,17 @@ class NotificationsNewScreen extends Component {
                                                                     <Text style={{ fontSize: 16 }}>Refrence ID: {item.purchaserName}</Text>
                                                                 </View>
                                                             </View>
-                                                            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Bill {index + 1}</Text>
+                                                            <View style={{paddingTop:5}}/>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <View style={{ flexDirection: 'row', width: (width - 50) / 3 }}>
+                                                   
+                                                <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Bill {index + 1}</Text>
+                                                </View>
+
+                                                <View style={{ width: (width - 40) / 2, alignItems: 'flex-end', marginLeft:'10%' }}>
+                                                    <Text style={{ fontSize: 14 }}>{item.notification_status}</Text>
+                                                </View>
+                                            </View>
                                                         </View>
                                                         {/* <View style={{ borderBottomColor: '#FF3301', borderBottomWidth: 1 }} />
                                                         <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center' }}>
