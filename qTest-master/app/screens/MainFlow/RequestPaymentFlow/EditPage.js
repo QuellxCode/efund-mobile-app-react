@@ -21,7 +21,9 @@ const EditPage = props => {
 
   const [allBillInfo, setAllBillInfo] = useState();
 
-  
+  const item = props.navigation.getParam('detail')
+  const id = item._id
+  console.log('item====', id)
   return (
     <View style={{ flex: 1 }}>
     <Header />
@@ -54,7 +56,7 @@ const EditPage = props => {
         />
       </View>
       <View style={styles.alignBtn}>
-        <TouchableOpacity style={styles.btn}  onPress={() => props.navigation.navigate('EditRequestPaymentScreen', {item: name, qty: qty, price: price})}>
+        <TouchableOpacity style={styles.btn}  onPress={() => props.navigation.navigate('EditRequestPaymentScreen', {id: id,item: name, qty: qty, price: price})}>
           <Text style={styles.loginText}>Update</Text>
         </TouchableOpacity>
       </View>

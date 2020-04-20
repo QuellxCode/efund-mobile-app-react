@@ -521,7 +521,7 @@ class ReportsScreen extends Component {
                     />
                     <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center' }}>
                       <TouchableOpacity onPress={() => this.setState({viewdata: item._id, show : !this.state.show})}>
-                    <Text style={{ color: '#FF3301', fontWeight: 'bold', fontSize: 16, marginRight: 10 }}>{this.state.show ? "Hide Details" : "Show Details"}</Text>
+                    <Text style={{ color: '#FF3301', fontWeight: 'bold', fontSize: 16, marginRight: 10 }}>{(this.state.viewdata === item._id) && this.state.show == true  ? "Hide Details" : "Show Details"}</Text>
                                             {/* <View style={{ justifyContent: 'flex-end', marginBottom: 4 }}>
                                                 <FontAwesome name='chevron-down' size={12} color='#FF3301' />
                                             </View> */}

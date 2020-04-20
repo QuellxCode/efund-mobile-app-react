@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity,Dimensions, StyleSheet, Button, Constants,Modal, FlatList, Text, TouchableO, TextInput, KeyboardAvoidingView, Picker, AsyncStorage , ScrollView, ToastAndroid} from 'react-native';
+import { View, TouchableOpacity,Dimensions, StyleSheet, Button, Constants,Modal, FlatList, Text, TouchableO, TextInput, KeyboardAvoidingView, Picker, AsyncStorage , ScrollView, ToastAndroid, Alert} from 'react-native';
 import Header from '../../../components/Header';
-import CustomButton from '../../../components/CustomButton';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import Bill from '../../../components/Bill';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MainFlowStyles from '../../../Styles/MainFlowStyles'
-import firebase from 'react-native-firebase';
 var n = 0;
 var value = 0;
 const rs = 0;
@@ -17,9 +12,6 @@ class EditRequestPayment extends Component {
         super(props);
         this.state = {
             data_: this.props.navigation.state.params.allData,
-            newItem:this.props.navigation.state.params.item,
-            newQty:this.props.navigation.state.params.qty,
-            newPrice:this.props.navigation.state.params.price,
             data_project: '',
             bills: [],
             qty: 0,
@@ -65,7 +57,8 @@ class EditRequestPayment extends Component {
             purchaseID: this.props.navigation.state.params.purchase,
             newDetail: [],
             stat: this.props.navigation.state.params.stat,
-            newArrayDetail:[]
+            newArrayDetail:[],
+            purchase_id: ''
         };
         this.list = React.createRef();
     }
@@ -77,7 +70,7 @@ class EditRequestPayment extends Component {
                 this.setState({
                     User: val,
                 })
-                this.get_Detailed();
+                 this.get_Detailed();
             }
         } catch (error) {
             console.log('error getting data')
@@ -116,8 +109,13 @@ class EditRequestPayment extends Component {
             .catch(error => {
                 console.log(error);
             });
+
+           
+
            
     }
+   
+
 
     get_Detailed() {
         var arr = [];
@@ -134,18 +132,21 @@ class EditRequestPayment extends Component {
           .then(json => {
             this.setState({
               newDetail: json.purchase.details,
-              data_project: json.purchase.project
-  
+              data_project: json.purchase.project,
+              purchase_id: json.purchase._id
               // stat: json.purchase.payment_status,
             });
             this.get_notification();
+             this.newObjInInitialArr();
             console.log("Hello josn",json)
             console.log("Hello detail",this.state.newDetail)
             console.log("stat", this.state.stat) 
-            console.log('new States===========================', this.state.newItem)
-            console.log('new States===========================', this.state.newPrice)
-            console.log('new States===========================', this.state.newQty)
-
+            console.log("purchase id", this.state.data_project) 
+            if(this.state.newArrayDetail.length < 1){
+                this.setState({
+                    newArrayDetail: this.state.newDetail
+                })
+            }
 
           })
           .catch(error => {
@@ -171,23 +172,6 @@ class EditRequestPayment extends Component {
               specif: json.project,
               detailed: json.project.details
             });
-            console.log("ALL",this.state.all)
-            console.log("Specific",this.state.specif)
-            console.log("Detailed",this.state.detailed)
-            console.log("AAAAA", this.state.data_)
-            // console.log("Sdasdasd", this.txt(this.state.data_.message))
-            console.log("SSasadda", this.state.purchaseID)
-            // console.log("aabe",json.notification[3].message[0].pkr)
-            // console.log("dasdatsd", this.state.all)
-            // console.log("dasdatsd", this.state.all.length)
-            // var v = this.state.all.length;
-            // for (let i = 0; i < v; i++) {
-            //   // arr.push(json.notification[i].message,json.notification[i].project
-            //  // arry.push(json.notification[i].project);
-            //   arr.push(json.notification[i].message);
-            // }
-            // this.setState({dada:arr})
-            // console.log('dada arr', JSON.stringify(arr));
             this.get_Detailed();
           })
           .catch(error => {
@@ -250,61 +234,61 @@ class EditRequestPayment extends Component {
                 });
         }
     }
-    // render_1 = () => (
-    //     <KeyboardAvoidingView behavior="padding" >
-    //         <View style={[MainFlowStyles.cardStyle, { padding: 10, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20, marginHorizontal: 5 }]}>
 
-    //             <Text style={{ fontWeight: 'bold', fontSize: 16 }}></Text>
-    //             <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-    //                 <TextInput style={{ fontSize: 16 }}
-    //                     placeholder='Item'
-    //                     onChangeText={(title) => this.setState({ title })}
-    //                     ref={ref => this.ref = ref}
-    //                 ></TextInput>
-    //                 <View style={{ marginBottom: 2 }} />
-    //             </View>
-    //             <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-    //                 <TextInput style={{ fontSize: 16 }}
-    //                     placeholder='price'
-    //                     keyboardType={'numeric'}
-    //                     onChangeText={(price) => this.setState({ price })}
-    //                     ref={ref => this.ref = ref}
-
-    //                 ></TextInput>
-    //                 <View style={{ marginBottom: 2 }} />
-    //             </View>
-    //             <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-    //                 <TextInput style={{ fontSize: 16 }}
-    //                     placeholder='qty'
-    //                     keyboardType={'numeric'}
-    //                     onChangeText={(qty) => this.setState({ qty })}
-    //                     ref={ref => this.ref = ref}
-
-    //                 ></TextInput>
-    //                 <View style={{ marginBottom: 2 }} />
-    //             </View>
-    //             <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-    //                 {/* <Text style={{ fontSize: 16 }}
-    //                    ref={ref => this.ref = ref}
-    //                 >
-    //                   {this.state.qty * this.state.price}
-
-    //                 </Text> */}
-    //                 <TextInput style={{ fontSize: 16 }}
-    //                     // placeholder='qty'
-    //                     // keyboardType={'numeric'}
-    //                     // onChangeText={(qty) => this.setState({ qty })}
-    //                      ref={ref => this.ref = ref}
-    //                     // value={this.state.price * this.state.qty}
-    //                     value={this.state.results}
-    //                 ></TextInput>
-
-    //                 <View style={{ marginBottom: 2 }} />
-    //             </View>
-    //         </View>
-    //     </KeyboardAvoidingView>
-    // )
-
+     newObjInInitialArr() {
+    
+        let  newObject = {
+            id: this.props.navigation.getParam('id'),
+            item:this.props.navigation.getParam('item'),
+            qty: this.props.navigation.getParam('qty'),
+            price: this.props.navigation.getParam('price')
+        };
+        let id = newObject.id;
+        let initialArr = [...this.state.newArrayDetail]
+         let newArr = [];
+        for (let i = 0; i < initialArr.length; i++) {
+          if (id === initialArr[i]._id) {
+            newArr.push(newObject);
+          } else {
+            newArr.push(initialArr[i]);
+          }
+        }
+        this.setState({
+            newArrayDetail: newArr
+        })
+      };
+      
+      updateNewRequest(){
+        console.log('body', this.state.data_project);
+        console.log('body', this.state.project_id);
+        
+        fetch('http://efundapp.herokuapp.com/api/purchase/' + this.state.purchase_id, {
+            method: 'PATCH',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-Auth-Token': this.state.User.token,
+            },
+            body: JSON.stringify({
+                "details": this.state.newArrayDetail,
+                "project": this.state.data_project,
+                // "main_id": this.state.purchase_id
+                // "project": "5e9405b2c4a40a001700dc22"
+            })
+            
+        }).then(response => response.json())
+        .then(json => {
+            console.log(json)
+           
+        })
+        .catch(error => {
+            console.error(error);
+        });
+        console.log('btn click')
+        Alert.alert('Your request is updated Successfully!')
+       
+      }
+   
     activate_(){
         if(this.state.bills != []){
             this.state.disabledB = false;
@@ -323,16 +307,9 @@ class EditRequestPayment extends Component {
 
     render() {
                   
-         // const PickerItems = this.state.Category.map((element, index) => (
-        //     <Picker.Item
-        //         key={"pick" + element.project_name}
-        //         label={"" + "  " + element.project_name}
-        //         value={element.project_id}
-        //         prompt='Options'
-        //     />
-        // ));
-
-        if(this.state.show === false){
+    
+        const { navigation } = this.props;
+      if(this.state.show === false){
             return(
                 <View/>
             )
@@ -344,206 +321,41 @@ class EditRequestPayment extends Component {
             <View style={{ flex: 1 }}>
                 <Header />
                 <Text style={{ fontWeight: 'bold', fontSize: 30, alignSelf: 'center', color: '#FF3301' }}>Project Name</Text>
-        <Text style={{ fontWeight: 'bold', fontSize: 24, alignSelf: 'center', color: 'black' }}>{this.state.specif.project_name}</Text>
-
-                {/* <View style={{ borderColor: '#FF3301', borderWidth: 1, width: 250, height: 50, borderRadius: 30, justifyContent: 'center', alignSelf: 'center', marginTop: 10 }}> */}
-                    {/* <Picker
-                        selectedValue={this.state.selectedValue}
-                        prompt="Select Project"
-                        style={{
-                            width: 600, height: 50,
-                            alignSelf: 'center',
-                            alignContent:"center",
-                            justifyContent:'center',
-                            marginTop: 1,
-                            borderWidth: 2,
-                            color: '#FF3301',
-                            borderColor: 'red',
-                            fontSize: 30
-                        }}
-                        onValueChange={(itemValue, itemIndex) => {
-                            this.setState({ selectedValue: itemValue })
-                            this.setState({selectedProject: itemValue});
-                            console.log("selected:val" + this.state.selectedValue)
-
-                        }}
-                    >
-                        {PickerItems}
-                    </Picker> */}
-
-                                {/* <Picker
-                                    selectedValue={this.state.selVal}
-                                    // onValueChange={(itemValue, itemIndex) => 
-                                    //     this.setState({selectedBank: itemValue})}>
-                                    onValueChange={this.onValueChange.bind(this)}>
-                                       <Picker.Item label='Select a Project' value='' />
-                                    {this.loadProjects()}
-                                </Picker>
-
-                </View> */}
-                {/* {this.state.bills.map((item, index) => ( */}
-                {/* ))}    */}
-                <View style={[MainFlowStyles.cardStyle, { padding: 10, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10, marginHorizontal: 25, marginTop: 10 }]}>
-
-                    <Text style={{ fontWeight: 'bold', fontSize: 12, alignSelf:'center' }}>Add Item</Text>
-                    <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-                        <TextInput style={{ fontSize: 16 }}
-                            placeholder='Item'
-                            onChangeText={(title) => this.setState({ title })}
-                            ref={ref => this.ref = ref}
-                            value={this.state.title}
-                        ></TextInput>
-                        <View style={{ marginBottom: 2 }} />
-                    </View>
-                    <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-                        <TextInput style={{ fontSize: 16 }}
-                            placeholder='Qty'
-                            keyboardType={'numeric'}
-                            onChangeText={(qty) => this.setState({ qty, results: this.state.price * this.state.qty })}
-                            ref={ref => this.ref = ref}
-                            value={this.state.qty}
-
-                        ></TextInput>
-                        <View style={{ marginBottom: 2 }} />
-                    </View>
-                    <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-                    <TextInput style={{ fontSize: 16 }}
-                            placeholder='Rate'
-                            keyboardType={'numeric'}
-                            onChangeText={(price) => this.setState({ price })}
-                            ref={ref => this.ref = ref}
-                            value={this.state.price}
-
-                        ></TextInput>
-                        <View style={{ marginBottom: 2 }} />
-                    </View>
-                    {/* <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-                    <TextInput style={{ fontSize: 16 }}
-                            placeholder='Total'
-                            keyboardType={'numeric'}
-                            defaultValue='Total'
-                            //onChangeText={(qty) => this.setState({ qty, results: this.state.price * this.state.qty })}
-                            ref={ref => this.ref = ref}
-                            //value={this.state.results}
-                            editable={false}
-                        ></TextInput>
-                        {/* <Text style={{ fontSize: 16 }}>
-                            
-                         </Text> */}
-                         {/* <TextInput style={{ fontSize: 16 }}
-                            // placeholder='qty'
-                            // keyboardType={'numeric'}
-                            // onChangeText={(qty) => this.setState({ qty, results: this.state.price * this.state.qty })}
-                            ref={ref => this.ref = ref}
-                            value={this.state.result}
-
-                        ></TextInput> 
-                        <View style={{ marginBottom: 2 }} />
-                    </View> */}
-                </View>
+                <Text style={{ fontWeight: 'bold', fontSize: 24, alignSelf: 'center', color: 'black' }}>{this.state.specif.project_name}</Text>
+             
+                    
+                
                 <View style={{ flex: 1, marginHorizontal: 20, marginTop: 5 }}>
-                    {/* <FlatList
-                        ref={this.list}
-                        style={{ flexGrow: 0 }}
-                        data={this.state.bills}
-                        keyExtractor={(item, index) => index.toString()}
-                        showsVerticalScrollIndicator={false}
-                        onContentSizeChange={() => this.list.current.scrollToEnd({ 'animated': false })}
-                        //renderItem={({ item }) => <Bill item={item} />}
-                        renderItem={this.render_1}
-                    /> */}
                     
                     <ScrollView>
-                    {this.state.newDetail.map((item, index) =>(
+                    {this.state.newArrayDetail.map((item, index) =>(
                        
                         <View style={[MainFlowStyles.cardStyle, { padding: 10, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20, marginHorizontal: 5 }]}>
             
-                    {/* <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.number}</Text> */}
                             <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-                                {/* <TextInput style={{ fontSize: 16 }}
-                                    placeholder='Item'
-                                    // onChangeText={(title) => this.setState({ title })}
-                                    // ref={ref => this.ref = ref}
-                                ></TextInput> */}
                                     <Text>{item.item}</Text>
-                                  <View style={{ marginBottom: 2 }} />
+                                  {/* <View style={{ marginBottom: 2 }} /> */}
                             </View>
                             <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-                                {/* <TextInput style={{ fontSize: 16 }}
-                                    placeholder='price'
-                                    keyboardType={'numeric'}
-                                    onChangeText={(price) => this.setState({ price })}
-                                    ref={ref => this.ref = ref}
-            
-                                ></TextInput> */}
                                     <Text>{item.qty}</Text>
 
-                                <View style={{ marginBottom: 2 }} />
+                                {/* <View style={{ marginBottom: 2 }} /> */}
                             </View>
                             <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-                                {/* <TextInput style={{ fontSize: 16 }}
-                                    placeholder='qty'
-                                    keyboardType={'numeric'}
-                                    onChangeText={(qty) => this.setState({ qty })}
-                                    ref={ref => this.ref = ref}
-            
-                                ></TextInput> */}
                                     <Text>{item.price}</Text>
 
-                                <View style={{ marginBottom: 2 }} />
+                                {/* <View style={{ marginBottom: 2 }} /> */}
                             </View>
-                            <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-                                {/* <Text style={{ fontSize: 16 }}
-                                   ref={ref => this.ref = ref}
-                                >
-                                  {this.state.qty * this.state.price}
-            
-                                </Text> */}
-                                {/* <TextInput style={{ fontSize: 16 }}
-                                    // placeholder='qty'
-                                    // keyboardType={'numeric'}
-                                    // onChangeText={(qty) => this.setState({ qty })}
-                                     ref={ref => this.ref = ref}
-                                    // value={this.state.price * this.state.qty}
-                                    value={this.state.results}
-                                ></TextInput> */}
+                            {/* <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
                                     <Text>{item.pkr}</Text>
 
             
-                                <View style={{ marginBottom: 2 }} />
-                            </View>
+                                {/* <View style={{ marginBottom: 2 }} /> 
+                            </View> */}
                             <TouchableOpacity
                         style={{ backgroundColor: '#FF3301', padding: 6, borderRadius: 4 }}
-                        onPress={() => this.props.navigation.navigate('EditPage')} 
-                        // disabled={this.state.disabledB}
-                        // onPress={() => {
-                        //     // if (this.state.check == true) {
-                        //     //     // let b = this.state.bills;
-                        //     //     // var aa = this.state.title;
-                        //     //     // var ab = this.state.qty;
-                        //     //     // var ac = this.state.price;
-                        //     //     // var ae = this.state.pkr;
-                        //     //     // var result = ac * ab
-                        //     //     // b.push({ title: aa, price: ac, qty: ab, pkr: result });
-                        //     //     //  this.setState({ bills: b, check: false })
-                        //     //      this.handlePress();
-                        //     //     this.props.navigation.navigate('', {
-                        //     //         bill: this.state.bills,
-                        //     //         project: this.state.selectedValue
-                        //     //     })
-                        //     //     this.setState({bill: ''})
-                        //     // }
-                        //     // else {
-                        //         this.props.navigation.navigate('GenerateBill', {
-                        //             bill: this.state.bills,
-                        //             project: this.state.selProj,
-                        //             total: this.state.total,
-                        //             purchase: this.state.purchaseID
-                        //         })
-                        //        this.setState({bill: ''})
-
-                        //     // }
-                        // }}
+                        onPress={() => this.props.navigation.navigate('EditPage',{detail: item})} 
+                        
                     >
                         
                         <Text
@@ -557,95 +369,30 @@ class EditRequestPayment extends Component {
                                         
 
  
-                                            {/* <View style={{ flexDirection: "row", justifyContent: "center" }}><Text>Total: {this.state.total}</Text></View> */}
-
-                    <View style={{ flexDirection: "row", justifyContent: "center" }}>
-                            {/* <Text>"Total ", {this.state.total}</Text> */}
-                            
-                        {/* <TouchableOpacity
-                            style={{ alignSelf: 'center', alignContent: 'center', backgroundColor: '#FF3301', height: 40, width: 100, borderRadius: 20, justifyContent: "center" }}
-                            onPress={() => {
-                                if(this.state.item == "" || this.state.price == 0 || this.state.qty == 0){
-                                    console.log("empty")
-                                    ToastAndroid.show('Add an Item', ToastAndroid.SHORT);
-                                }
-                                else{
-                                let b = this.state.bills;
-                                var aa = this.state.title;
-                                var ab = this.state.qty;
-                                var ac = this.state.price;
-                                var ae = this.state.pkr;
-                                var result = ac * ab;
-                                var totall = this.state.total + (this.state.qty * this.state.price);
-                                this.setState({
-                                    val: result,
-                                    total: totall
-                                })
-                                // this.handlePress();
-                                n = n + 1
-                                b.push({ item: aa, price: ac, qty: ab, pkr: result });
-                                this.setState({ bills: b, title:'', qty: '', price: '' })
-                                this.activate_();
-                                console.log("arr from button", this.state.bills, this.state.qty,this.state.price,this.state.total)
-                            }
-                            }
-                            }
-                        >
+                                           
+                    {/* <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                          
+                       
                             <Text style={{ alignSelf: 'center', color: '#FFF', alignContent: 'center', justifyContent: "center" }}>Add New</Text>
 
-                            {/* <AntDesign name='pluscircle' size={20} color='#FF3301' /> 
-                        </TouchableOpacity>
-                         */}
-{/*                         
-                        <Text>Total: {this.state.total}</Text>
-                         */}
-                    </View>
+                            
+                        {/* <Text>Total: {this.state.total}</Text> 
+                        
+                    </View> */}
                     
                 </View>
                 
                 <View style={{ marginHorizontal: 15, marginBottom: 20, marginTop: 10 }}>
-                    {/* <CustomButton
-                        text='Generate Bill'
-                        routeName='GenerateBill'
-                        data={this.state.bills}
-                        data1={this.state.selectedValue}
-                    /> */}
+                   
                     <TouchableOpacity
                         style={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 10 }}
-                        disabled={this.state.disabledB}
-                        onPress={() => {
-                            // if (this.state.check == true) {
-                            //     // let b = this.state.bills;
-                            //     // var aa = this.state.title;
-                            //     // var ab = this.state.qty;
-                            //     // var ac = this.state.price;
-                            //     // var ae = this.state.pkr;
-                            //     // var result = ac * ab
-                            //     // b.push({ title: aa, price: ac, qty: ab, pkr: result });
-                            //     //  this.setState({ bills: b, check: false })
-                            //      this.handlePress();
-                            //     this.props.navigation.navigate('', {
-                            //         bill: this.state.bills,
-                            //         project: this.state.selectedValue
-                            //     })
-                            //     this.setState({bill: ''})
-                            // }
-                            // else {
-                                this.props.navigation.navigate('GenerateBill', {
-                                    bill: this.state.bills,
-                                    project: this.state.selProj,
-                                    total: this.state.total,
-                                    purchase: this.state.purchaseID
-                                })
-                               this.setState({bill: ''})
-
-                            // }
-                        }}
+                        // disabled={this.state.disabledB}
+                         onPress={() => this.updateNewRequest()}
                     >
                         
                         <Text
                             style={{ alignSelf: 'center', color: '#FFF', alignContent: 'center', justifyContent: "center" }}
-                        >Generate Bill</Text>
+                        >Update Bill</Text>
                     </TouchableOpacity>
                 </View>
                 
