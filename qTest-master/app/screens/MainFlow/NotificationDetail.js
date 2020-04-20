@@ -552,7 +552,7 @@ class NotifierDetaler extends Component {
                       source={{
                       uri:'http://efundapp.herokuapp.com/uploads/'+this.state.imagePath,
                       }}
-                      style={{height: 500, width: 300}}
+                      style={{height: 450, width: 250,alignSelf:'center'}}
                     />
                     <Button
                       title="OK"
