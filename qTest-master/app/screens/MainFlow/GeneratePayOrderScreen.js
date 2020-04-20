@@ -320,7 +320,6 @@ class GeneratePayOrderScreen extends Component {
                                         <Picker.Item label='Select a Payee' value='' />
                                     {this.loadPayee()}
                                 </Picker>
-
                                 <Input
                                     placeholder='Amount'
                                     autoCapitalize='none'

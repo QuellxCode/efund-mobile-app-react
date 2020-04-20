@@ -329,7 +329,7 @@ class NotificationsNewScreen extends Component {
                             <View>
                                 <Header />
                                 <View style={{ margin: 10 }}>
-                                    <Text style={MainFlowStyles.headerTextStyle}>Notifications</Text>
+                                    <Text style={MainFlowStyles.headerTextStyle}>Notificationssss</Text>
                 
                                     <TouchableOpacity style={{ flexDirection: 'row', marginBottom: 10 }}>
                                         <TouchableOpacity
@@ -409,7 +409,8 @@ class NotificationsNewScreen extends Component {
                                                         </View> */}
                                                     </View>
                                                 </View>
-                                                </TouchableOpacity>
+                                      </TouchableOpacity>
+                                                // </TouchableOpacity>
                                             );
                                         }}
                                     />

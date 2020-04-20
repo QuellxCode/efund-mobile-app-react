@@ -18,6 +18,7 @@ import MenuDrawer from "../components/MenuDrawer";
 import Notification from "../screens/MainFlow/Notification";
 import NotificationNew from "../screens/MainFlow/NotificationsNew";
 import NotificationDeta from "../screens/MainFlow/NotificationDetail";
+import EditRejected from "../screens/MainFlow/EditRejected";
 import EditableForm from "../screens/MainFlow/Editableform";
 import EditRequestPaymentScreen from '../screens/MainFlow/RequestPaymentFlow/EditRequestPaymentScreen';
 import EditPage from '../screens/MainFlow/RequestPaymentFlow/EditPage';

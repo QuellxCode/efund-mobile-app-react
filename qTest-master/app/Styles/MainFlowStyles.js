@@ -49,7 +49,7 @@ const Card = StyleSheet.create({
         fontWeight: 'bold'
     },
     billHeadingStyle: {
-        width: (width - 25) / 4,
+        width: (width - 25) /4.25,
         alignItems: 'center',
         justifyContent: 'center'
     }
