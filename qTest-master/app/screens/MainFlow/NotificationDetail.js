@@ -366,7 +366,8 @@ class NotifierDetaler extends Component {
               </Text>
             </View>
           </View>
-
+          {this.state.stat == 'Pending' && (
+            <View>
           <View
             style={{
               flexDirection: 'row',
@@ -503,6 +504,8 @@ class NotifierDetaler extends Component {
               </View>
             </View>
           </Modal>
+          </View>
+          )}
         </View>
       );
     } else {
