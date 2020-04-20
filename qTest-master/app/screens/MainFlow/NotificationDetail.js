@@ -7,6 +7,7 @@ import {
   Modal,
   AsyncStorage,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import Header from '../../components/Header';
 import {Button, Input} from 'react-native-elements';
@@ -43,7 +44,9 @@ class NotifierDetaler extends Component {
       newDetail: [],
       stat: this.props.navigation.state.params.stat,
       notifystat: this.props.navigation.state.params.notistat,
-      grandTotal: 0
+      grandTotal: 0,
+      spinner : false,
+
     };
   }
 
@@ -299,6 +302,7 @@ class NotifierDetaler extends Component {
     this.setState({visibleB: true});
   };
   onClickButtonImg = async () => {
+    <ActivityIndicator size="large" color="#0000ff" />
     this.setState({visibleImg: false});
   };
   render() {
