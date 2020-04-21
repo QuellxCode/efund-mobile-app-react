@@ -52,6 +52,7 @@ class LoginScreen extends Component {
           await AsyncStorage.setItem('User', JSON.stringify(responseJson));
           this.setState({
             loading: false,
+            spinner: false,
            })
            console.log(responseJson)
       if(responseJson.message == 'login successfull'){
