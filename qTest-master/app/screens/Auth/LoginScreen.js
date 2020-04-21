@@ -52,6 +52,7 @@ class LoginScreen extends Component {
           await AsyncStorage.setItem('User', JSON.stringify(responseJson));
           this.setState({
             loading: false,
+            spinner: false,
            })
            console.log(responseJson)
       if(responseJson.message == 'login successfull'){
@@ -75,9 +76,10 @@ class LoginScreen extends Component {
     }
 
     render() {
+      const screenHeight = Math.round(Dimensions.get('window').height)/2;
       if(this.state.spinner == true){
         return(
-          <ActivityIndicator/>
+          <ActivityIndicator color='red' style={{paddingVertical:screenHeight}}/>
         )
       }
       else{
