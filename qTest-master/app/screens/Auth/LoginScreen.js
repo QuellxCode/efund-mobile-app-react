@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ImageBackground, ScrollView, ToastAndroid, KeyboardAvoidingView, StatusBar, AsyncStorage, TouchableOpacity } from 'react-native';
+import { View, Text, ImageBackground, ScrollView, ToastAndroid, KeyboardAvoidingView, StatusBar, AsyncStorage, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Input, CheckBox, Button } from 'react-native-elements';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import styles from '../../Styles/AuthStyles';
@@ -15,7 +15,8 @@ class LoginScreen extends Component {
             email: '',
             password: '',
             checked: false,
-            viewS: true
+            viewS: true,
+            spinner: true,
         };
     }
 
@@ -28,6 +29,7 @@ class LoginScreen extends Component {
             const value = await AsyncStorage.getItem('User');
             if (value !== null) {
               this.props.navigation.navigate("mainFlow")
+              this.setState({spinner: false})
             }
           } catch (error) {
             console.log('error getting data')
@@ -73,6 +75,12 @@ class LoginScreen extends Component {
     }
 
     render() {
+      if(this.state.spinner == true){
+        return(
+          <ActivityIndicator/>
+        )
+      }
+      else{
         return (
             // <StatusBar translucent backgroundColor='#FF3301' barStyle="light-content" />
             
@@ -147,6 +155,7 @@ class LoginScreen extends Component {
                 </View>
             </ScrollView>
         );
+                  }
     }
 }
 
