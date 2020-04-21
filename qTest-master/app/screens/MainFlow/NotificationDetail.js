@@ -16,9 +16,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import {Button, Input} from 'react-native-elements';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
 const {width, height} = Dimensions.get('window');
-
 class NotifierDetaler extends Component {
   constructor(props) {
     super(props);
@@ -47,13 +45,12 @@ class NotifierDetaler extends Component {
       newDetail: [],
       stat: this.props.navigation.state.params.stat,
       notifystat: this.props.navigation.state.params.notistat,
-      grandTotal: 0,
       spinner : false,
+      imageUrl:"",
 
     };
   }
 async request_storage_runtime_permission() {
- 
   try {
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
@@ -63,13 +60,10 @@ async request_storage_runtime_permission() {
       }
     )
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
- 
-      Alert.alert("Storage Permission Granted.");
+      console.log("Storage Permission Granted.");
     }
     else {
- 
-      Alert.alert("Storage Permission Not Granted");
- 
+      console.log("Storage Permission Not Granted");
     }
   } catch (err) {
     console.warn(err)
@@ -86,12 +80,37 @@ async request_storage_runtime_permission() {
         });
         console.log('userIdii', this.state.User.user_id);
         this.get_notification();
-        // console.log("userId",this.state.User.user_id)
       }
     } catch (error) {
       console.log('error getting data');
     }
   }
+  downloadImage = () => {
+    var date = new Date();
+    var image_URL ='http://efundapp.herokuapp.com/uploads/'+this.state.imagePath;
+    var ext = this.getExtention(image_URL);
+    ext = "." + ext[0];
+    const { config, fs } = RNFetchBlob;
+    let PictureDir = fs.dirs.PictureDir
+    let options = {
+      fileCache: true,
+      addAndroidDownloads: {
+        useDownloadManager: true,
+        notification: true,
+        path: PictureDir + "/image_" + Math.floor(date.getTime()
+          + date.getSeconds() / 2) + ext,
+        description: 'Image'
+      }
+    }
+    config(options).fetch('GET', image_URL).then((res) => {
+      Alert.alert("Image Downloaded Successfully.");
+    });
+  }
+   getExtention = (filename) => {
+    return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename) :
+      undefined;
+  }
+ 
   get_Detailed() {
     var arr = [];
     var arry = [];
@@ -116,26 +135,11 @@ async request_storage_runtime_permission() {
         });
         console.log('Image Path', this.state.imagePath);
         console.log('Image Path ', json);
-        // console.log('stat', this.state.stat);
-        this.get_Total();
       })
       .catch(error => {
         console.error(error);
       });
   }
-
-  get_Total(){
-    for(let i=0; i<this.state.newDetail.length; i++){
-      var tol = this.state.newDetail[i].qty * this.state.newDetail[i].price;
-      this.state.grandTotal = this.state.grandTotal + tol;
-  }
-  var g = this.state.grandTotal;
-  console.log("totals", this.state.grandTotal)
-  this.setState({
-    grandTotal: g
-  })
-}
-
   get_notification() {
     var arr = [];
     var arry = [];
@@ -420,7 +424,7 @@ hideLoader = () => { this.setState({ spinner:false }); };
             </View>
           </View>
           {this.state.notifystat == 'ClaimRequest' && (
-            <View style={{alignSelf: 'center', padding: 20}}>
+            <View style={{alignSelf: 'center', padding: 20,flexDirection:'row'}}>
               <Button
                 buttonStyle={{
                   backgroundColor: '#FF3301',
@@ -436,10 +440,11 @@ hideLoader = () => { this.setState({ spinner:false }); };
                 buttonStyle={{
                   backgroundColor: '#FF3301',
                   padding: 14,
+                  marginLeft:2,
                   borderRadius: 10,
                 }}
                 onPress={() => {
-                  this.setState({visibleImg: true,spinner:true});
+                 this.downloadImage()
                 }}
                 title="Download Image"
               />

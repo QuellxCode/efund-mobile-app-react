@@ -29,6 +29,7 @@ class ClaimPaymentScreen extends Component {
       Username: '',
       visible: false,
       Loader: false,
+      IsLoader:false,
     };
   }
   //var array2=[{"details[item_name]":"Aaa","details[item_quantity]":"5","details[item_price]":"55","details[total_price]":"55"}]
@@ -88,11 +89,14 @@ class ClaimPaymentScreen extends Component {
   }
   notification_send = async () => {
     console.log('send notificatoion');
+    this.setState({IsLoader:true});
+    console.log(this.state.data_);
+    console.log(this.state.ID);
+    console.log(this.state.Selected_Proj);
     fetch('http://efundapp.herokuapp.com/api/purchase/send-notification', {
-      method: 'Post',
+      method: 'Post', 
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json',
         'X-Auth-Token': this.state.User.token,
       },
       body: JSON.stringify({
@@ -105,8 +109,8 @@ class ClaimPaymentScreen extends Component {
       .then(response => response.json())
       .then(json => {
         console.log('snd notification', json);
-        this.setState({response_: json.notificationID});
-        this.setState({visible: false});
+        this.hideLoader();
+        this.setState({response_: json.notificationID,visible: false,IsLoader:false});
         this.props.navigation.replace('ClaimDropDown');
         this.props.navigation.navigate('Home');
       })
@@ -212,6 +216,7 @@ class ClaimPaymentScreen extends Component {
               justifyContent: 'center',
               backgroundColor: 'rgba(0, 0, 0, 0.7)',
             }}>
+           
             <View
               style={{
                 backgroundColor: 'white',
@@ -220,6 +225,7 @@ class ClaimPaymentScreen extends Component {
                 width: width * 0.8,
               }}>
               <View style={{alignSelf: 'center', padding: 20}}>
+            {this.state.IsLoader==true && <ActivityIndicator color={'red'} />}
                 <FontAwesome name="send" color="#FF3301" size={50} />
               </View>
               <Text
