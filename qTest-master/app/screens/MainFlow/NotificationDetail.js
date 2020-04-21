@@ -7,9 +7,12 @@ import {
   Modal,
   AsyncStorage,
   Image,
+  Alert,
   ActivityIndicator,
+  PermissionsAndroid,
 } from 'react-native';
 import Header from '../../components/Header';
+import RNFetchBlob from 'rn-fetch-blob';
 import {Button, Input} from 'react-native-elements';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -49,8 +52,31 @@ class NotifierDetaler extends Component {
 
     };
   }
-
+async request_storage_runtime_permission() {
+ 
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      {
+        'title': 'ReactNativeCode Storage Permission',
+        'message': 'ReactNativeCode App needs access to your storage to download Photos.'
+      }
+    )
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+ 
+      Alert.alert("Storage Permission Granted.");
+    }
+    else {
+ 
+      Alert.alert("Storage Permission Not Granted");
+ 
+    }
+  } catch (err) {
+    console.warn(err)
+  }
+}
   async componentDidMount() {
+    this.request_storage_runtime_permission();
     try {
       const value = await AsyncStorage.getItem('User');
       const val = JSON.parse(value);
@@ -66,7 +92,6 @@ class NotifierDetaler extends Component {
       console.log('error getting data');
     }
   }
-
   get_Detailed() {
     var arr = [];
     var arry = [];
@@ -86,11 +111,9 @@ class NotifierDetaler extends Component {
       .then(json => {
         this.setState({
           newDetail: json.purchase.details,
+          imagePath: json.purchase.file,
           // stat: json.purchase.payment_status,
         });
-        if(this.state.notifystat == 'ClaimRequest'){
-          this.setState({imagePath: json.purchase.file,});
-        }
         console.log('Image Path', this.state.imagePath);
         console.log('Image Path ', json);
         // console.log('stat', this.state.stat);
@@ -174,7 +197,6 @@ class NotifierDetaler extends Component {
         purchaserName: this.state.data_.purchaserName,
         purchaserID: this.state.data_.purchaserID,
         request: this.state.purchaseID,
-        payment: "Approved"
       }),
     })
       .then(response => response.json())
@@ -217,7 +239,6 @@ class NotifierDetaler extends Component {
         purchaserName: this.state.data_.purchaserName,
         purchaserID: this.state.data_.purchaserID,
         request: this.state.purchaseID,
-        notification_status: this.state.notifystat
       }),
     })
       .then(response => response.json())
@@ -305,6 +326,9 @@ class NotifierDetaler extends Component {
     <ActivityIndicator size="large" color="#0000ff" />
     this.setState({visibleImg: false});
   };
+showLoader = () => { this.setState({ spinner:true }); };
+hideLoader = () => { this.setState({ spinner:false }); };
+
   render() {
     if (this.state.User.roles == 'Supervisor') {
       return (
@@ -378,10 +402,13 @@ class NotifierDetaler extends Component {
                   );
                 }}
               />
+<<<<<<< HEAD
+=======
               <Text style={{alignSelf:'flex-end', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth:1, marginRight:'10%'}}>Grand Total: {this.state.grandTotal}</Text>
               {/* <View>
                                       <Text>{this.txt(this.state.data_.message)}</Text>
                                           </View> */}
+>>>>>>> 52a552e5fe1b77eff3d03f666ad1f5ba61df1537
               <Text
                 style={{
                   alignSelf: 'flex-end',
@@ -395,7 +422,6 @@ class NotifierDetaler extends Component {
               </Text>
             </View>
           </View>
-
           {this.state.notifystat == 'ClaimRequest' && (
             <View style={{alignSelf: 'center', padding: 20}}>
               <Button
@@ -405,9 +431,20 @@ class NotifierDetaler extends Component {
                   borderRadius: 10,
                 }}
                 onPress={() => {
-                  this.setState({visibleImg: true});
+                  this.setState({visibleImg: true,spinner:true});
                 }}
                 title="View Claim"
+              />
+                <Button
+                buttonStyle={{
+                  backgroundColor: '#FF3301',
+                  padding: 14,
+                  borderRadius: 10,
+                }}
+                onPress={() => {
+                  this.setState({visibleImg: true,spinner:true});
+                }}
+                title="Download Image"
               />
             </View>
           )}
@@ -556,6 +593,9 @@ class NotifierDetaler extends Component {
                 animationType="fade"
                 transparent={true}
                 visible={this.state.visibleImg}>
+                {/* {this.state.spinner==true && (<ActivityIndicator size="large" color="#0000ff" />)} */}
+                      {/* <ActivityIndicator animating={this.state.showLoader} size="small" color="#00ff00" /> */}
+
                 <View
                   style={{
                     flex: 1,
@@ -860,7 +900,7 @@ class NotifierDetaler extends Component {
                       source={{
                       uri:'http://efundapp.herokuapp.com/uploads/'+this.state.imagePath,
                       }}
-                      style={{height: 450, width: 250,alignSelf:'center'}}
+                      style={{height: 200, width: 290}}
                     />
                     <Button
                       title="OK"

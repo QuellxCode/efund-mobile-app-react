@@ -1,5 +1,13 @@
 import React, {Component} from 'react';
-import {View, Text, Image, AsyncStorage, Modal, Dimensions} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  ActivityIndicator,
+  AsyncStorage,
+  Modal,
+  Dimensions,
+} from 'react-native';
 import Header from '../../components/Header';
 import CustomButton from '../../components/CustomButton';
 import {Button} from 'react-native-elements';
@@ -20,6 +28,7 @@ class ClaimPaymentScreen extends Component {
       response_: '',
       Username: '',
       visible: false,
+      Loader: false,
     };
   }
   //var array2=[{"details[item_name]":"Aaa","details[item_quantity]":"5","details[item_price]":"55","details[total_price]":"55"}]
@@ -31,6 +40,13 @@ class ClaimPaymentScreen extends Component {
   // var that = this;
   // var token =
   // console.log(token)
+  showLoader() {
+    this.setState({Loader: true});
+  }
+  hideLoader() {
+    this.setState({Loader: false});
+  }
+
   async componentDidMount() {
     try {
       const value = await AsyncStorage.getItem('User');
@@ -71,7 +87,7 @@ class ClaimPaymentScreen extends Component {
     }
   }
   notification_send = async () => {
-    console.log("send notificatoion")
+    console.log('send notificatoion');
     fetch('http://efundapp.herokuapp.com/api/purchase/send-notification', {
       method: 'Post',
       headers: {
@@ -81,25 +97,26 @@ class ClaimPaymentScreen extends Component {
       },
       body: JSON.stringify({
         details: this.state.data_,
-        request:this.state.ID,
+        request: this.state.ID,
         project: this.state.Selected_Proj,
         notification_status: 'ClaimRequest',
       }),
     })
       .then(response => response.json())
       .then(json => {
-        console.log("snd notification",json);      
+        console.log('snd notification', json);
         this.setState({response_: json.notificationID});
         this.setState({visible: false});
-        this.props.navigation.replace('ClaimDropDown')
-        this.props.navigation.navigate('Home')
+        this.props.navigation.replace('ClaimDropDown');
+        this.props.navigation.navigate('Home');
       })
       .catch(error => {
         console.error(error);
       });
   };
   submit() {
-    console.log("taa",this.state.ID);
+    this.showLoader(); // Once You Call the API Action loading will be true
+    console.log('taa', this.state.ID);
     fetch(
       'http://efundapp.herokuapp.com/api/purchase/claimimage/' + this.state.ID,
       {
@@ -115,6 +132,7 @@ class ClaimPaymentScreen extends Component {
       .then(response => response.json())
       .then(json => {
         console.log('image', json);
+        this.hideLoader();
         this.setState({visible: true});
       })
       .catch(error => {
@@ -130,24 +148,28 @@ class ClaimPaymentScreen extends Component {
         image: res.uri,
         chek: true,
       });
-        formdata.append('file', {
-       uri: this.state.image,
-       type: 'image/jpeg',
-       name: 'image${moment()}',
-    });
+      formdata.append('file', {
+        uri: this.state.image,
+        type: 'image/jpeg',
+        name: 'image${moment()}',
+      });
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
       } else {
         throw err;
       }
     }
-  
   }
   render() {
     return (
       <View>
         <Header />
         <View style={{marginHorizontal: 15, marginBottom: 20, marginTop: 10}}>
+          <View
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            {this.state.Loader==true && <ActivityIndicator color={'red'} />}
+          </View>
+
           {/* <Button
             title="Pick Image"
             buttonStyle={{
