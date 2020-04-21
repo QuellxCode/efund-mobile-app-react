@@ -52,6 +52,7 @@ export default class ClaimDropDown extends Component {
       purchaseID: '',
       proj: '',
       show: false,
+      totalC: 0,
     };
     this.list = React.createRef();
   }
@@ -207,7 +208,7 @@ export default class ClaimDropDown extends Component {
               selectedValue={this.state.selectedId}
               prompt="Select ctg"
               style={{
-                width: 50,
+                width: 150,
                 alignSelf: 'flex-end',
                 zIndex: 5,
                 marginTop: 1,
@@ -625,7 +626,7 @@ export default class ClaimDropDown extends Component {
               style={{
                 width: 250,
                 height: 60,
-                alignSelf: 'flex-end',
+                alignSelf: 'center',
                 zIndex: 5,
                 marginTop: 1,
                 borderWidth: 1,
@@ -696,8 +697,8 @@ export default class ClaimDropDown extends Component {
               selectedValue={this.state.selectedCtg}
               prompt="Select Category"
               style={{
-                width: 30,
-                alignSelf: 'flex-end',
+                width: 120,
+                alignSelf: 'center',
                 zIndex: 5,
                 marginTop: 1,
                 borderWidth: 1,
@@ -711,7 +712,17 @@ export default class ClaimDropDown extends Component {
               }}>
               {CtgItems}
             </Picker>
-
+            <View style={{marginBottom: 2}} />
+          </View>
+          <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
+            <TextInput
+              style={{fontSize: 16}}
+              placeholder="Total"
+              keyboardType={'numeric'}
+              ref={ref => (this.ref = ref)}
+              defaultValue={'Total'}
+              editable={false}
+            />
             <View style={{marginBottom: 2}} />
           </View>
          
@@ -730,9 +741,9 @@ export default class ClaimDropDown extends Component {
                     marginHorizontal: 5,
                   },
                 ]}>
-                <Text style={{fontWeight: 'bold', fontSize: 16}}>
+                {/* <Text style={{fontWeight: 'bold', fontSize: 16}}>
                   {item.number}
-                </Text>
+                </Text> */}
                 <View
                   style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
                   <Text>{item.item}</Text>
@@ -750,21 +761,23 @@ export default class ClaimDropDown extends Component {
 
                   <View style={{marginBottom: 2}} />
                 </View>
-                <View
-                  style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
-                  <Text>{item.pkr}</Text>
-
-                  <View style={{marginBottom: 2}} />
-                </View>
+               
                    <View
                   style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
                   <Text>{item.category}</Text>
 
                   <View style={{marginBottom: 2}} />
                 </View>
+                <View
+                  style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
+                  <Text>{item.pkr}</Text>
+
+                  <View style={{marginBottom: 2}} />
+                </View>
               </View>
             ))}
           </ScrollView>
+          <View style={{ flexDirection: "row", justifyContent: "center" }}><Text>Total: {this.state.totalC}</Text></View>
           <View style={{flexDirection: 'row', justifyContent: 'center'}}>
             <TouchableOpacity
               style={{
@@ -792,6 +805,11 @@ export default class ClaimDropDown extends Component {
                   var ae = this.state.pkr;
                   var result = ac * ab;
                   var cat = this.state.selectedCtg;
+                  var totall = this.state.totalC + (this.state.qty * this.state.price);
+                                this.setState({
+                                    val: result,
+                                    totalC: totall
+                                })
                   n = n + 1;
                   b.push({item: aa, price: ac, qty: ab, pkr: result,category:cat});
                   this.setState({bills: b, title: '', qty: '', price: '',selectedCtg:''});
