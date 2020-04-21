@@ -75,9 +75,10 @@ class LoginScreen extends Component {
     }
 
     render() {
+      const screenHeight = Math.round(Dimensions.get('window').height)/2;
       if(this.state.spinner == true){
         return(
-          <ActivityIndicator/>
+          <ActivityIndicator color='red' style={{paddingVertical:screenHeight}}/>
         )
       }
       else{
