@@ -402,13 +402,10 @@ hideLoader = () => { this.setState({ spinner:false }); };
                   );
                 }}
               />
-<<<<<<< HEAD
-=======
               <Text style={{alignSelf:'flex-end', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth:1, marginRight:'10%'}}>Grand Total: {this.state.grandTotal}</Text>
               {/* <View>
                                       <Text>{this.txt(this.state.data_.message)}</Text>
                                           </View> */}
->>>>>>> 52a552e5fe1b77eff3d03f666ad1f5ba61df1537
               <Text
                 style={{
                   alignSelf: 'flex-end',

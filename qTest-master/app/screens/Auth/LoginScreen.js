@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ImageBackground, ScrollView, ToastAndroid, KeyboardAvoidingView, StatusBar, AsyncStorage, TouchableOpacity } from 'react-native';
+import { View, Text, ImageBackground, ScrollView, ToastAndroid, KeyboardAvoidingView, StatusBar, AsyncStorage, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Input, CheckBox, Button } from 'react-native-elements';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import styles from '../../Styles/AuthStyles';
@@ -16,7 +16,7 @@ class LoginScreen extends Component {
             password: '',
             checked: false,
             viewS: true,
-            Loader:false,
+            spinner: true,
         };
     }
 
@@ -29,19 +29,14 @@ class LoginScreen extends Component {
             const value = await AsyncStorage.getItem('User');
             if (value !== null) {
               this.props.navigation.navigate("mainFlow")
+              this.setState({spinner: false})
             }
           } catch (error) {
             console.log('error getting data')
           }
         };
- showLoader() {
-    this.setState({Loader: true});
-  }
-  hideLoader() {
-    this.setState({Loader: false});
-  }
+
     getdata(){
-      this.showLoader()
         fetch("http://efundapp.herokuapp.com/api/user/login",{
         method:"POST",
           headers: {
@@ -61,7 +56,6 @@ class LoginScreen extends Component {
            console.log(responseJson)
       if(responseJson.message == 'login successfull'){
         ToastAndroid.show(responseJson.message, ToastAndroid.SHORT);
-        this.hideLoader()
         this.props.navigation.navigate("mainFlow")}
       else{
         ToastAndroid.show('Incorrect Credentials!', ToastAndroid.SHORT);
@@ -81,7 +75,15 @@ class LoginScreen extends Component {
     }
 
     render() {
+      if(this.state.spinner == true){
+        return(
+          <ActivityIndicator/>
+        )
+      }
+      else{
         return (
+            // <StatusBar translucent backgroundColor='#FF3301' barStyle="light-content" />
+            
             <ScrollView>
                 <View style={{ marginBottom: 20 }}>
                     <ImageBackground
@@ -92,7 +94,6 @@ class LoginScreen extends Component {
                         <Text style={styles.logoTextStyle}>E-Fund</Text>
                     </ImageBackground>
                 </View>
-                <View style={{marginHorizontal: 15, marginBottom: 20, marginTop: 10}}>
                 <View style={styles.formStyle, {marginTop: -10}}>
                     <Text style={styles.headerStyle}>Sign In</Text>
                     <Input
@@ -154,6 +155,8 @@ class LoginScreen extends Component {
                 </View>
             </ScrollView>
         );
+                  }
     }
 }
+
 export default LoginScreen;
