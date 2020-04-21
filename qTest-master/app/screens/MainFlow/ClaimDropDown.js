@@ -11,7 +11,9 @@ import {
   KeyboardAvoidingView,
   Picker,
   AsyncStorage,
- Constants,TouchableO,ToastAndroid,
+  Constants,
+  TouchableO,
+  ToastAndroid,
 } from 'react-native';
 import Header from '../../components/Header';
 import {Button} from 'react-native-elements';
@@ -65,9 +67,9 @@ export default class ClaimDropDown extends Component {
         'Content-Type': 'application/json',
         'X-Auth-Token': this.state.User.token,
       },
-      body:JSON.stringify( {
-         project: this.state.selectedValue,
-         details: this.state.bills,
+      body: JSON.stringify({
+        project: this.state.selectedValue,
+        details: this.state.bills,
       }),
     })
       .then(response => response.json())
@@ -247,11 +249,11 @@ export default class ClaimDropDown extends Component {
       <Picker.Item label={proj.project_name} value={proj._id} />
     ));
   }
-     activate_(){
-        if(this.state.bills != []){
-            this.state.disabledB = false;
-        }
+  activate_() {
+    if (this.state.bills != []) {
+      this.state.disabledB = false;
     }
+  }
 
   render() {
     const PickerItems = this.state.Category.map((element, index) => (
@@ -619,31 +621,30 @@ export default class ClaimDropDown extends Component {
             alignSelf: 'center',
             marginTop: 10,
           }}>
-          
-           <Picker
-              selectedValue={this.state.selectedValue}
-              prompt="Select Project"
-              style={{
-                width: 250,
-                height: 60,
-                alignSelf: 'center',
-                zIndex: 5,
-                marginTop: 1,
-                borderWidth: 1,
-                //flexDirection: "row-reverse",
-                color: '#FF3301',
-                fontSize: 12,
-              }}
-              // onValueChange={this..bind(this)}
-              onValueChange={(itemValue, itemIndex) => {
-                this.setState({selectedValue: itemValue});
-                this.setState({selectedProject: itemValue});
-                console.log(
-                  'selected:value of project' + this.state.selectedValue,
-                );
-              }}>
-              {PickerItems}
-            </Picker>
+          <Picker
+            selectedValue={this.state.selectedValue}
+            prompt="Select Project"
+            style={{
+              width: 250,
+              height: 60,
+              alignSelf: 'center',
+              zIndex: 5,
+              marginTop: 1,
+              borderWidth: 1,
+              //flexDirection: "row-reverse",
+              color: '#FF3301',
+              fontSize: 12,
+            }}
+            // onValueChange={this..bind(this)}
+            onValueChange={(itemValue, itemIndex) => {
+              this.setState({selectedValue: itemValue});
+              this.setState({selectedProject: itemValue});
+              console.log(
+                'selected:value of project' + this.state.selectedValue,
+              );
+            }}>
+            {PickerItems}
+          </Picker>
         </View>
         <View
           style={[
@@ -725,7 +726,6 @@ export default class ClaimDropDown extends Component {
             />
             <View style={{marginBottom: 2}} />
           </View>
-         
         </View>
         <View style={{flex: 1, marginHorizontal: 20, marginTop: 5}}>
           <ScrollView>
@@ -761,8 +761,8 @@ export default class ClaimDropDown extends Component {
 
                   <View style={{marginBottom: 2}} />
                 </View>
-               
-                   <View
+
+                <View
                   style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
                   <Text>{item.category}</Text>
 
@@ -777,7 +777,9 @@ export default class ClaimDropDown extends Component {
               </View>
             ))}
           </ScrollView>
-          <View style={{ flexDirection: "row", justifyContent: "center" }}><Text>Total: {this.state.totalC}</Text></View>
+          <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+            <Text>Total: {this.state.totalC}</Text>
+          </View>
           <View style={{flexDirection: 'row', justifyContent: 'center'}}>
             <TouchableOpacity
               style={{
@@ -805,16 +807,28 @@ export default class ClaimDropDown extends Component {
                   var ae = this.state.pkr;
                   var result = ac * ab;
                   var cat = this.state.selectedCtg;
-                  var totall = this.state.totalC + (this.state.qty * this.state.price);
-                                this.setState({
-                                    val: result,
-                                    totalC: totall
-                                })
+                  var totall =
+                    this.state.totalC + this.state.qty * this.state.price;
+                  this.setState({
+                    val: result,
+                    totalC: totall,
+                  });
                   n = n + 1;
-                  b.push({item: aa, price: ac, qty: ab, pkr: result,category:cat});
-                  this.setState({bills: b, title: '', qty: '', price: '',selectedCtg:''});
+                  b.push({
+                    item: aa,
+                    price: ac,
+                    qty: ab,
+                    pkr: result,
+                    category: cat,
+                  });
+                  this.setState({
+                    bills: b,
+                    title: '',
+                    qty: '',
+                    price: '',
+                    selectedCtg: '',
+                  });
                   this.activate_();
-                 
                 }
               }}>
               <Text
@@ -835,7 +849,7 @@ export default class ClaimDropDown extends Component {
             style={{backgroundColor: '#FF3301', padding: 14, borderRadius: 10}}
             disabled={this.state.disabledB}
             onPress={() => {
-              this.claim_handlePress()
+              this.claim_handlePress();
             }}>
             <Text
               style={{
@@ -844,7 +858,7 @@ export default class ClaimDropDown extends Component {
                 alignContent: 'center',
                 justifyContent: 'center',
               }}>
-             Add Claim Image
+              Add Claim Image
             </Text>
           </TouchableOpacity>
         </View>
