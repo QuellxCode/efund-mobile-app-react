@@ -102,7 +102,7 @@ class GeneratePayOrderScreen extends Component {
         this.setState({
           details: myDetails
         })
-        console.log(this.state.details)
+        console.log('My Data',this.state.details)
         this.snd();
       }
 
@@ -148,9 +148,9 @@ class GeneratePayOrderScreen extends Component {
   this.setState({
     show:false,
     resf:true,
+    change:true
   }),
-  this.state.details = [],
-  console.log(this.state.details))
+  )
   }
 
   set(){
