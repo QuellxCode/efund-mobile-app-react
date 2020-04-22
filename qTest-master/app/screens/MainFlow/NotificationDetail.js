@@ -47,6 +47,7 @@ class NotifierDetaler extends Component {
       notifystat: this.props.navigation.state.params.notistat,
       spinner : false,
       imageUrl:"",
+      grandTotal: 0,
 
     };
   }
@@ -135,11 +136,25 @@ async request_storage_runtime_permission() {
         });
         console.log('Image Path', this.state.imagePath);
         console.log('Image Path ', json);
+        this.get_Total();
       })
       .catch(error => {
         console.error(error);
       });
   }
+
+get_Total(){
+    for(let i=0; i<this.state.newDetail.length; i++){
+      var tol = this.state.newDetail[i].qty * this.state.newDetail[i].price;
+      this.state.grandTotal = this.state.grandTotal + tol;
+  }
+  var g = this.state.grandTotal;
+  console.log("totals", this.state.grandTotal)
+  this.setState({
+    grandTotal: g
+  })
+}
+
   get_notification() {
     var arr = [];
     var arry = [];
@@ -708,6 +723,7 @@ hideLoader = () => { this.setState({ spinner:false }); };
                   );
                 }}
               />
+               <Text style={{alignSelf:'flex-end', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth:1, marginRight:'10%'}}>Grand Total: {this.state.grandTotal}</Text>
               <Text
                 style={{
                   alignSelf: 'flex-end',
