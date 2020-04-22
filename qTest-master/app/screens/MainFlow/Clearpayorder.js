@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator,Dimensions } from 'react-native';
 
 
 class Clearpayorder extends Component {
