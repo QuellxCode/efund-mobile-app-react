@@ -436,18 +436,6 @@ hideLoader = () => { this.setState({ spinner:false }); };
                 }}
                 title="View Claim"
               />
-                <Button
-                buttonStyle={{
-                  backgroundColor: '#FF3301',
-                  padding: 14,
-                  marginLeft:2,
-                  borderRadius: 10,
-                }}
-                onPress={() => {
-                 this.downloadImage()
-                }}
-                title="Download Image"
-              />
             </View>
           )}
           {this.state.stat == 'Pending' && (
@@ -620,11 +608,21 @@ hideLoader = () => { this.setState({ spinner:false }); };
                       }}
                       style={{height: 450, width: 250,alignSelf:'center'}}
                     />
+                     <Button
+                      title="Download"
+                      buttonStyle={{
+                        backgroundColor: '#FF3301',
+                        padding: 14,
+                        borderRadius: 0,
+                      }}
+                      onPress={() => this.downloadImage()}
+                    />
                     <Button
                       title="OK"
                       buttonStyle={{
                         backgroundColor: '#FF3301',
                         padding: 14,
+                        marginTop:1,
                         borderRadius: 0,
                         borderBottomLeftRadius: 10,
                         borderBottomRightRadius: 10,
@@ -902,7 +900,16 @@ hideLoader = () => { this.setState({ spinner:false }); };
                       source={{
                       uri:'http://efundapp.herokuapp.com/uploads/'+this.state.imagePath,
                       }}
-                      style={{height: 200, width: 290}}
+                      style={{height: 450, width: 250,alignSelf:'center'}}
+                    />
+                      <Button
+                      title="Download"
+                      buttonStyle={{
+                        backgroundColor: '#FF3301',
+                        padding: 14,
+                        borderRadius: 0,
+                      }}
+                      onPress={() => this.downloadImage()}
                     />
                     <Button
                       title="OK"
@@ -910,6 +917,7 @@ hideLoader = () => { this.setState({ spinner:false }); };
                         backgroundColor: '#FF3301',
                         padding: 14,
                         borderRadius: 0,
+                        marginTop:1,
                         borderBottomLeftRadius: 10,
                         borderBottomRightRadius: 10,
                       }}

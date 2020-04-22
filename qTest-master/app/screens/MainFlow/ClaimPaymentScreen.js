@@ -25,7 +25,7 @@ class ClaimPaymentScreen extends Component {
       //data_ctg: this.props.navigation.state.params.data_ctg,
       chek: false,
       User: '',
-      response_: '',
+      response: '',
       Username: '',
       visible: false,
       Loader: false,
@@ -87,39 +87,40 @@ class ClaimPaymentScreen extends Component {
       return {uri: this.state.image};
     }
   }
-  notification_send = async () => {
+  notification_send(){
     console.log('send notificatoion');
     this.setState({IsLoader:true});
     console.log(this.state.data_);
     console.log(this.state.ID);
     console.log(this.state.Selected_Proj);
+    console.log("tokens",this.state.User.token)
     fetch('http://efundapp.herokuapp.com/api/purchase/send-notification', {
       method: 'Post', 
       headers: {
         Accept: 'application/json',
+        'Content-Type': 'application/json',
         'X-Auth-Token': this.state.User.token,
       },
       body: JSON.stringify({
         details: this.state.data_,
         request: this.state.ID,
         project: this.state.Selected_Proj,
-        notification_status: 'ClaimRequest',
+        notification_status:'ClaimRequest',
       }),
     })
       .then(response => response.json())
       .then(json => {
         console.log('snd notification', json);
-        this.hideLoader();
-        this.setState({response_: json.notificationID,visible: false,IsLoader:false});
+        this.setState({response: json.notificationID,visible: false,IsLoader:false});
         this.props.navigation.replace('ClaimDropDown');
         this.props.navigation.navigate('Home');
       })
       .catch(error => {
-        console.error(error);
+        console.log(error);
       });
-  };
+  }
   submit() {
-    this.showLoader(); // Once You Call the API Action loading will be true
+     this.showLoader(); // Once You Call the API Action loading will be true
     console.log('taa', this.state.ID);
     fetch(
       'http://efundapp.herokuapp.com/api/purchase/claimimage/' + this.state.ID,
@@ -135,7 +136,7 @@ class ClaimPaymentScreen extends Component {
     )
       .then(response => response.json())
       .then(json => {
-        console.log('image', json);
+        console.log('image new path', json);
         this.hideLoader();
         this.setState({visible: true});
       })
@@ -173,7 +174,7 @@ class ClaimPaymentScreen extends Component {
             style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             {this.state.Loader==true && <ActivityIndicator color={'red'} />}
           </View>
-
+         
           {/* <Button
             title="Pick Image"
             buttonStyle={{
@@ -216,7 +217,6 @@ class ClaimPaymentScreen extends Component {
               justifyContent: 'center',
               backgroundColor: 'rgba(0, 0, 0, 0.7)',
             }}>
-           
             <View
               style={{
                 backgroundColor: 'white',

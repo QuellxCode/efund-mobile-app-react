@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ImageBackground, ScrollView, ToastAndroid, KeyboardAvoidingView, StatusBar, AsyncStorage, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, ImageBackground, ScrollView, ToastAndroid, KeyboardAvoidingView, StatusBar, AsyncStorage, TouchableOpacity, Dimensions,ActivityIndicator } from 'react-native';
 import { Input, CheckBox, Button } from 'react-native-elements';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import styles from '../../Styles/AuthStyles';
@@ -31,6 +31,7 @@ class LoginScreen extends Component {
               this.props.navigation.navigate("mainFlow")
               this.setState({spinner: false})
             }
+        this.setState({spinner: false})
           } catch (error) {
             console.log('error getting data')
           }
