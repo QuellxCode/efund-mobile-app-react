@@ -87,6 +87,7 @@ async request_storage_runtime_permission() {
     }
   }
   downloadImage = () => {
+    console.log("dounloaded imade",this.state.imagePath)
     var date = new Date();
     var image_URL ='http://efundapp.herokuapp.com/uploads/'+this.state.imagePath;
     var ext = this.getExtention(image_URL);

@@ -127,7 +127,7 @@ class ClaimPaymentScreen extends Component {
       {
         method: 'Post',
         headers: {
-          Accept: 'application/json',
+          //Accept: 'application/json',
           'Content-Type': 'multipart/form-data',
           'X-Auth-Token': this.state.User.token,
         },
