@@ -61,9 +61,8 @@ class GeneratePayOrderScreen extends Component {
       if(this.state.change === true){
         this.state.details = []
         console.log(this.state.details)
-        //this.props.navigation.replace("GeneratePayOrder");
-        this.props.navigation.goBack();
-    this.setState({change: false});
+        this.props.navigation.navigate("Clearpayorder");
+        this.setState({change: false});
     }
     }
 

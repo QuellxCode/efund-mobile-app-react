@@ -104,7 +104,7 @@ if(User.roles == "Director"){
 
             <View>
                 {navLink('Home', 'Home'.toUpperCase(), require('../images/Home.png'))}
-                {navLink('GeneratePayOrder', 'Generate Pay Order'.toUpperCase(), require('../images/RequestPayment.png'))}
+                {navLink('generate', 'Generate Pay Order'.toUpperCase(), require('../images/RequestPayment.png'))}
                 {navLink('Reports', 'Reports'.toUpperCase(), require('../images/Reports.png'))}
                 {navLink('Settings', 'Settings'.toUpperCase(), require('../images/Settings.png'))}
             </View>

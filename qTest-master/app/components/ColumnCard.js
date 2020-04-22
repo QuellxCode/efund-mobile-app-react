@@ -9,7 +9,7 @@ const ColumnCard = ({ navigation }) => {
             <View style={{ flexDirection: 'row', marginBottom: 20 }}>
                 <TouchableOpacity
                     style={[MainFlowStyles.cardStyle, { flex: 1, padding: 30, paddingVertical: 50, alignItems: 'center', justifyContent: 'center', marginRight: 20 }]}
-                    onPress={() => navigation.navigate('GeneratePayOrder')}
+                    onPress={() => navigation.navigate('generate')}
                 >
                     <Image
                         source={require('../images/GenerateOrderBig.png')}
