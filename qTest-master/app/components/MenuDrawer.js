@@ -116,9 +116,12 @@ const MenuDrawer = ({navigation}) => {
             <View style={styles.avatarIconContainerStyle}>
               <MaterialCommunityIcons name="account" color="white" size={40} />
             </View>
-            <View style={{marginLeft: 20}}>
-              <Text style={styles.avatarTextStyle}>{User.name}</Text>
-              <Text>{User.roles}</Text>
+
+            <View>
+                {navLink('Home', 'Home'.toUpperCase(), require('../images/Home.png'))}
+                {navLink('generate', 'Generate Pay Order'.toUpperCase(), require('../images/RequestPayment.png'))}
+                {navLink('Reports', 'Reports'.toUpperCase(), require('../images/Reports.png'))}
+                {navLink('Settings', 'Settings'.toUpperCase(), require('../images/Settings.png'))}
             </View>
           </View>
           <View>

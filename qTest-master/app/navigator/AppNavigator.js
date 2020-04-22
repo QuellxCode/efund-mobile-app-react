@@ -22,6 +22,8 @@ import EditRejected from "../screens/MainFlow/EditRejected";
 import EditableForm from "../screens/MainFlow/Editableform";
 import EditRequestPaymentScreen from '../screens/MainFlow/RequestPaymentFlow/EditRequestPaymentScreen';
 import EditPage from '../screens/MainFlow/RequestPaymentFlow/EditPage';
+import Clearpayorder from '../screens/MainFlow/Clearpayorder';
+
 const AppNavigator = createSwitchNavigator({
     loginFlow: createStackNavigator({
         Login: LoginScreen
@@ -68,7 +70,16 @@ const AppNavigator = createSwitchNavigator({
                 headerShown: false
             }
         }),
-        GeneratePayOrder: GeneratePayOrderScreen,
+        generate: createStackNavigator({
+            GeneratePayOrder: GeneratePayOrderScreen,
+            Clearpayorder: Clearpayorder,
+        },
+        {
+            initialRouteName: 'GeneratePayOrder',
+            defaultNavigationOptions: {
+                headerShown: false
+            }
+        }),
         Reports: ReportsScreen,
         Wallet: WalletScreen,
         Settings: SettingsScreen

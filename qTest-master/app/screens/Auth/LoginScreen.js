@@ -31,9 +31,11 @@ class LoginScreen extends Component {
               this.props.navigation.navigate("mainFlow")
               this.setState({spinner: false})
             }
+            else{
         this.setState({spinner: false})
+            }
           } catch (error) {
-            console.log('error getting data')
+            console.log('error getting data'), this.setState({spinner: false})
           }
         };
 
