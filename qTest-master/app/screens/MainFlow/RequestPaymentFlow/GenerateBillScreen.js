@@ -189,7 +189,7 @@ class GenerateBillScreen extends Component {
                                 return (
                                     <View style={{ flexDirection: 'row', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth: 1 }}>
                                         <View style={MainFlowStyles.billHeadingStyle}>
-                                            <Text>{item.item}</Text>
+                                            <Text style={{textAlign:'center'}}>{item.item}</Text>
                                         </View>
                                         <View style={MainFlowStyles.billHeadingStyle}>
                                             <Text>{item.qty}</Text>

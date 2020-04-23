@@ -15,18 +15,18 @@ import {Button} from 'react-native-elements';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import PushNotification from 'react-native-push-notification';
-import firebase from 'react-native-firebase';
+// import firebase from 'react-native-firebase';
 import {notificationManager} from '../../screens/MainFlow/RequestPaymentFlow/RemotePushController';
 const {width, height} = Dimensions.get('window');
-const message = new firebase.messaging.RemoteMessage()
-  .setMessageId(
-    'cBDaDPlGeNzfHel7VRUxk2:APA91bG0HnCCDddqaZIx06Fu5IpVIiDhVviZyWl9EFX-WWL3yjaT6SHKQei1Okcg12XFnqhkYD7fwWyTHsySAIheFZWoHpIHvmusA0ZabLcefhxjZZXFkAF7z05hEh_5D4ch6f0jhza9',
-  )
-  .setTo('senderId@gcm.googleapis.com')
-  .setData({
-    key1: 'value1',
-    key2: 'value2',
-  });
+// const message = new firebase.messaging.RemoteMessage()
+  // .setMessageId(
+  //   'cBDaDPlGeNzfHel7VRUxk2:APA91bG0HnCCDddqaZIx06Fu5IpVIiDhVviZyWl9EFX-WWL3yjaT6SHKQei1Okcg12XFnqhkYD7fwWyTHsySAIheFZWoHpIHvmusA0ZabLcefhxjZZXFkAF7z05hEh_5D4ch6f0jhza9',
+  // )
+  // .setTo('senderId@gcm.googleapis.com')
+  // .setData({
+  //   key1: 'value1',
+  //   key2: 'value2',
+  // });
 const onRegister = token => {
   console.log('[Notification] Register', token);
 };

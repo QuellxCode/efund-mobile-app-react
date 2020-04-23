@@ -236,7 +236,7 @@ class ClaimPaymentScreen extends Component {
                   color: '#FF3301',
                   paddingBottom: 40,
                 }}>
-                Claim Request Goes to Approved
+                Claim Request sent for Approval
               </Text>
               <Button
                 title="OK"

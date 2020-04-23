@@ -5,7 +5,7 @@ import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.farzadmarius.rnminimizeapp.RNMinimizeAppPackage;
-import io.invertase.firebase.RNFirebasePackage;
+
 import io.github.elyx0.reactnativedocumentpicker.DocumentPickerPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -14,8 +14,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import io.invertase.firebase.messaging.RNFirebaseMessagingPackage; 
-import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;  
+
 import com.farzadmarius.rnminimizeapp.RNMinimizeAppPackage;
 public class MainApplication extends Application implements ReactApplication {
 
@@ -36,8 +35,7 @@ public class MainApplication extends Application implements ReactApplication {
           // packages.add(new RNFirebaseMessagingPackage());
           //packages.add(new RNFirebaseMessagingPackage());
           new ReactNativePushNotificationPackage();
-          new RNFirebasePackage();
-          new RNFirebaseMessagingPackage();
+
           new RNMinimizeAppPackage();
           return packages;
         }
