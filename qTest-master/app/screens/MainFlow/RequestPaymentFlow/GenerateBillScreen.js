@@ -110,7 +110,7 @@ class GenerateBillScreen extends Component {
         })
             .then(response => response.json())
             .then(json => {
-                this.setState({ token: json.mobileToken,data:json.notification.message })
+                this.setState({ token: json.mobileToken, data:json.notification.message })
                  console.log("tokens:"+this.state.token)
                 //this.push_notification()
                 // this.push_notification()

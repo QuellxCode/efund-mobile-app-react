@@ -217,6 +217,7 @@ get_Total(){
         purchaserName: this.state.data_.purchaserName,
         purchaserID: this.state.data_.purchaserID,
         request: this.state.purchaseID,
+        notification_status: this.state.notifystat,
       }),
     })
       .then(response => response.json())
@@ -259,6 +260,7 @@ get_Total(){
         purchaserName: this.state.data_.purchaserName,
         purchaserID: this.state.data_.purchaserID,
         request: this.state.purchaseID,
+        notification_status: this.state.notifystat,
       }),
     })
       .then(response => response.json())
