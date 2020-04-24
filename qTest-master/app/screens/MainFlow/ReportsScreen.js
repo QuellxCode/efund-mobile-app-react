@@ -9,8 +9,10 @@ import {
   Picker,
   UIManager,
   LayoutAnimation,
-  Platform
+  Platform,
+  StyleSheet
 } from 'react-native';
+import Timeline from '../../components/Timeline';
 import Header from '../../components/Header';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -18,7 +20,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import DatePicker from 'react-native-datepicker';
 import moment from 'react-moment';
 import ExpanableList from 'react-native-expandable-section-flatlist';
+
 const {width, height} = Dimensions.get('window');
+
 class ReportsScreen extends Component {
   constructor(props) {
     super(props);
@@ -46,6 +50,12 @@ class ReportsScreen extends Component {
         {date: 'Jan 01, 2020', bNumber: '01', status: 'Pending'},
         {date: 'Jan 01, 2020', bNumber: '02', status: 'Rejected'},
       ],
+      data: [
+        { id: 1, name: 'Purchaser', select: true },
+        { id: 2, name: 'Manager', select: false },
+        { id: 3, name: 'Director', select: false },
+        { id: 4, name: 'Accountant', select: false }
+    ],
       // textLayoutHeight: 0,
       //      updatedHeight: 0, 
       //      expand: false,
@@ -517,6 +527,22 @@ class ReportsScreen extends Component {
                         borderBottomWidth: 1,
                       }}
                     />
+
+
+
+                    {/* {Timeline} */}
+                    <View style={[MainFlowStyles.cardStyle, { paddingBottom: 10, marginBottom: 20 }]}>
+                        <View style={styles.currentStatusContainer}>
+                            <Text style={styles.currentStatusTextStyle}>Current Status</Text>
+                        </View>
+                        <View style={{ padding: 10, alignItems: 'center' }}>
+                            <Timeline data={this.state.data} />
+                        </View>
+                    </View>
+
+
+
+
                     <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center' }}>
                       <TouchableOpacity onPress={() => this.setState({viewdata: item._id, show : !this.state.show})}>
                     <Text style={{ color: '#FF3301', fontWeight: 'bold', fontSize: 16, marginRight: 10 }}>{(this.state.viewdata === item._id) && this.state.show == true  ? "Hide Details" : "Show Details"}</Text>
@@ -617,3 +643,22 @@ export default ReportsScreen;
 //     )
 // }
 // }
+
+const styles = StyleSheet.create({
+  welcomeTextStyle: {
+      fontSize: 30,
+      fontWeight: 'bold',
+      alignSelf: 'center',
+      marginVertical: 10
+  },
+  currentStatusContainer: {
+      borderBottomColor: '#FF3301',
+      borderBottomWidth: 1,
+      padding: 10
+  },
+  currentStatusTextStyle: {
+      fontWeight: 'bold',
+      fontSize: 16,
+      marginLeft: 10
+  }
+});

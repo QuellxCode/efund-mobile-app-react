@@ -288,7 +288,7 @@ get_Total(){
     );
   };
   reject_ok() {
-    this.setState({visibleB: true});
+    console.log(this.state.description)
     fetch('http://efundapp.herokuapp.com/api/purchase/reject-notification', {
       method: 'Post',
       headers: {
@@ -308,6 +308,7 @@ get_Total(){
       .then(response => response.json())
       .then(json => {
         console.log('response:' + JSON.stringify(json));
+        this.onClickButtonB();
       })
       .catch(error => {
         console.error(error);
@@ -336,6 +337,12 @@ get_Total(){
     });
     this.props.navigation.replace('Notification');
     this.props.navigation.navigate('Home');
+  }
+
+  onClickReject(){
+    this.setState({
+      visibleB: true,
+    });
   }
 
   handlePress = async () => {
@@ -488,7 +495,7 @@ hideLoader = () => { this.setState({ spinner:false }); };
                   }}
                   containerStyle={{marginHorizontal: 10}}
                   onPress={() => {
-                    this.reject_ok(), {visibleB: true};
+                    this.onClickReject();
                   }}
                 />
               </View>
@@ -591,7 +598,7 @@ hideLoader = () => { this.setState({ spinner:false }); };
                         borderBottomLeftRadius: 10,
                         borderBottomRightRadius: 10,
                       }}
-                      onPress={() => this.onClickButtonB()}
+                      onPress={() => this.reject_ok()}
                     />
                   </View>
                 </View>
@@ -787,7 +794,7 @@ hideLoader = () => { this.setState({ spinner:false }); };
                   }}
                   containerStyle={{marginHorizontal: 10}}
                   onPress={() => {
-                    this.reject_ok(), {visibleB: true};
+                    this.onClickReject();
                   }}
                 />
               </View>
@@ -890,7 +897,7 @@ hideLoader = () => { this.setState({ spinner:false }); };
                         borderBottomLeftRadius: 10,
                         borderBottomRightRadius: 10,
                       }}
-                      onPress={() => this.onClickButtonB()}
+                      onPress={() => this.reject_ok()}
                     />
                   </View>
                 </View>
