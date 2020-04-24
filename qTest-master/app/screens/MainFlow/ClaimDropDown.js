@@ -608,7 +608,7 @@ export default class ClaimDropDown extends Component {
             alignSelf: 'center',
             color: '#FF3301',
           }}>
-          Select Project
+          Claim Payment
         </Text>
         <View
           style={{

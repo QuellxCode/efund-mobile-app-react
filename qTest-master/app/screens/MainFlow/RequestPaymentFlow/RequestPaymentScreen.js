@@ -22,7 +22,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Bill from '../../../components/Bill';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MainFlowStyles from '../../../Styles/MainFlowStyles';
-import firebase from 'react-native-firebase';
+
 var n = 0;
 var value = 0;
 const rs = 0;
@@ -154,9 +154,15 @@ class RequestPayment extends Component {
           console.log(json);
           this.setState({
             response_: json,
-            disabledB: false,
             purchaseID: json.purchaseID,
+            disabledB: false,
           });
+          // if(this.state.selProj == ''){
+          //   this.setState({disabledB: true})
+          // }
+          // else{
+          //   this.setState({disabledB: false})
+          // }
           console.log('adasda', this.state.purchaseID);
         })
         .catch(error => {
@@ -256,7 +262,7 @@ class RequestPayment extends Component {
               alignSelf: 'center',
               color: '#FF3301',
             }}>
-            Select Project
+            Request Payment
           </Text>
           <View
             style={{
@@ -267,7 +273,7 @@ class RequestPayment extends Component {
               borderRadius: 30,
               justifyContent: 'center',
               alignSelf: 'center',
-              marginTop: 10,
+              marginTop: 20,
             }}>
             {/* <Picker
                         selectedValue={this.state.selectedValue}
@@ -506,7 +512,14 @@ class RequestPayment extends Component {
                   ) {
                     console.log('empty');
                     ToastAndroid.show('Add an Item', ToastAndroid.SHORT);
-                  } else {
+                  } 
+                  else if (
+                    this.state.selProj == ''
+                  ) {
+                    console.log('empty');
+                    ToastAndroid.show('Add a Project First', ToastAndroid.SHORT);
+                  }
+                  else {
                     let b = this.state.bills;
                     var aa = this.state.title;
                     var ab = this.state.qty;

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, AsyncStorage, ToastAndroid, Picker, StyleSheet, Modal, Dimensions } from 'react-native';
+import { View, Text, ScrollView, AsyncStorage, ToastAndroid, Picker, StyleSheet, Modal, Dimensions, ActivityIndicator } from 'react-native';
 import Header from '../../components/Header';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -60,8 +60,10 @@ class GeneratePayOrderScreen extends Component {
       }
       if(this.state.change === true){
         this.state.details = []
+        this.state.selectedBankNo = ''
+        this.state.selectedPayeeNo = ''
         console.log(this.state.details)
-        this.props.navigation.navigate("Clearpayorder");
+        // this.props.navigation.navigate("Clearpayorder");
         this.setState({change: false});
     }
     }
@@ -112,6 +114,7 @@ class GeneratePayOrderScreen extends Component {
 
       _sendFunds(){
         console.log(this.state.User.token)
+        console.log("myDetails",this.state.details)
         fetch("http://efundapp.herokuapp.com/api/purchase/payorder-notification",{
       method:"POST",
         headers: {
@@ -120,7 +123,14 @@ class GeneratePayOrderScreen extends Component {
          'X-Auth-Token': this.state.User.token,
        },
        body:JSON.stringify({
-       "details" : this.state.details,
+      //  "details" : this.state.details,
+       "details" : [{"item": "payorder",
+       "qty": "1",
+       "price": "1",
+       "pkr":this.state.amount,
+       "account_no":this.state.account_no,
+       "description":this.state.description
+      }],
        "purchaserID":this.state.selectedPayee,
       })
       })
@@ -239,10 +249,12 @@ class GeneratePayOrderScreen extends Component {
       }  
 
     render() {
+      const screenHeight = Math.round(Dimensions.get('window').height)/2;
+      
         if(this.state.show === false){
-            return(
-                <View/>
-            )
+          return(
+            <ActivityIndicator color='red' style={{paddingVertical:screenHeight}}/>
+          )
         }
         else{
         return (
@@ -278,15 +290,16 @@ class GeneratePayOrderScreen extends Component {
                             <View style={{ alignSelf: 'center', padding: 20 }}>
                                 <FontAwesome name='send' color='#FF3301' size={50} />
                             </View>
-                            <Text style={{ alignSelf: 'center', fontSize: 16, fontWeight: 'bold', color: '#FF3301', paddingBottom: 40 }}>Pay Order Generated Successfully And Sent To Accountant</Text>
+                            <Text style={{ alignSelf: 'center', fontSize: 16, fontWeight: 'bold', color: '#FF3301', paddingBottom: 40, textAlign:'center' }}>Pay Order Generated Successfully And Sent To Accountant</Text>
                             <Button
                                 title='OK'
                                 buttonStyle={{ backgroundColor: '#FF3301', padding: 14, borderRadius: 0, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, }}
                                 onPress={() => {
                                   this.setState({
                                     isVisible:false,
-                                    change: true
+                                    // change: true
                                   })
+                                  this.props.navigation.navigate("Clearpayorder");
                                 }}
                             />
                         </View>
