@@ -9,7 +9,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { notificationManager } from '../../NotificationManager';
 import Notification from "../../screens/MainFlow/Notification"
 import { withNavigation } from 'react-navigation';
-
 const Purchaser = props => {
     const data = [
         { id: 1, name: 'Purchaser', select: true },
