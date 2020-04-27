@@ -60,7 +60,7 @@ class NotificationsNewScreen extends Component {
         get_notification() {
             var arr = [];
             var arry = [];
-            fetch('http://efundapp.herokuapp.com/api/notification', {
+            fetch('http://efund.alliedco.pk:3000/api/notification', {
               method: 'Get',
               headers: {
                 Accept: 'application/json',
@@ -106,7 +106,7 @@ class NotificationsNewScreen extends Component {
 
           director_accept(item) {
             console.log('dddd', item);
-            fetch('http://efundapp.herokuapp.com/api/purchase/director-accept', {
+            fetch('http://efund.alliedco.pk:3000/api/purchase/director-accept', {
               method: 'Post',
               headers: {
                 Accept: 'application/json',
@@ -129,7 +129,7 @@ class NotificationsNewScreen extends Component {
               });
           }
           director_notification(id) {
-            fetch('http://efundapp.herokuapp.com/api/notification/' + id, {
+            fetch('http://efund.alliedco.pk:3000/api/notification/' + id, {
               method: 'GET',
               headers: {
                 Accept: 'application/json',
@@ -146,7 +146,7 @@ class NotificationsNewScreen extends Component {
               });
           }
           sup_accept(item) {
-            fetch('http://efundapp.herokuapp.com/api/purchase/accept-notification', {
+            fetch('http://efund.alliedco.pk:3000/api/purchase/accept-notification', {
               method: 'Post',
               headers: {
                 Accept: 'application/json',
@@ -187,7 +187,7 @@ class NotificationsNewScreen extends Component {
             // console.log("item::::"+this.state.items)
             // console.log("itemssss::::"+this.state.project)
             // console.log("msg"+this.state.Msg)
-            fetch('http://efundapp.herokuapp.com/api/purchase/reject-notification', {
+            fetch('http://efund.alliedco.pk:3000/api/purchase/reject-notification', {
               method: 'Post',
               headers: {
                 Accept: 'application/json',

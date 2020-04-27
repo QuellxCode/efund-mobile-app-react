@@ -78,7 +78,7 @@ class EditRequestPayment extends Component {
         var thisdata = []
         var arr = []
         
-        fetch('http://efundapp.herokuapp.com/api/project', {
+        fetch('http://efund.alliedco.pk:3000/api/project', {
             method: 'Get',
             headers: {
                 'Accept': 'application/json',
@@ -120,7 +120,7 @@ class EditRequestPayment extends Component {
     get_Detailed() {
         var arr = [];
         var arry = [];
-        fetch('http://efundapp.herokuapp.com/api/purchase/get-purchase/'+this.state.purchaseID, {
+        fetch('http://efund.alliedco.pk:3000/api/purchase/get-purchase/'+this.state.purchaseID, {
           method: 'Get',
           headers: {
             Accept: 'application/json',
@@ -157,7 +157,7 @@ class EditRequestPayment extends Component {
       get_notification() {
         var arr = [];
         var arry = [];
-        fetch('http://efundapp.herokuapp.com/api/project/'+this.state.data_project, {
+        fetch('http://efund.alliedco.pk:3000/api/project/'+this.state.data_project, {
           method: 'Get',
           headers: {
             Accept: 'application/json',
@@ -210,7 +210,7 @@ class EditRequestPayment extends Component {
 
         }
         else {
-            fetch('http://efundapp.herokuapp.com/api/purchase/post', {
+            fetch('http://efund.alliedco.pk:3000/api/purchase/post', {
                 method: 'Post',
                 headers: {
                     Accept: 'application/json',
@@ -262,7 +262,7 @@ class EditRequestPayment extends Component {
         console.log('body', this.state.data_project);
         console.log('body', this.state.project_id);
         
-        fetch('http://efundapp.herokuapp.com/api/purchase/' + this.state.purchase_id, {
+        fetch('http://efund.alliedco.pk:3000/api/purchase/' + this.state.purchase_id, {
             method: 'PATCH',
             headers: {
                 'Accept': 'application/json',
