@@ -115,7 +115,7 @@ class GeneratePayOrderScreen extends Component {
       _sendFunds(){
         console.log(this.state.User.token)
         console.log("myDetails",this.state.details)
-        fetch("http://efund.alliedco.pk:3000/api/purchase/payorder-notification",{
+        fetch("http://efund.alliedco.pk:5000/api/purchase/payorder-notification",{
       method:"POST",
         headers: {
           'Accept': 'application/json',
@@ -169,7 +169,7 @@ class GeneratePayOrderScreen extends Component {
 }
 
       _getBanks(){
-        fetch("http://efund.alliedco.pk:3000/api/banks/",{
+        fetch("http://efund.alliedco.pk:5000/api/banks/",{
       method:"GET",
         headers: {
           'Accept': 'application/json',
@@ -189,7 +189,7 @@ class GeneratePayOrderScreen extends Component {
          }
 
          _getPayee(){
-          fetch("http://efund.alliedco.pk:3000/api/payee",{
+          fetch("http://efund.alliedco.pk:5000/api/payee",{
         method:"GET",
           headers: {
             'Accept': 'application/json',
@@ -210,7 +210,7 @@ class GeneratePayOrderScreen extends Component {
 
         getAmount(bankNo){
           console.log("hello tak cash")
-          fetch("http://efund.alliedco.pk:3000/api/bankAccount/account/"+bankNo,{
+          fetch("http://efund.alliedco.pk:5000/api/bankAccount/account/"+bankNo,{
             method:"GET",
               headers: {
                 'Accept': 'application/json',

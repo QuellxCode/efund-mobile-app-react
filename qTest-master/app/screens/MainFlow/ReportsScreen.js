@@ -118,7 +118,7 @@ class ReportsScreen extends Component {
   }
   daily() {
     var thisarr = [];
-    fetch('http://efund.alliedco.pk:3000/api/reports/daily', {
+    fetch('http://efund.alliedco.pk:5000/api/reports/daily', {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -152,7 +152,7 @@ class ReportsScreen extends Component {
     this.setState({nextdate: date1});
     console.log('first', this.state.date);
     console.log('next', this.state.nextdate);
-    fetch('http://efund.alliedco.pk:3000/api/reports/weekly', {
+    fetch('http://efund.alliedco.pk:5000/api/reports/weekly', {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -174,7 +174,7 @@ class ReportsScreen extends Component {
       });
   }
   monthly() {
-    fetch('http://efund.alliedco.pk:3000/api/reports/monthly', {
+    fetch('http://efund.alliedco.pk:5000/api/reports/monthly', {
       method: 'Post',
       headers: {
         Accept: 'application/json',

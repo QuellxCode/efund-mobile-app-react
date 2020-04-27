@@ -38,7 +38,7 @@ class ProjectList extends Component{
       };
 
     _getProjects(){
-        fetch("http://efund.alliedco.pk:3000/api/project/",{
+        fetch("http://efund.alliedco.pk:5000/api/project/",{
       method:"GET",
         headers: {
           'Accept': 'application/json',
