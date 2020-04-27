@@ -70,7 +70,7 @@ class GenerateBillScreen extends Component {
     // }
 
     handlePressfirst = async () => {
-            fetch('http://efund.alliedco.pk:5000/api/purchase/post', {
+            fetch('http://efund.alliedco.pk/api/purchase/post', {
                 method: 'Post',
                 headers: {
                     Accept: 'application/json',
@@ -100,7 +100,7 @@ class GenerateBillScreen extends Component {
 
     get_notifiaction(n_id) {
         console.log("this.your notify id"+n_id)
-        fetch('http://efund.alliedco.pk:5000/api/notification/'+n_id, {
+        fetch('http://efund.alliedco.pk/api/notification/'+n_id, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -132,7 +132,7 @@ class GenerateBillScreen extends Component {
         console.log("data" + JSON.stringify(this.state.data_))
         console.log("datap" + this.state.data_project)
 
-        fetch('http://efund.alliedco.pk:5000/api/purchase/send-notification', {
+        fetch('http://efund.alliedco.pk/api/purchase/send-notification', {
             method: 'Post',
             headers: {
                 'Accept': 'application/json',

@@ -62,7 +62,7 @@ class NotifierDetal extends Component {
     var arr = [];
     var arry = [];
     fetch(
-      'http://efund.alliedco.pk:5000/api/purchase/get-purchase/' +
+      'http://efund.alliedco.pk/api/purchase/get-purchase/' +
         this.state.purchaseID,
       {
         method: 'Get',
@@ -93,7 +93,7 @@ class NotifierDetal extends Component {
     var arr = [];
     var arry = [];
     fetch(
-      'http://efund.alliedco.pk:5000/api/project/' + this.state.data_project,
+      'http://efund.alliedco.pk/api/project/' + this.state.data_project,
       {
         method: 'Get',
         headers: {
@@ -137,7 +137,7 @@ class NotifierDetal extends Component {
   director_accept() {
     this.setState({visible: true});
     // console.log('dddd', item);
-    fetch('http://efund.alliedco.pk:5000/api/purchase/director-accept', {
+    fetch('http://efund.alliedco.pk/api/purchase/director-accept', {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -161,7 +161,7 @@ class NotifierDetal extends Component {
       });
   }
   director_notification(id) {
-    fetch('http://efund.alliedco.pk:5000/api/notification/' + id, {
+    fetch('http://efund.alliedco.pk/api/notification/' + id, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -179,7 +179,7 @@ class NotifierDetal extends Component {
   }
   sup_accept() {
     this.setState({visible: true});
-    fetch('http://efund.alliedco.pk:5000/api/purchase/accept-notification', {
+    fetch('http://efund.alliedco.pk/api/purchase/accept-notification', {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -220,7 +220,7 @@ class NotifierDetal extends Component {
   };
   reject_ok() {
     this.setState({visibleB: true});
-    fetch('http://efund.alliedco.pk:5000/api/purchase/reject-notification', {
+    fetch('http://efund.alliedco.pk/api/purchase/reject-notification', {
       method: 'Post',
       headers: {
         Accept: 'application/json',

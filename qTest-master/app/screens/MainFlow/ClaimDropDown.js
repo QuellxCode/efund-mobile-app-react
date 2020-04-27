@@ -60,7 +60,7 @@ export default class ClaimDropDown extends Component {
   }
   claim_handlePress = async () => {
     console.log('aRRAY', this.state.bills);
-    fetch('http://efund.alliedco.pk:5000/api/purchase/claimpayment', {
+    fetch('http://efund.alliedco.pk/api/purchase/claimpayment', {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -89,7 +89,7 @@ export default class ClaimDropDown extends Component {
   };
   claim_ctg() {
     var array = [];
-    fetch('http://efund.alliedco.pk:5000/api/chart', {
+    fetch('http://efund.alliedco.pk/api/chart', {
       method: 'Get',
       headers: {
         Accept: 'application/json',
@@ -133,7 +133,7 @@ export default class ClaimDropDown extends Component {
       console.log('error getting data');
     }
     var thisdata = [];
-    fetch('http://efund.alliedco.pk:5000/api/project', {
+    fetch('http://efund.alliedco.pk/api/project', {
       method: 'Get',
       headers: {
         Accept: 'application/json',

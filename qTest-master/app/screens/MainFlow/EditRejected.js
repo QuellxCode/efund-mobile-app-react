@@ -50,7 +50,7 @@ class EditRejected extends Component {
       console.log('error getting data');
     }
     fetch(
-      'http://efund.alliedco.pk:5000/api/purchase/get-purchase/' +
+      'http://efund.alliedco.pk/api/purchase/get-purchase/' +
         this.state.data.request,
       {
         method: 'Get',

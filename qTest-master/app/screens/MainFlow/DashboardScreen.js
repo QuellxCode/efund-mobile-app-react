@@ -66,7 +66,7 @@ const Purchaser = props => {
     useEffect(() => {
        setTimeout(() => {
         if (user != undefined && user != null) {
-            fetch('http://efund.alliedco.pk:5000/api/notification', {
+            fetch('http://efund.alliedco.pk/api/notification', {
                 method: 'Get',
                 headers: {
                     Accept: 'application/json',
@@ -199,7 +199,7 @@ const Supervisor = props => {
     useEffect(() => {
         setTimeout(() => {
          if (user != undefined && user != null) {
-             fetch('http://efund.alliedco.pk:5000/api/notification', {
+             fetch('http://efund.alliedco.pk/api/notification', {
                  method: 'Get',
                  headers: {
                      Accept: 'application/json',
@@ -379,7 +379,7 @@ const Director = props => {
     useEffect(() => {
         setTimeout(() => {
          if (user != undefined && user != null) {
-             fetch('http://efund.alliedco.pk:5000/api/notification', {
+             fetch('http://efund.alliedco.pk/api/notification', {
                  method: 'Get',
                  headers: {
                      Accept: 'application/json',
