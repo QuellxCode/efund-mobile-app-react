@@ -10,7 +10,7 @@ import {
   UIManager,
   LayoutAnimation,
   Platform,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 import Timeline from '../../components/Timeline';
 import Header from '../../components/Header';
@@ -28,9 +28,9 @@ class ReportsScreen extends Component {
     super(props);
     // if( Platform.OS === 'android' )
     //     {
- 
+
     //       UIManager.setLayoutAnimationEnabledExperimental(true);
- 
+
     //     }
     this.state = {
       selectedDaily: true,
@@ -51,17 +51,17 @@ class ReportsScreen extends Component {
         {date: 'Jan 01, 2020', bNumber: '02', status: 'Rejected'},
       ],
       data: [
-        { id: 1, name: 'Purchaser', select: true },
-        { id: 2, name: 'Manager', select: false },
-        { id: 3, name: 'Director', select: false },
-        { id: 4, name: 'Accountant', select: false }
-    ],
+        {id: 1, name: 'Purchaser', select: true},
+        {id: 2, name: 'Manager', select: true},
+        {id: 3, name: 'Director', select: true},
+        {id: 4, name: 'Accountant', select: true},
+      ],
       // textLayoutHeight: 0,
-      //      updatedHeight: 0, 
+      //      updatedHeight: 0,
       //      expand: false,
-           buttonText : 'Show Details',
-           viewdata: '',
-           show: false
+      buttonText: 'Show Details',
+      viewdata: '',
+      show: false,
     };
   }
 
@@ -71,18 +71,18 @@ class ReportsScreen extends Component {
 
   //     if( this.state.expand == false )
   //     {
-  //         this.setState({ 
-  //           updatedHeight: this.state.textLayoutHeight, 
-  //           expand: true, 
-  //           buttonText: 'Hide Details' 
-  //         }); 
+  //         this.setState({
+  //           updatedHeight: this.state.textLayoutHeight,
+  //           expand: true,
+  //           buttonText: 'Hide Details'
+  //         });
   //     }
   //     else
   //     {
-  //         this.setState({ 
-  //           updatedHeight: 0, 
-  //           expand: false, 
-  //           buttonText: 'Show Details' 
+  //         this.setState({
+  //           updatedHeight: 0,
+  //           expand: false,
+  //           buttonText: 'Show Details'
   //         });
   //     }
   // }
@@ -132,8 +132,8 @@ class ReportsScreen extends Component {
       .then(response => response.json())
       .then(json => {
         this.setState({daily: json.report});
-        console.log("daily", this.state.daily)
-        console.log("daily", json)
+        console.log('daily', this.state.daily);
+        console.log('daily', json);
         //console.log('daily life', this.state.daily);
         // for (let i = 0; i < this.state.daily.length; i++) {
         //   thisarr.push({
@@ -201,10 +201,10 @@ class ReportsScreen extends Component {
     var sp = date;
     var spq = sp.split('T');
     var spqw = spq[0];
-   // console.log(spqw)
+    // console.log(spqw)
     var sqwww = spqw.split('-');
-   // console.log(sqwww)
-    var qwert = sqwww[2]+'-'+sqwww[1]+'-'+sqwww[0];
+    // console.log(sqwww)
+    var qwert = sqwww[2] + '-' + sqwww[1] + '-' + sqwww[0];
     return qwert;
   }
   details(item) {
@@ -440,8 +440,8 @@ class ReportsScreen extends Component {
             keyExtractor={(item, index) => index.toString()}
             showsVerticalScrollIndicator={false}
             renderItem={({item, index}) => {
-              console.log('item from report', item._id)
-                
+              console.log('item from report', item._id);
+
               return (
                 <View
                   style={{
@@ -528,61 +528,122 @@ class ReportsScreen extends Component {
                       }}
                     />
 
-
-
                     {/* {Timeline} */}
-                    <View style={[MainFlowStyles.cardStyle, { paddingBottom: 10, marginBottom: 20 }]}>
-                        <View style={styles.currentStatusContainer}>
-                            <Text style={styles.currentStatusTextStyle}>Current Status</Text>
-                        </View>
-                        <View style={{ padding: 10, alignItems: 'center' }}>
-                            <Timeline data={this.state.data} />
-                        </View>
+                    <View
+                      style={[
+                        MainFlowStyles.cardStyle,
+                        {paddingBottom: 10, marginBottom: 20},
+                      ]}>
+                      <View style={styles.currentStatusContainer}>
+                        <Text style={styles.currentStatusTextStyle}>
+                          Current Status
+                        </Text>
+                      </View>
+                      <View style={{padding: 10, alignItems: 'center'}}>
+                        {/* <Timeline data={this.state.data} /> */}
+                        <FlatList
+                          data={this.state.data}
+                          horizontal={true}
+                          showsHorizontalScrollIndicator={false}
+                          keyExtractor={item => item.id.toString()}
+                          renderItem={({item, index}) => {
+                            return (
+                              <View style={{width: 70}}>
+                                <View
+                                  style={{
+                                    height: 30,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    flexDirection: 'row',
+                                  }}>
+                                  {index !== 0 ? (
+                                    <View
+                                      style={{
+                                        width: 30,
+                                        borderBottomColor: '#FF3301',
+                                        borderBottomWidth: 1,
+                                      }}
+                                    />
+                                  ) : (
+                                    <View style={{width: 30}} />
+                                  )}
+                                  <View
+                                    style={{
+                                      width: 14,
+                                      height: 14,
+                                      borderRadius: 14 / 2,
+                                      backgroundColor: item.select
+                                        ? '#FF3301'
+                                        : '#FFC1B2',
+                                      // backgroundColor:item.select
+                                      // ? 'pink'
+                                      // : 'grey',
+                                    }}
+                                  />
+                                  {index !== this.state.data.length - 1 ? (
+                                    <View
+                                      style={{
+                                        width: 30,
+                                        borderBottomColor: '#FF3301',
+                                        borderBottomWidth: 1,
+                                      }}
+                                    />
+                                  ) : (
+                                    <View style={{width: 30}} />
+                                  )}
+                                </View>
+                                <View
+                                  style={{
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                  }}>
+                                  <Text style={{fontSize: 12}}>
+                                    {item.name}
+                                  </Text>
+                                </View>
+                              </View>
+                            );
+                          }}
+                        />
+                      </View>
                     </View>
 
-
-
-
-                    <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center' }}>
-                      <TouchableOpacity onPress={() => this.setState({viewdata: item._id, show : !this.state.show})}>
-                    <Text style={{ color: '#FF3301', fontWeight: 'bold', fontSize: 16, marginRight: 10 }}>{(this.state.viewdata === item._id) && this.state.show == true  ? "Hide Details" : "Show Details"}</Text>
-                                            {/* <View style={{ justifyContent: 'flex-end', marginBottom: 4 }}>
+                    <View
+                      style={{
+                        padding: 10,
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                      }}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          this.setState({
+                            viewdata: item._id,
+                            show: !this.state.show,
+                          })
+                        }>
+                        <Text
+                          style={{
+                            color: '#FF3301',
+                            fontWeight: 'bold',
+                            fontSize: 16,
+                            marginRight: 10,
+                          }}>
+                          {this.state.viewdata === item._id &&
+                          this.state.show == true
+                            ? 'Hide Details'
+                            : 'Show Details'}
+                        </Text>
+                        {/* <View style={{ justifyContent: 'flex-end', marginBottom: 4 }}>
                                                 <FontAwesome name='chevron-down' size={12} color='#FF3301' />
                                             </View> */}
-                                            </TouchableOpacity>
-                                        </View>
+                      </TouchableOpacity>
+                    </View>
                     {/* <View style = {{ height: this.state.updatedHeight, overflow: 'hidden' }}>
                       <View onLayout = {( value ) => this.getHeight( value.nativeEvent.layout.height )}> */}
                     {/* <View style={{ flexDirection: 'row', borderBottomColor: '#FFC1B2', borderBottomWidth: 1 }}> */}
-                 {(this.state.viewdata === item._id) && (this.state.show == true) &&
-                 <View> 
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        paddingBottom: 20,
-                        marginTop: 20,
-                        borderBottomColor: '#FFC1B2',
-                        borderBottomWidth: 1,
-                      }}>
-                      <View style={MainFlowStyles.billHeadingStyle}>
-                        <Text>Item Name</Text>
-                      </View>
-                      <View style={MainFlowStyles.billHeadingStyle}>
-                        <Text>Quantity</Text>
-                      </View>
-                      <View style={MainFlowStyles.billHeadingStyle}>
-                        <Text>Rate</Text>
-                      </View>
-                      <View style={MainFlowStyles.billHeadingStyle}>
-                        <Text>Total</Text>
-                      </View>
-                    </View>
-                    <FlatList
-                      data={item.details}
-                      keyExtractor={item => item.number}
-                      showsVerticalScrollIndicator={false}
-                      renderItem={({item}) => {
-                        return (
+                    {this.state.viewdata === item._id &&
+                      this.state.show == true && (
+                        <View>
                           <View
                             style={{
                               flexDirection: 'row',
@@ -592,22 +653,50 @@ class ReportsScreen extends Component {
                               borderBottomWidth: 1,
                             }}>
                             <View style={MainFlowStyles.billHeadingStyle}>
-                              <Text>{item.item}</Text>
+                              <Text>Item Name</Text>
                             </View>
                             <View style={MainFlowStyles.billHeadingStyle}>
-                              <Text>{item.qty}</Text>
+                              <Text>Quantity</Text>
                             </View>
                             <View style={MainFlowStyles.billHeadingStyle}>
-                              <Text>{item.price}</Text>
+                              <Text>Rate</Text>
                             </View>
                             <View style={MainFlowStyles.billHeadingStyle}>
-                              <Text>{item.pkr}</Text>
+                              <Text>Total</Text>
                             </View>
                           </View>
-                        );
-                      }}
-                    />
-                    </View>}
+                          <FlatList
+                            data={item.details}
+                            keyExtractor={item => item.number}
+                            showsVerticalScrollIndicator={false}
+                            renderItem={({item}) => {
+                              return (
+                                <View
+                                  style={{
+                                    flexDirection: 'row',
+                                    paddingBottom: 20,
+                                    marginTop: 20,
+                                    borderBottomColor: '#FFC1B2',
+                                    borderBottomWidth: 1,
+                                  }}>
+                                  <View style={MainFlowStyles.billHeadingStyle}>
+                                    <Text>{item.item}</Text>
+                                  </View>
+                                  <View style={MainFlowStyles.billHeadingStyle}>
+                                    <Text>{item.qty}</Text>
+                                  </View>
+                                  <View style={MainFlowStyles.billHeadingStyle}>
+                                    <Text>{item.price}</Text>
+                                  </View>
+                                  <View style={MainFlowStyles.billHeadingStyle}>
+                                    <Text>{item.pkr}</Text>
+                                  </View>
+                                </View>
+                              );
+                            }}
+                          />
+                        </View>
+                      )}
                     {/* </View> */}
                     {/* </View>
                     </View> */}
@@ -646,19 +735,19 @@ export default ReportsScreen;
 
 const styles = StyleSheet.create({
   welcomeTextStyle: {
-      fontSize: 30,
-      fontWeight: 'bold',
-      alignSelf: 'center',
-      marginVertical: 10
+    fontSize: 30,
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    marginVertical: 10,
   },
   currentStatusContainer: {
-      borderBottomColor: '#FF3301',
-      borderBottomWidth: 1,
-      padding: 10
+    borderBottomColor: '#FF3301',
+    borderBottomWidth: 1,
+    padding: 10,
   },
   currentStatusTextStyle: {
-      fontWeight: 'bold',
-      fontSize: 16,
-      marginLeft: 10
-  }
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginLeft: 10,
+  },
 });

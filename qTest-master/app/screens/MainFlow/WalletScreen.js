@@ -202,7 +202,7 @@ method:"GET",
                                 <Text style={{ fontSize: 18, marginRight: 10 }}>Amount</Text>
                             </View>
                         </View>
-                        
+                         
                         <FlatList
                             style={{ maxHeight: height * 0.4 }}
                             data={this.state.wallet}
