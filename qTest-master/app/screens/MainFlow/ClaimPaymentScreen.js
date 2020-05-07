@@ -94,7 +94,7 @@ class ClaimPaymentScreen extends Component {
     console.log(this.state.ID);
     console.log(this.state.Selected_Proj);
     console.log("tokens",this.state.User.token)
-    fetch('http://efund.alliedco.pk:3000/api/purchase/send-notification', {
+    fetch('http://efund.alliedco.pk/api/purchase/send-notification', {
       method: 'Post', 
       headers: {
         Accept: 'application/json',
@@ -123,7 +123,7 @@ class ClaimPaymentScreen extends Component {
      this.showLoader(); // Once You Call the API Action loading will be true
     console.log('taa', this.state.ID);
     fetch(
-      'http://efund.alliedco.pk:3000/api/purchase/claimimage/' + this.state.ID,
+      'http://efund.alliedco.pk/api/purchase/claimimage/' + this.state.ID,
       {
         method: 'Post',
         headers: {

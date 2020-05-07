@@ -75,7 +75,7 @@ class RequestPayment extends Component {
     }
     var thisdata = [];
     var arr = [];
-    fetch('http://efund.alliedco.pk:3000/api/project', {
+    fetch('http://efund.alliedco.pk/api/project', {
       method: 'Get',
       headers: {
         Accept: 'application/json',
@@ -140,7 +140,7 @@ class RequestPayment extends Component {
     if (data.details[0].item == '') {
       console.log('nt call a api');
     } else {
-      fetch('http://efund.alliedco.pk:3000/api/purchase/post', {
+      fetch('http://efund.alliedco.pk/api/purchase/post', {
         method: 'Post',
         headers: {
           Accept: 'application/json',

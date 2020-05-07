@@ -20,7 +20,6 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import DatePicker from 'react-native-datepicker';
 import moment from 'react-moment';
 import ExpanableList from 'react-native-expandable-section-flatlist';
-
 const {width, height} = Dimensions.get('window');
 
 class ReportsScreen extends Component {
@@ -52,7 +51,7 @@ class ReportsScreen extends Component {
       ],
       data: [
         {id: 1, name: 'Purchaser', select: true},
-        {id: 2, name: 'Manager', select: true},
+        {id: 2, name: 'Manager', select: false},
         {id: 3, name: 'Director', select: true},
         {id: 4, name: 'Accountant', select: true},
       ],
@@ -112,13 +111,13 @@ class ReportsScreen extends Component {
       console.log('error getting data');
     }
     //console.log('dates', this.state.today);
-    this.daily();
+    //this.daily();
     //this.weekly();
     this.monthly();
   }
   daily() {
     var thisarr = [];
-    fetch('http://efund.alliedco.pk:3000/api/reports/daily', {
+    fetch('http://efund.alliedco.pk/api/reports/daily', {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -152,7 +151,7 @@ class ReportsScreen extends Component {
     this.setState({nextdate: date1});
     console.log('first', this.state.date);
     console.log('next', this.state.nextdate);
-    fetch('http://efund.alliedco.pk:3000/api/reports/weekly', {
+    fetch('http://efund.alliedco.pk/api/reports/weekly', {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -174,7 +173,7 @@ class ReportsScreen extends Component {
       });
   }
   monthly() {
-    fetch('http://efund.alliedco.pk:3000/api/reports/monthly', {
+    fetch('http://efund.alliedco.pk/api/reports/monthly', {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -201,9 +200,8 @@ class ReportsScreen extends Component {
     var sp = date;
     var spq = sp.split('T');
     var spqw = spq[0];
-    // console.log(spqw)
+    //console.log(spqw)
     var sqwww = spqw.split('-');
-    // console.log(sqwww)
     var qwert = sqwww[2] + '-' + sqwww[1] + '-' + sqwww[0];
     return qwert;
   }
@@ -529,6 +527,7 @@ class ReportsScreen extends Component {
                     />
 
                     {/* {Timeline} */}
+
                     <View
                       style={[
                         MainFlowStyles.cardStyle,
@@ -536,12 +535,110 @@ class ReportsScreen extends Component {
                       ]}>
                       <View style={styles.currentStatusContainer}>
                         <Text style={styles.currentStatusTextStyle}>
-                          Current Status
+                          Current Status:{item.notify_status}
                         </Text>
                       </View>
                       <View style={{padding: 10, alignItems: 'center'}}>
+                        <View style={{width: 70}}>
+                          <View
+                            style={{
+                              height: 40,
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              flexDirection: 'row',
+                            }}>
+                            <View
+                              style={{
+                                width: 14,
+                                height: 14,
+                                borderRadius: 14 / 2,
+                                backgroundColor:
+                                  // item.notify_status === '1'||item.notify_status === '2'||item.notify_status === '3'
+                                  item.notify_status > '0' ? '#FF3301' : 'gray',
+                              }}
+                            />
+                            <View
+                              style={{
+                                width: 45,
+                                borderBottomColor: '#FF3301',
+                                borderBottomWidth: 1,
+                              }}
+                            />
+                            <View
+                              style={{
+                                width: 14,
+                                height: 14,
+                                borderRadius: 14 / 2,
+                                backgroundColor:
+                                  item.notify_status > '1'
+                                    ? //  item.notify_status === '0'||item.notify_status === '3'||item.notify_status === '2'
+                                      '#FF3301'
+                                    : 'gray',
+                                // : item.notify_status === '1'
+                                // ? '#FF3301'
+                                // : item.notify_status === '2'
+                                // ? '#FF3301'
+                                // : 'green',
+                              }}
+                            />
+                            <View
+                              style={{
+                                width: 45,
+                                borderBottomColor: '#FF3301',
+                                borderBottomWidth: 1,
+                              }}
+                            />
+                            <View
+                              style={{
+                                width: 14,
+                                height: 14,
+                                borderRadius: 14 / 2,
+                                backgroundColor:
+                                  // item.notify_status === '3'||item.notify_status === '1'||item.notify_status === '0'
+                                  // item.notify_status > '0'&&  item.notify_status > '1'&&  item.notify_status > '2'
+                                  item.notify_status > '2' ? '#FF3301' : 'gray',
+                              }}
+                            />
+                            <View
+                              style={{
+                                width: 45,
+                                borderBottomColor: '#FF3301',
+                                borderBottomWidth: 1,
+                              }}
+                            />
+                            <View
+                              style={{
+                                width: 14,
+                                height: 14,
+                                borderRadius: 14 / 2,
+                                backgroundColor:
+                                  // item.notify_status === '2'||item.notify_status === '1'||item.notify_status === '0'
+                                  //item.notify_status > '0'&&  item.notify_status > '1'&&  item.notify_status > '2'&&  item.notify_status > '3'
+                                  item.notify_status > '3' ? '#FF3301' : 'gray',
+                              }}
+                            />
+                          </View>
+                          {/* )} */}
+                          <View
+                            style={{
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              flexDirection: 'row',
+                            }}>
+                            <Text style={{fontSize: 12}}>Purchaser</Text>
+                            <Text style={{marginLeft: 7, fontSize: 12}}>
+                              Supervioser
+                            </Text>
+                            <Text style={{marginLeft: 7, fontSize: 12}}>
+                              Manager
+                            </Text>
+                            <Text style={{marginLeft: 7, fontSize: 12}}>
+                              Accountant
+                            </Text>
+                          </View>
+                        </View>
                         {/* <Timeline data={this.state.data} /> */}
-                        <FlatList
+                        {/* <FlatList
                           data={this.state.data}
                           horizontal={true}
                           showsHorizontalScrollIndicator={false}
@@ -567,6 +664,7 @@ class ReportsScreen extends Component {
                                   ) : (
                                     <View style={{width: 30}} />
                                   )}
+                                  
                                   <View
                                     style={{
                                       width: 14,
@@ -575,11 +673,9 @@ class ReportsScreen extends Component {
                                       backgroundColor: item.select
                                         ? '#FF3301'
                                         : '#FFC1B2',
-                                      // backgroundColor:item.select
-                                      // ? 'pink'
-                                      // : 'grey',
                                     }}
                                   />
+                                  
                                   {index !== this.state.data.length - 1 ? (
                                     <View
                                       style={{
@@ -600,11 +696,12 @@ class ReportsScreen extends Component {
                                   <Text style={{fontSize: 12}}>
                                     {item.name}
                                   </Text>
+                               <Text>nhjj</Text>
                                 </View>
                               </View>
                             );
                           }}
-                        />
+                        /> */}
                       </View>
                     </View>
 
@@ -732,7 +829,6 @@ export default ReportsScreen;
 //     )
 // }
 // }
-
 const styles = StyleSheet.create({
   welcomeTextStyle: {
     fontSize: 30,

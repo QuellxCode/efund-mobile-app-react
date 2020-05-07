@@ -89,7 +89,7 @@ async request_storage_runtime_permission() {
   downloadImage = () => {
     console.log("dounloaded imade",this.state.imagePath)
     var date = new Date();
-    var image_URL ='http://efund.alliedco.pk:3000/uploads/'+this.state.imagePath;
+    var image_URL ='http://efund.alliedco.pk/uploads/'+this.state.imagePath;
     var ext = this.getExtention(image_URL);
     ext = "." + ext[0];
     const { config, fs } = RNFetchBlob;
@@ -117,7 +117,7 @@ async request_storage_runtime_permission() {
     var arr = [];
     var arry = [];
     fetch(
-      'http://efund.alliedco.pk:3000/api/purchase/get-purchase/' +
+      'http://efund.alliedco.pk/api/purchase/get-purchase/' +
         this.state.purchaseID,
       {
         method: 'Get',
@@ -160,7 +160,7 @@ get_Total(){
     var arr = [];
     var arry = [];
     fetch(
-      'http://efund.alliedco.pk:3000/api/project/' + this.state.data_project,
+      'http://efund.alliedco.pk/api/project/' + this.state.data_project,
       {
         method: 'Get',
         headers: {
@@ -204,7 +204,7 @@ get_Total(){
   director_accept() {
     this.setState({visible: true});
     // console.log('dddd', item);
-    fetch('http://efund.alliedco.pk:3000/api/purchase/director-accept', {
+    fetch('http://efund.alliedco.pk/api/purchase/director-accept', {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -229,7 +229,7 @@ get_Total(){
       });
   }
   director_notification(id) {
-    fetch('http://efund.alliedco.pk:3000/api/notification/' + id, {
+    fetch('http://efund.alliedco.pk/api/notification/' + id, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -247,7 +247,7 @@ get_Total(){
   }
   sup_accept() {
     this.setState({visible: true});
-    fetch('http://efund.alliedco.pk:3000/api/purchase/accept-notification', {
+    fetch('http://efund.alliedco.pk/api/purchase/accept-notification', {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -289,7 +289,7 @@ get_Total(){
   };
   reject_ok() {
     console.log(this.state.description)
-    fetch('http://efund.alliedco.pk:3000/api/purchase/reject-notification', {
+    fetch('http://efund.alliedco.pk/api/purchase/reject-notification', {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -383,7 +383,7 @@ hideLoader = () => { this.setState({ spinner:false }); };
                 style={{
                   flexDirection: 'row',
                   paddingBottom: 20,
-                  marginTop: 20,
+                  marginTop: 10,
                   borderBottomColor: '#FFC1B2',
                   borderBottomWidth: 1,
                 }}>
@@ -432,9 +432,7 @@ hideLoader = () => { this.setState({ spinner:false }); };
                 }}
               />
               <Text style={{alignSelf:'flex-end', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth:1, marginRight:'10%'}}>Grand Total: {this.state.grandTotal}</Text>
-              {/* <View>
-                                      <Text>{this.txt(this.state.data_.message)}</Text>
-                                          </View> */}
+              
               <Text
                 style={{
                   alignSelf: 'flex-end',
@@ -446,6 +444,7 @@ hideLoader = () => { this.setState({ spinner:false }); };
                 }}>
                 {this.state.totall}
               </Text>
+              
             </View>
           </View>
           {this.state.notifystat == 'ClaimRequest' && (
@@ -629,7 +628,7 @@ hideLoader = () => { this.setState({ spinner:false }); };
                     </View> */}
                     <Image
                       source={{
-                      uri:'http://efundapp.herokuapp.com/uploads/'+this.state.imagePath,
+                      uri:'http://efund.alliedco.pk/uploads'+this.state.imagePath,
                       }}
                       style={{height: 450, width: 250,alignSelf:'center'}}
                     />
@@ -762,6 +761,29 @@ hideLoader = () => { this.setState({ spinner:false }); };
               />
             </View>
           )}
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
           {this.state.stat == 'Pending' && (
             <View>
               <View

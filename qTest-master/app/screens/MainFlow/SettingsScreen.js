@@ -54,7 +54,7 @@ class Settings extends Component {
       };
       _getCash(){
         var New = this.state.User;
-        fetch("http://efund.alliedco.pk:3000/api/user/profile",{
+        fetch("http://efund.alliedco.pk/api/user/profile",{
       method:"PATCH",
         headers: {
           'Accept': 'application/json',

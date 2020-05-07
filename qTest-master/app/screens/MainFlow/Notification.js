@@ -115,7 +115,7 @@ export default class Notification extends Component {
   get_notification() {
     var arr = [];
     var arry = [];
-    fetch('http://efund.alliedco.pk:3000/api/notification', {
+    fetch('http://efund.alliedco.pk/api/notification', {
       method: 'Get',
       headers: {
         Accept: 'application/json',
@@ -141,7 +141,7 @@ export default class Notification extends Component {
   }
   director_accept(item) {
     console.log('dddd', item);
-    fetch('http://efund.alliedco.pk:3000/api/purchase/director-accept', {
+    fetch('http://efund.alliedco.pk/api/purchase/director-accept', {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -164,7 +164,7 @@ export default class Notification extends Component {
       });
   }
   director_notification(id) {
-    fetch('http://efund.alliedco.pk:3000/api/notification/' + id, {
+    fetch('http://efund.alliedco.pk/api/notification/' + id, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -181,7 +181,7 @@ export default class Notification extends Component {
       });
   }
   sup_accept(item) {
-    fetch('http://efund.alliedco.pk:3000/api/purchase/accept-notification', {
+    fetch('http://efund.alliedco.pk/api/purchase/accept-notification', {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -222,7 +222,7 @@ export default class Notification extends Component {
     // console.log("item::::"+this.state.items)
     // console.log("itemssss::::"+this.state.project)
     // console.log("msg"+this.state.Msg)
-    fetch('http://efund.alliedco.pk:3000/api/purchase/reject-notification', {
+    fetch('http://efund.alliedco.pk/api/purchase/reject-notification', {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -260,7 +260,7 @@ return str
         <View style={{ flex: 1 }}>
           <Header />
           <Text style={{ fontSize: 30, color: "red", alignSelf: "center" }}>
-            Notification
+            Notifications
           </Text>
           <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
             <FlatList
@@ -569,7 +569,7 @@ return str
         <View style={{ flex: 1 }}>
           <Header />
           <Text style={{ fontSize: 30, color: "red", alignSelf: "center" }}>
-            Notification
+            Notifications
           </Text>
           <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
             <FlatList

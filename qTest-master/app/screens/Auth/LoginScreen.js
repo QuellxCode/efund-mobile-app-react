@@ -40,7 +40,7 @@ class LoginScreen extends Component {
         };
 
     getdata(){
-        fetch("http://efund.alliedco.pk:3000/api/user/login",{
+        fetch("http://efund.alliedco.pk/api/user/login",{
         method:"POST",
           headers: {
            'Content-Type': 'application/json'

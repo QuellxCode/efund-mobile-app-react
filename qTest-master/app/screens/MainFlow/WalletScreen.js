@@ -59,7 +59,7 @@ class Wallet extends Component {
     };
 
   _addCash(){
-      fetch("http://efund.alliedco.pk:3000/api/wallet/add-cash",{
+      fetch("http://efund.alliedco.pk/api/wallet/add-cash",{
     method:"POST",
       headers: {
         'Accept': 'application/json',
@@ -95,7 +95,7 @@ class Wallet extends Component {
 }
 
 _getTransaction(){
-  fetch("http://efund.alliedco.pk:3000/api/wallet/transaction",{
+  fetch("http://efund.alliedco.pk/api/wallet/transaction",{
 method:"GET",
   headers: {
     'Accept': 'application/json',
@@ -114,7 +114,7 @@ method:"GET",
    }
 
 _getCash(){
-  fetch("http://efund.alliedco.pk:3000/api/wallet/get-amount",{
+  fetch("http://efund.alliedco.pk/api/wallet/get-amount",{
 method:"GET",
   headers: {
     'Accept': 'application/json',

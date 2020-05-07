@@ -5,7 +5,6 @@ import MainFlowStyles from '../../Styles/MainFlowStyles';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 const {width, height} = Dimensions.get('window');
-
 class NotificationsNewScreen extends Component {
     constructor(props) {
         super(props);
@@ -55,12 +54,10 @@ class NotificationsNewScreen extends Component {
         }
     }
 
-
-
         get_notification() {
             var arr = [];
             var arry = [];
-            fetch('http://efund.alliedco.pk:3000/api/notification', {
+            fetch('http://efund.alliedco.pk/api/notification', {
               method: 'Get',
               headers: {
                 Accept: 'application/json',
@@ -74,8 +71,8 @@ class NotificationsNewScreen extends Component {
                   all: json.notification,
                 });
                 // console.log("aabe",json.notification[3].message[0].pkr)
-                console.log("dasdatsd", this.state.all)
-                console.log("dasdatsd", this.state.all.length)
+                console.log("ALL DATA", this.state.all)
+                //console.log("dasdatsd", this.state.all.length)
                 var v = this.state.all.length;
                 for (let i = 0; i < v; i++) {
                   // arr.push(json.notification[i].message,json.notification[i].project
@@ -106,7 +103,7 @@ class NotificationsNewScreen extends Component {
 
           director_accept(item) {
             console.log('dddd', item);
-            fetch('http://efund.alliedco.pk:3000/api/purchase/director-accept', {
+            fetch('http://efund.alliedco.pk/api/purchase/director-accept', {
               method: 'Post',
               headers: {
                 Accept: 'application/json',
@@ -129,7 +126,7 @@ class NotificationsNewScreen extends Component {
               });
           }
           director_notification(id) {
-            fetch('http://efund.alliedco.pk:3000/api/notification/' + id, {
+            fetch('http://efund.alliedco.pk/api/notification/' + id, {
               method: 'GET',
               headers: {
                 Accept: 'application/json',
@@ -146,7 +143,7 @@ class NotificationsNewScreen extends Component {
               });
           }
           sup_accept(item) {
-            fetch('http://efund.alliedco.pk:3000/api/purchase/accept-notification', {
+            fetch('http://efund.alliedco.pk/api/purchase/accept-notification', {
               method: 'Post',
               headers: {
                 Accept: 'application/json',
@@ -187,7 +184,7 @@ class NotificationsNewScreen extends Component {
             // console.log("item::::"+this.state.items)
             // console.log("itemssss::::"+this.state.project)
             // console.log("msg"+this.state.Msg)
-            fetch('http://efund.alliedco.pk:3000/api/purchase/reject-notification', {
+            fetch('http://efund.alliedco.pk/api/purchase/reject-notification', {
               method: 'Post',
               headers: {
                 Accept: 'application/json',
@@ -310,10 +307,13 @@ class NotificationsNewScreen extends Component {
                                                 <View style={{ flexDirection: 'row', width: (width - 50) / 3 }}>
                                                    
                                                 <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Bill {index + 1}</Text>
+
                                                 </View>
 
                                                 <View style={{ width: (width - 40) / 2, alignItems: 'flex-end', marginLeft:'10%' }}>
                                                     <Text style={{ fontSize: 14 }}>{item.notification_status}</Text>
+                                            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.message}</Text>
+
                                                 </View>
                                             </View>
                                         </View>
