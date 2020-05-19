@@ -313,7 +313,7 @@ class NotificationsNewScreen extends Component {
 
                                                 <View style={{ width: (width - 40) / 2, alignItems: 'flex-end', marginLeft:'10%' }}>
                                                     <Text style={{ fontSize: 14 }}>{item.notification_status}</Text>
-                                            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.message}</Text>
+                                            {/* <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.message}</Text> */}
 
                                                 </View>
                                             </View>

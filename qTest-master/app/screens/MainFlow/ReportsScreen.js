@@ -112,9 +112,9 @@ class ReportsScreen extends Component {
       console.log('error getting data');
     }
     //console.log('dates', this.state.today);
-    //this.daily();
-    //this.weekly();
-    this.monthly();
+    this.daily();
+    this.weekly();
+    // this.monthly();
   }
   daily() {
     var thisarr = [];
@@ -215,14 +215,14 @@ class ReportsScreen extends Component {
         <Header />
         <View style={{margin: 10}}>
           <Text style={MainFlowStyles.headerTextStyle}>Reports</Text>
-          <TouchableOpacity style={{flexDirection: 'row', marginBottom: 10}}>
+          <TouchableOpacity style={{flexDirection: 'row', marginBottom: 10, marginHorizontal:'20%'}}>
             <TouchableOpacity
               style={MainFlowStyles.tabStyles}
               onPress={() =>
                 this.setState({
                   selectedDaily: true,
                   selectedWeekly: false,
-                  selectedMonthly: false,
+                  // selectedMonthly: false,
                 })
               }>
               <View style={{flexDirection: 'row'}}>
@@ -254,7 +254,7 @@ class ReportsScreen extends Component {
                 this.setState({
                   selectedDaily: false,
                   selectedWeekly: true,
-                  selectedMonthly: false,
+                  // selectedMonthly: false,
                 })
               }>
               <View style={{flexDirection: 'row'}}>
@@ -273,43 +273,13 @@ class ReportsScreen extends Component {
                       MainFlowStyles.tabTextStyle,
                       {color: this.state.selectedWeekly ? 'black' : 'grey'},
                     ]}>
-                    Weekly
+                    By Dates
                   </Text>
                 </View>
                 <View style={{flex: 1}} />
               </View>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={MainFlowStyles.tabStyles}
-              onPress={() =>
-                this.setState({
-                  selectedDaily: false,
-                  selectedWeekly: false,
-                  selectedMonthly: true,
-                })
-              }>
-              <View style={{flexDirection: 'row'}}>
-                <View style={{flex: 1}} />
-                <View
-                  style={[
-                    MainFlowStyles.tabTextContainerStyle,
-                    {
-                      borderBottomColor: this.state.selectedMonthly
-                        ? '#FF3301'
-                        : 'transparent',
-                      marginRight: 10,
-                    },
-                  ]}>
-                  <Text
-                    style={[
-                      MainFlowStyles.tabTextStyle,
-                      {color: this.state.selectedMonthly ? 'black' : 'grey'},
-                    ]}>
-                    Monthly
-                  </Text>
-                </View>
-              </View>
-            </TouchableOpacity>
+            
           </TouchableOpacity>
           {/* {this.state.daily.map((item, index) => {})} */}
           <View>
@@ -448,13 +418,13 @@ class ReportsScreen extends Component {
                       ? index === this.state.daily.length - 1
                         ? 20
                         : 0
-                      : this.state.selectedWeekly
-                      ? index === this.state.weeklyBills.length - 1
+                      // : this.state.selectedWeekly
+                      : index === this.state.weeklyBills.length - 1
                         ? 20
                         : 0
-                      : index === this.state.monthly.length - 1
-                      ? 20
-                      : 0,
+                      // : index === this.state.monthly.length - 1
+                      // ? 20
+                      // : 0,
                   }}>
                   <View
                     style={[

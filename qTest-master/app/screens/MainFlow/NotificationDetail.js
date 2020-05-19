@@ -49,7 +49,7 @@ class NotifierDetaler extends Component {
       spinner : false,
       imageUrl:"",
       grandTotal: 0,
-
+      pname:[]
     };
   }
 async request_storage_runtime_permission() {
@@ -82,6 +82,7 @@ async request_storage_runtime_permission() {
         });
         console.log('userIdii', this.state.User.user_id);
         this.get_notification();
+        console.log('project id', this.state.data_project, '\n', 'purchase id', this.state.purchaseID, '\n', 'status', this.state.notifystat, '\n', this.state.stat)
       }
     } catch (error) {
       console.log('error getting data');
@@ -118,8 +119,7 @@ async request_storage_runtime_permission() {
     var arr = [];
     var arry = [];
     fetch(
-      `${SERVER_URL}/api/purchase/get-purchase/` +
-        this.state.purchaseID,
+      `${SERVER_URL}/api/purchase/get-purchase/` + this.state.purchaseID,
       {
         method: 'Get',
         headers: {
@@ -135,6 +135,7 @@ async request_storage_runtime_permission() {
           newDetail: json.purchase.details,
           imagePath: json.purchase.file,
           // stat: json.purchase.payment_status,
+          pname:json
         });
         console.log('Image Path', this.state.imagePath);
         console.log('Image Path ', json);
@@ -160,6 +161,7 @@ get_Total(){
   get_notification() {
     var arr = [];
     var arry = [];
+    console.log("fhfjtytk")
     fetch(
       `${SERVER_URL}/api/project/` + this.state.data_project,
       {
@@ -178,8 +180,8 @@ get_Total(){
           specif: json.project,
           detailed: json.project.details,
         });
-        // console.log('ALL', this.state.all);
-        // console.log('Specific', this.state.specif);
+        console.log('ALL', this.state.all);
+        //console.log('Specific', this.state.specif);
         // console.log('Detailed', this.state.detailed);
         // console.log('AAAAA', this.state.data_);
         // console.log('Sdasdasd', this.txt(this.state.data_.message));
@@ -198,8 +200,8 @@ get_Total(){
         this.get_Detailed();
       })
       .catch(error => {
-        console.error(error);
-      });
+        console.log(error);
+      }, console.log("not"));
   }
 
   director_accept() {
@@ -463,7 +465,7 @@ hideLoader = () => { this.setState({ spinner:false }); };
               />
             </View>
           )}
-          {this.state.stat == 'Pending' && (
+          {this.state.stat == 0 && (
             <View>
               <View
                 style={{
@@ -764,28 +766,7 @@ hideLoader = () => { this.setState({ spinner:false }); };
           )}
           
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          {this.state.stat == 'Pending' && (
+          {this.state.stat == 0 && (
             <View>
               <View
                 style={{
