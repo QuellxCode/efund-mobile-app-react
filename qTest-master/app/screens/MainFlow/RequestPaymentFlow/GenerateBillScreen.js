@@ -4,6 +4,7 @@ import Header from '../../../components/Header';
 import { Button } from 'react-native-elements';
 import MainFlowStyles from '../../../Styles/MainFlowStyles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { SERVER_URL } from '../../../utils/config';
 
 const { width, height } = Dimensions.get('window');
 
@@ -70,7 +71,7 @@ class GenerateBillScreen extends Component {
     // }
 
     handlePressfirst = async () => {
-            fetch('http://efund.alliedco.pk/api/purchase/post', {
+            fetch(`${SERVER_URL}/api/purchase/post`, {
                 method: 'Post',
                 headers: {
                     Accept: 'application/json',
@@ -100,7 +101,7 @@ class GenerateBillScreen extends Component {
 
     get_notifiaction(n_id) {
         console.log("this.your notify id"+n_id)
-        fetch('http://efund.alliedco.pk/api/notification/'+n_id, {
+        fetch(`${SERVER_URL}/api/notification/`+n_id, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -132,7 +133,7 @@ class GenerateBillScreen extends Component {
         console.log("data" + JSON.stringify(this.state.data_))
         console.log("datap" + this.state.data_project)
 
-        fetch('http://efund.alliedco.pk/api/purchase/send-notification', {
+        fetch(`${SERVER_URL}/api/purchase/send-notification`, {
             method: 'Post',
             headers: {
                 'Accept': 'application/json',

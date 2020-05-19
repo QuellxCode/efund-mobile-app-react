@@ -8,6 +8,7 @@ import AntDeisgn from 'react-native-vector-icons/AntDesign';
 import { Input, Button } from 'react-native-elements';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Projects from '../../../components/Projects';
+import { SERVER_URL } from '../../../utils/config';
 
 class ProjectList extends Component{
     constructor(){
@@ -38,7 +39,7 @@ class ProjectList extends Component{
       };
 
     _getProjects(){
-        fetch("http://efund.alliedco.pk/api/project/",{
+        fetch(`${SERVER_URL}/api/project/`,{
       method:"GET",
         headers: {
           'Accept': 'application/json',

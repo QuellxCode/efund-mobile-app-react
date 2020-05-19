@@ -14,6 +14,7 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
+import { SERVER_URL } from '../../utils/config';
 // import RNPickerSelect from 'react-native-picker-select';
 
 const { width, height } = Dimensions.get('window');
@@ -115,7 +116,7 @@ class GeneratePayOrderScreen extends Component {
       _sendFunds(){
         console.log(this.state.User.token)
         console.log("myDetails",this.state.details)
-        fetch("http://efund.alliedco.pk/api/purchase/payorder-notification",{
+        fetch(`${SERVER_URL}/api/purchase/payorder-notification`,{
       method:"POST",
         headers: {
           'Accept': 'application/json',
@@ -169,7 +170,7 @@ class GeneratePayOrderScreen extends Component {
 }
 
       _getBanks(){
-        fetch("http://efund.alliedco.pk/api/banks/",{
+        fetch(`${SERVER_URL}/api/banks/`,{
       method:"GET",
         headers: {
           'Accept': 'application/json',
@@ -189,7 +190,7 @@ class GeneratePayOrderScreen extends Component {
          }
 
          _getPayee(){
-          fetch("http://efund.alliedco.pk/api/payee",{
+          fetch(`${SERVER_URL}/api/payee`,{
         method:"GET",
           headers: {
             'Accept': 'application/json',
@@ -210,7 +211,7 @@ class GeneratePayOrderScreen extends Component {
 
         getAmount(bankNo){
           console.log("hello tak cash")
-          fetch("http://efund.alliedco.pk/api/bankAccount/account/"+bankNo,{
+          fetch(`${SERVER_URL}/api/bankAccount/account/`+bankNo,{
             method:"GET",
               headers: {
                 'Accept': 'application/json',

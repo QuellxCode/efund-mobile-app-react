@@ -13,6 +13,7 @@ import CustomButton from '../../components/CustomButton';
 import {Button} from 'react-native-elements';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import DocumentPicker from 'react-native-document-picker';
+import { SERVER_URL } from '../../utils/config';
 const {width, height} = Dimensions.get('window');
 const formdata = new FormData();
 class ClaimPaymentScreen extends Component {
@@ -94,7 +95,7 @@ class ClaimPaymentScreen extends Component {
     console.log(this.state.ID);
     console.log(this.state.Selected_Proj);
     console.log("tokens",this.state.User.token)
-    fetch('http://efund.alliedco.pk/api/purchase/send-notification', {
+    fetch(`${SERVER_URL}/api/purchase/send-notification`, {
       method: 'Post', 
       headers: {
         Accept: 'application/json',
@@ -123,7 +124,7 @@ class ClaimPaymentScreen extends Component {
      this.showLoader(); // Once You Call the API Action loading will be true
     console.log('taa', this.state.ID);
     fetch(
-      'http://efund.alliedco.pk/api/purchase/claimimage/' + this.state.ID,
+      `${SERVER_URL}/api/purchase/claimimage/` + this.state.ID,
       {
         method: 'Post',
         headers: {

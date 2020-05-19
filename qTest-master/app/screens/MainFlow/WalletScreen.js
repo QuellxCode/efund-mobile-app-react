@@ -9,6 +9,7 @@ import {
     responsiveWidth,
     responsiveFontSize,
   } from 'react-native-responsive-dimensions';
+import { SERVER_URL } from '../../utils/config';
 
 const {width, height} = Dimensions.get('window');
 console.disableYellowBox = true;
@@ -59,7 +60,7 @@ class Wallet extends Component {
     };
 
   _addCash(){
-      fetch("http://efund.alliedco.pk/api/wallet/add-cash",{
+      fetch(`${SERVER_URL}/api/wallet/add-cash`,{
     method:"POST",
       headers: {
         'Accept': 'application/json',
@@ -95,7 +96,7 @@ class Wallet extends Component {
 }
 
 _getTransaction(){
-  fetch("http://efund.alliedco.pk/api/wallet/transaction",{
+  fetch(`${SERVER_URL}/api/wallet/transaction`,{
 method:"GET",
   headers: {
     'Accept': 'application/json',
@@ -114,7 +115,7 @@ method:"GET",
    }
 
 _getCash(){
-  fetch("http://efund.alliedco.pk/api/wallet/get-amount",{
+  fetch(`${SERVER_URL}/api/wallet/get-amount`,{
 method:"GET",
   headers: {
     'Accept': 'application/json',

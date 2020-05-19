@@ -6,7 +6,7 @@ import styles from '../../Styles/AuthStyles';
 import CustomButton from '../../components/CustomButton';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
+import {SERVER_URL} from '../../utils/config';
 class LoginScreen extends Component {
     constructor(props) {
         super(props);
@@ -40,7 +40,7 @@ class LoginScreen extends Component {
         };
 
     getdata(){
-        fetch("http://efund.alliedco.pk/api/user/login",{
+        fetch(`${SERVER_URL}/api/user/login`,{
         method:"POST",
           headers: {
            'Content-Type': 'application/json'

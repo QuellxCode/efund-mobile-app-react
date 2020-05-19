@@ -20,6 +20,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import DatePicker from 'react-native-datepicker';
 import moment from 'react-moment';
 import ExpanableList from 'react-native-expandable-section-flatlist';
+import { SERVER_URL } from '../../utils/config';
 const {width, height} = Dimensions.get('window');
 
 class ReportsScreen extends Component {
@@ -117,7 +118,7 @@ class ReportsScreen extends Component {
   }
   daily() {
     var thisarr = [];
-    fetch('http://efund.alliedco.pk/api/reports/daily', {
+    fetch(`${SERVER_URL}/api/reports/daily`, {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -151,7 +152,7 @@ class ReportsScreen extends Component {
     this.setState({nextdate: date1});
     console.log('first', this.state.date);
     console.log('next', this.state.nextdate);
-    fetch('http://efund.alliedco.pk/api/reports/weekly', {
+    fetch(`${SERVER_URL}/api/reports/weekly`, {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -173,7 +174,7 @@ class ReportsScreen extends Component {
       });
   }
   monthly() {
-    fetch('http://efund.alliedco.pk/api/reports/monthly', {
+    fetch(`${SERVER_URL}/api/reports/monthly`, {
       method: 'Post',
       headers: {
         Accept: 'application/json',

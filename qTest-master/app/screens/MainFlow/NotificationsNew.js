@@ -4,6 +4,7 @@ import Header from '../../components/Header';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { SERVER_URL } from '../../utils/config';
 const {width, height} = Dimensions.get('window');
 class NotificationsNewScreen extends Component {
     constructor(props) {
@@ -57,7 +58,7 @@ class NotificationsNewScreen extends Component {
         get_notification() {
             var arr = [];
             var arry = [];
-            fetch('http://efund.alliedco.pk/api/notification', {
+            fetch(`${SERVER_URL}/api/notification`, {
               method: 'Get',
               headers: {
                 Accept: 'application/json',
@@ -103,7 +104,7 @@ class NotificationsNewScreen extends Component {
 
           director_accept(item) {
             console.log('dddd', item);
-            fetch('http://efund.alliedco.pk/api/purchase/director-accept', {
+            fetch(`${SERVER_URL}/api/purchase/director-accept`, {
               method: 'Post',
               headers: {
                 Accept: 'application/json',
@@ -126,7 +127,7 @@ class NotificationsNewScreen extends Component {
               });
           }
           director_notification(id) {
-            fetch('http://efund.alliedco.pk/api/notification/' + id, {
+            fetch(`${SERVER_URL}/api/notification/` + id, {
               method: 'GET',
               headers: {
                 Accept: 'application/json',
@@ -143,7 +144,7 @@ class NotificationsNewScreen extends Component {
               });
           }
           sup_accept(item) {
-            fetch('http://efund.alliedco.pk/api/purchase/accept-notification', {
+            fetch(`${SERVER_URL}/api/purchase/accept-notification`, {
               method: 'Post',
               headers: {
                 Accept: 'application/json',
@@ -184,7 +185,7 @@ class NotificationsNewScreen extends Component {
             // console.log("item::::"+this.state.items)
             // console.log("itemssss::::"+this.state.project)
             // console.log("msg"+this.state.Msg)
-            fetch('http://efund.alliedco.pk/api/purchase/reject-notification', {
+            fetch(`${SERVER_URL}/api/purchase/reject-notification`, {
               method: 'Post',
               headers: {
                 Accept: 'application/json',
