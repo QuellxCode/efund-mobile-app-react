@@ -121,6 +121,7 @@ class EditRequestPayment extends Component {
     get_Detailed() {
         var arr = [];
         var arry = [];
+       console.log('purchase id', this.state.purchaseID)
         fetch(`${SERVER_URL}/api/purchase/get-purchase/`+this.state.purchaseID, {
           method: 'Get',
           headers: {
@@ -139,7 +140,7 @@ class EditRequestPayment extends Component {
             });
             this.get_notification();
              this.newObjInInitialArr();
-            console.log("Hello josn",json)
+            console.log("all josn",json)
             console.log("Hello detail",this.state.newDetail)
             console.log("stat", this.state.stat) 
             console.log("purchase id", this.state.data_project) 

@@ -98,7 +98,8 @@ class ReportsScreen extends Component {
     var month = new Date().getMonth() + 1; //Current Month
     var year = new Date().getFullYear(); //Current Year
     that.setState({
-      today: year + '-' + 0 + month + '-' + date,
+       today: year + '-' + 0 + month + '-' + date,
+      // today: new Date()
     });
     try {
       const value = await AsyncStorage.getItem('User');
@@ -118,6 +119,7 @@ class ReportsScreen extends Component {
   }
   daily() {
     var thisarr = [];
+    console.log('daily date', this.state.today)
     fetch(`${SERVER_URL}/api/reports/daily`, {
       method: 'Post',
       headers: {
@@ -133,7 +135,7 @@ class ReportsScreen extends Component {
       .then(json => {
         this.setState({daily: json.report});
         console.log('daily', this.state.daily);
-        console.log('daily', json);
+        console.log('daily json', json);
         //console.log('daily life', this.state.daily);
         // for (let i = 0; i < this.state.daily.length; i++) {
         //   thisarr.push({

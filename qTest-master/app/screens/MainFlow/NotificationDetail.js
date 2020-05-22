@@ -631,7 +631,10 @@ hideLoader = () => { this.setState({ spinner:false }); };
                     </View> */}
                     <Image
                       source={{
-                      uri:'http://efund.alliedco.pk/uploads'+this.state.imagePath,
+                        
+                         uri:'http://efundapp.herokuapp.com/uploads/'+this.state.imagePath,
+                       
+                        // uri:'http://efund.alliedco.pk/uploads'+this.state.imagePath,
                       }}
                       style={{height: 450, width: 250,alignSelf:'center'}}
                     />
