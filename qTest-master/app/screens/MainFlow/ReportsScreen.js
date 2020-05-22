@@ -20,6 +20,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import DatePicker from 'react-native-datepicker';
 import moment from 'react-moment';
 import ExpanableList from 'react-native-expandable-section-flatlist';
+import { SERVER_URL } from '../../utils/config';
 const {width, height} = Dimensions.get('window');
 
 class ReportsScreen extends Component {
@@ -97,7 +98,8 @@ class ReportsScreen extends Component {
     var month = new Date().getMonth() + 1; //Current Month
     var year = new Date().getFullYear(); //Current Year
     that.setState({
-      today: year + '-' + 0 + month + '-' + date,
+       today: year + '-' + 0 + month + '-' + date,
+      // today: new Date()
     });
     try {
       const value = await AsyncStorage.getItem('User');
@@ -111,13 +113,14 @@ class ReportsScreen extends Component {
       console.log('error getting data');
     }
     //console.log('dates', this.state.today);
-    //this.daily();
-    //this.weekly();
-    this.monthly();
+    this.daily();
+    this.weekly();
+    // this.monthly();
   }
   daily() {
     var thisarr = [];
-    fetch('http://efund.alliedco.pk/api/reports/daily', {
+    console.log('daily date', this.state.today)
+    fetch(`${SERVER_URL}/api/reports/daily`, {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -132,7 +135,7 @@ class ReportsScreen extends Component {
       .then(json => {
         this.setState({daily: json.report});
         console.log('daily', this.state.daily);
-        console.log('daily', json);
+        console.log('daily json', json);
         //console.log('daily life', this.state.daily);
         // for (let i = 0; i < this.state.daily.length; i++) {
         //   thisarr.push({
@@ -151,7 +154,7 @@ class ReportsScreen extends Component {
     this.setState({nextdate: date1});
     console.log('first', this.state.date);
     console.log('next', this.state.nextdate);
-    fetch('http://efund.alliedco.pk/api/reports/weekly', {
+    fetch(`${SERVER_URL}/api/reports/weekly`, {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -173,7 +176,7 @@ class ReportsScreen extends Component {
       });
   }
   monthly() {
-    fetch('http://efund.alliedco.pk/api/reports/monthly', {
+    fetch(`${SERVER_URL}/api/reports/monthly`, {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -214,14 +217,14 @@ class ReportsScreen extends Component {
         <Header />
         <View style={{margin: 10}}>
           <Text style={MainFlowStyles.headerTextStyle}>Reports</Text>
-          <TouchableOpacity style={{flexDirection: 'row', marginBottom: 10}}>
+          <TouchableOpacity style={{flexDirection: 'row', marginBottom: 10, marginHorizontal:'20%'}}>
             <TouchableOpacity
               style={MainFlowStyles.tabStyles}
               onPress={() =>
                 this.setState({
                   selectedDaily: true,
                   selectedWeekly: false,
-                  selectedMonthly: false,
+                  // selectedMonthly: false,
                 })
               }>
               <View style={{flexDirection: 'row'}}>
@@ -253,7 +256,7 @@ class ReportsScreen extends Component {
                 this.setState({
                   selectedDaily: false,
                   selectedWeekly: true,
-                  selectedMonthly: false,
+                  // selectedMonthly: false,
                 })
               }>
               <View style={{flexDirection: 'row'}}>
@@ -272,43 +275,13 @@ class ReportsScreen extends Component {
                       MainFlowStyles.tabTextStyle,
                       {color: this.state.selectedWeekly ? 'black' : 'grey'},
                     ]}>
-                    Weekly
+                    By Dates
                   </Text>
                 </View>
                 <View style={{flex: 1}} />
               </View>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={MainFlowStyles.tabStyles}
-              onPress={() =>
-                this.setState({
-                  selectedDaily: false,
-                  selectedWeekly: false,
-                  selectedMonthly: true,
-                })
-              }>
-              <View style={{flexDirection: 'row'}}>
-                <View style={{flex: 1}} />
-                <View
-                  style={[
-                    MainFlowStyles.tabTextContainerStyle,
-                    {
-                      borderBottomColor: this.state.selectedMonthly
-                        ? '#FF3301'
-                        : 'transparent',
-                      marginRight: 10,
-                    },
-                  ]}>
-                  <Text
-                    style={[
-                      MainFlowStyles.tabTextStyle,
-                      {color: this.state.selectedMonthly ? 'black' : 'grey'},
-                    ]}>
-                    Monthly
-                  </Text>
-                </View>
-              </View>
-            </TouchableOpacity>
+            
           </TouchableOpacity>
           {/* {this.state.daily.map((item, index) => {})} */}
           <View>
@@ -447,13 +420,13 @@ class ReportsScreen extends Component {
                       ? index === this.state.daily.length - 1
                         ? 20
                         : 0
-                      : this.state.selectedWeekly
-                      ? index === this.state.weeklyBills.length - 1
+                      // : this.state.selectedWeekly
+                      : index === this.state.weeklyBills.length - 1
                         ? 20
                         : 0
-                      : index === this.state.monthly.length - 1
-                      ? 20
-                      : 0,
+                      // : index === this.state.monthly.length - 1
+                      // ? 20
+                      // : 0,
                   }}>
                   <View
                     style={[

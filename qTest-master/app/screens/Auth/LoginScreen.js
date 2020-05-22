@@ -18,7 +18,7 @@ import styles from '../../Styles/AuthStyles';
 import CustomButton from '../../components/CustomButton';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
+import {SERVER_URL} from '../../utils/config';
 class LoginScreen extends Component {
   constructor(props) {
     super(props);
@@ -36,14 +36,30 @@ class LoginScreen extends Component {
     this.checkStorge();
   }
 
-  checkStorge = async () => {
-    try {
-      const value = await AsyncStorage.getItem('User');
-      if (value !== null) {
-        this.props.navigation.navigate('mainFlow');
-        this.setState({spinner: false});
-      } else {
-        this.setState({spinner: false});
+    getdata(){
+        fetch(`${SERVER_URL}/api/user/login`,{
+        method:"POST",
+          headers: {
+           'Content-Type': 'application/json'
+         },
+         body:JSON.stringify({
+           "email":this.state.email,
+           "password":this.state.password
+         })
+        })
+    .then(response => response.json())
+    .then(async (responseJson)=> {
+          await AsyncStorage.setItem('User', JSON.stringify(responseJson));
+          this.setState({
+            loading: false,
+            spinner: false,
+           })
+           console.log(responseJson)
+      if(responseJson.message == 'login successfull'){
+        ToastAndroid.show(responseJson.message, ToastAndroid.SHORT);
+        this.props.navigation.navigate("mainFlow")}
+      else{
+        ToastAndroid.show('Incorrect Credentials!', ToastAndroid.SHORT);
       }
     } catch (error) {
       console.log('error getting data'), this.setState({spinner: false});

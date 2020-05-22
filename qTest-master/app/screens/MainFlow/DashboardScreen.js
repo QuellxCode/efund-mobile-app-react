@@ -9,6 +9,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { notificationManager } from '../../NotificationManager';
 import Notification from "../../screens/MainFlow/Notification"
 import { withNavigation } from 'react-navigation';
+import { SERVER_URL } from '../../utils/config';
 const Purchaser = props => {
     const data = [
         { id: 1, name: 'Purchaser', select: true },
@@ -66,7 +67,7 @@ const Purchaser = props => {
     useEffect(() => {
        setTimeout(() => {
         if (user != undefined && user != null) {
-            fetch('http://efund.alliedco.pk/api/notification', {
+            fetch(`${SERVER_URL}/api/notification`, {
                 method: 'Get',
                 headers: {
                     Accept: 'application/json',
@@ -199,7 +200,7 @@ const Supervisor = props => {
     useEffect(() => {
         setTimeout(() => {
          if (user != undefined && user != null) {
-             fetch('http://efund.alliedco.pk/api/notification', {
+             fetch(`${SERVER_URL}/api/notification`, {
                  method: 'Get',
                  headers: {
                      Accept: 'application/json',
@@ -379,7 +380,7 @@ const Director = props => {
     useEffect(() => {
         setTimeout(() => {
          if (user != undefined && user != null) {
-             fetch('http://efund.alliedco.pk/api/notification', {
+             fetch(`${SERVER_URL}/api/notification`, {
                  method: 'Get',
                  headers: {
                      Accept: 'application/json',

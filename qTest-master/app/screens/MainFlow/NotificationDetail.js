@@ -16,6 +16,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import {Button, Input} from 'react-native-elements';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { SERVER_URL } from '../../utils/config';
 const {width, height} = Dimensions.get('window');
 class NotifierDetaler extends Component {
   constructor(props) {
@@ -48,7 +49,7 @@ class NotifierDetaler extends Component {
       spinner : false,
       imageUrl:"",
       grandTotal: 0,
-
+      pname:[]
     };
   }
 async request_storage_runtime_permission() {
@@ -81,6 +82,7 @@ async request_storage_runtime_permission() {
         });
         console.log('userIdii', this.state.User.user_id);
         this.get_notification();
+        console.log('project id', this.state.data_project, '\n', 'purchase id', this.state.purchaseID, '\n', 'status', this.state.notifystat, '\n', this.state.stat)
       }
     } catch (error) {
       console.log('error getting data');
@@ -89,7 +91,7 @@ async request_storage_runtime_permission() {
   downloadImage = () => {
     console.log("dounloaded imade",this.state.imagePath)
     var date = new Date();
-    var image_URL ='http://efund.alliedco.pk/uploads/'+this.state.imagePath;
+    var image_URL =`${SERVER_URL}/uploads/`+this.state.imagePath;
     var ext = this.getExtention(image_URL);
     ext = "." + ext[0];
     const { config, fs } = RNFetchBlob;
@@ -117,8 +119,7 @@ async request_storage_runtime_permission() {
     var arr = [];
     var arry = [];
     fetch(
-      'http://efund.alliedco.pk/api/purchase/get-purchase/' +
-        this.state.purchaseID,
+      `${SERVER_URL}/api/purchase/get-purchase/` + this.state.purchaseID,
       {
         method: 'Get',
         headers: {
@@ -134,6 +135,7 @@ async request_storage_runtime_permission() {
           newDetail: json.purchase.details,
           imagePath: json.purchase.file,
           // stat: json.purchase.payment_status,
+          pname:json
         });
         console.log('Image Path', this.state.imagePath);
         console.log('Image Path ', json);
@@ -159,8 +161,9 @@ get_Total(){
   get_notification() {
     var arr = [];
     var arry = [];
+    console.log("fhfjtytk")
     fetch(
-      'http://efund.alliedco.pk/api/project/' + this.state.data_project,
+      `${SERVER_URL}/api/project/` + this.state.data_project,
       {
         method: 'Get',
         headers: {
@@ -177,8 +180,8 @@ get_Total(){
           specif: json.project,
           detailed: json.project.details,
         });
-        // console.log('ALL', this.state.all);
-        // console.log('Specific', this.state.specif);
+        console.log('ALL', this.state.all);
+        //console.log('Specific', this.state.specif);
         // console.log('Detailed', this.state.detailed);
         // console.log('AAAAA', this.state.data_);
         // console.log('Sdasdasd', this.txt(this.state.data_.message));
@@ -197,14 +200,14 @@ get_Total(){
         this.get_Detailed();
       })
       .catch(error => {
-        console.error(error);
-      });
+        console.log(error);
+      }, console.log("not"));
   }
 
   director_accept() {
     this.setState({visible: true});
     // console.log('dddd', item);
-    fetch('http://efund.alliedco.pk/api/purchase/director-accept', {
+    fetch(`${SERVER_URL}/api/purchase/director-accept`, {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -229,7 +232,7 @@ get_Total(){
       });
   }
   director_notification(id) {
-    fetch('http://efund.alliedco.pk/api/notification/' + id, {
+    fetch(`${SERVER_URL}/api/notification/` + id, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -247,7 +250,7 @@ get_Total(){
   }
   sup_accept() {
     this.setState({visible: true});
-    fetch('http://efund.alliedco.pk/api/purchase/accept-notification', {
+    fetch(`${SERVER_URL}/api/purchase/accept-notification`, {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -289,7 +292,7 @@ get_Total(){
   };
   reject_ok() {
     console.log(this.state.description)
-    fetch('http://efund.alliedco.pk/api/purchase/reject-notification', {
+    fetch(`${SERVER_URL}/api/purchase/reject-notification`, {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -462,7 +465,7 @@ hideLoader = () => { this.setState({ spinner:false }); };
               />
             </View>
           )}
-          {this.state.stat == 'Pending' && (
+          {this.state.stat == 0 && (
             <View>
               <View
                 style={{
@@ -628,7 +631,10 @@ hideLoader = () => { this.setState({ spinner:false }); };
                     </View> */}
                     <Image
                       source={{
-                      uri:'http://efund.alliedco.pk/uploads'+this.state.imagePath,
+                        
+                         uri:'http://efundapp.herokuapp.com/uploads/'+this.state.imagePath,
+                       
+                        // uri:'http://efund.alliedco.pk/uploads'+this.state.imagePath,
                       }}
                       style={{height: 450, width: 250,alignSelf:'center'}}
                     />
@@ -763,28 +769,7 @@ hideLoader = () => { this.setState({ spinner:false }); };
           )}
           
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          {this.state.stat == 'Pending' && (
+          {this.state.stat == 0 && (
             <View>
               <View
                 style={{

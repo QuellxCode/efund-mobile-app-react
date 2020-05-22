@@ -22,6 +22,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 const {width, height} = Dimensions.get('window');
 import CustomButton from '../../components/CustomButton';
+import { SERVER_URL } from '../../utils/config';
 var n = 1;
 export default class ClaimDropDown extends Component {
   constructor(props) {
@@ -60,7 +61,7 @@ export default class ClaimDropDown extends Component {
   }
   claim_handlePress = async () => {
     console.log('aRRAY', this.state.bills);
-    fetch('http://efund.alliedco.pk/api/purchase/claimpayment', {
+    fetch(`${SERVER_URL}/api/purchase/claimpayment`, {
       method: 'Post',
       headers: {
         Accept: 'application/json',
@@ -89,7 +90,7 @@ export default class ClaimDropDown extends Component {
   };
   claim_ctg() {
     var array = [];
-    fetch('http://efund.alliedco.pk/api/chart', {
+    fetch(`${SERVER_URL}/api/chart`, {
       method: 'Get',
       headers: {
         Accept: 'application/json',
@@ -133,7 +134,7 @@ export default class ClaimDropDown extends Component {
       console.log('error getting data');
     }
     var thisdata = [];
-    fetch('http://efund.alliedco.pk/api/project', {
+    fetch(`${SERVER_URL}/api/project`, {
       method: 'Get',
       headers: {
         Accept: 'application/json',

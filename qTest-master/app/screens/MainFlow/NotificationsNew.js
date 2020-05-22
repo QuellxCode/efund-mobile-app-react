@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, Dimensions, FlatList, AsyncStorage } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions, FlatList, AsyncStorage, Alert } from 'react-native';
 import Header from '../../components/Header';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { SERVER_URL } from '../../utils/config';
 const {width, height} = Dimensions.get('window');
 class NotificationsNewScreen extends Component {
     constructor(props) {
@@ -57,7 +58,7 @@ class NotificationsNewScreen extends Component {
         get_notification() {
             var arr = [];
             var arry = [];
-            fetch('http://efund.alliedco.pk/api/notification', {
+            fetch(`${SERVER_URL}/api/notification`, {
               method: 'Get',
               headers: {
                 Accept: 'application/json',
@@ -103,7 +104,7 @@ class NotificationsNewScreen extends Component {
 
           director_accept(item) {
             console.log('dddd', item);
-            fetch('http://efund.alliedco.pk/api/purchase/director-accept', {
+            fetch(`${SERVER_URL}/api/purchase/director-accept`, {
               method: 'Post',
               headers: {
                 Accept: 'application/json',
@@ -126,7 +127,7 @@ class NotificationsNewScreen extends Component {
               });
           }
           director_notification(id) {
-            fetch('http://efund.alliedco.pk/api/notification/' + id, {
+            fetch(`${SERVER_URL}/api/notification/` + id, {
               method: 'GET',
               headers: {
                 Accept: 'application/json',
@@ -143,7 +144,7 @@ class NotificationsNewScreen extends Component {
               });
           }
           sup_accept(item) {
-            fetch('http://efund.alliedco.pk/api/purchase/accept-notification', {
+            fetch(`${SERVER_URL}/api/purchase/accept-notification`, {
               method: 'Post',
               headers: {
                 Accept: 'application/json',
@@ -184,7 +185,7 @@ class NotificationsNewScreen extends Component {
             // console.log("item::::"+this.state.items)
             // console.log("itemssss::::"+this.state.project)
             // console.log("msg"+this.state.Msg)
-            fetch('http://efund.alliedco.pk/api/purchase/reject-notification', {
+            fetch(`${SERVER_URL}/api/purchase/reject-notification`, {
               method: 'Post',
               headers: {
                 Accept: 'application/json',
@@ -280,8 +281,7 @@ class NotificationsNewScreen extends Component {
                         data={this.state.selectedAll ? this.state.all : this.state.selectedApproved ? this.state.approved : this.state.rejected}
                         keyExtractor={(item, index) => index.toString()}
                         showsVerticalScrollIndicator={false}
-                        renderItem={({ item, index }) => {
-                            return (
+                        renderItem={({ item, index }) => item.type !== 'final' && 
                                 <TouchableOpacity onPress={() => this.props.navigation.navigate("NotificationDeta", {project:item.project, allData:item, purchase: item.request, stat: item.payment, notistat: item.notification_status})} >
                                 <View style={{ marginBottom: this.state.selectedAll ? (index === this.state.all.length - 1 ? 20 : 0) : (this.state.selectedApproved ? (index === this.state.approved.length - 1 ? 20 : 0) : (index === this.state.rejected.length - 1 ? 20 : 0)) }}>
                                     <View style={[MainFlowStyles.cardStyle, { marginBottom: 20, marginHorizontal: 5, marginTop: index === 0 ? 20 : 0, flex: 1, borderColor: item.payment == "Rejected" ? 'red' : item.payment == "Approved" ? 'green': 'grey', borderWidth:2 }]}>
@@ -312,7 +312,7 @@ class NotificationsNewScreen extends Component {
 
                                                 <View style={{ width: (width - 40) / 2, alignItems: 'flex-end', marginLeft:'10%' }}>
                                                     <Text style={{ fontSize: 14 }}>{item.notification_status}</Text>
-                                            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.message}</Text>
+                                            {/* <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.message}</Text> */}
 
                                                 </View>
                                             </View>
@@ -327,8 +327,7 @@ class NotificationsNewScreen extends Component {
                                     </View>
                                 </View>
                                 </TouchableOpacity>
-                            );
-                        }}
+                          }
                     />
                 </View>
             </View>
@@ -385,9 +384,8 @@ class NotificationsNewScreen extends Component {
                                         data={this.state.selectedAll ? this.state.all : this.state.selectedApproved ? this.state.approved : this.state.rejected}
                                         keyExtractor={(item, index) => index.toString()}
                                         showsVerticalScrollIndicator={false}
-                                        renderItem={({ item, index }) => {
-                                            return (
-                                                <TouchableOpacity onPress={() => this.props.navigation.navigate("EditRequestPaymentScreen", {project:item.project, allData:item, purchase: item.request, stat: item.payment})} >
+                                        renderItem={({ item, index }) => item.type !== 'final' && 
+                                                <TouchableOpacity onPress={() => item.message[0] === 'Your request has been accepted bySupervisor' ? Alert.alert('Your Request has been Accepted') : this.props.navigation.navigate("EditRequestPaymentScreen", {project:item.project, allData:item, purchase: item.request, stat: item.payment})} >
                                                 <View style={{ marginBottom: this.state.selectedAll ? (index === this.state.all.length - 1 ? 20 : 0) : (this.state.selectedApproved ? (index === this.state.approved.length - 1 ? 20 : 0) : (index === this.state.rejected.length - 1 ? 20 : 0)) }}>
                                                     <View style={[MainFlowStyles.cardStyle, { marginBottom: 20, marginHorizontal: 5, marginTop: index === 0 ? 20 : 0, flex: 1, borderColor: item.payment == "Rejected" ? 'red' : item.payment == "Approved" ? 'green': 'grey', borderWidth:2 }]}>
                                                         <View style={{ padding: 10 }}>
@@ -421,8 +419,7 @@ class NotificationsNewScreen extends Component {
                                                 </View>
                                       </TouchableOpacity>
                                                 // </TouchableOpacity>
-                                            );
-                                        }}
+                        }
                                     />
                                 </View>
                             </View>
@@ -482,7 +479,10 @@ class NotificationsNewScreen extends Component {
                                         showsVerticalScrollIndicator={false}
                                         renderItem={({ item, index }) => {
                                             return (
-                                                <TouchableOpacity onPress={() => this.props.navigation.navigate("NotificationDeta", {project:item.project, allData:item, purchase: item.request, stat: item.payment, notistat: item.notification_status})} >
+                                                
+                                                 <TouchableOpacity onPress={() => this.props.navigation.navigate( item.type === 'final' ? "DirectorNotification" : "NotificationDeta" , {project:item.project, allData:item, purchase: item.request, stat: item.payment, notistat: item.notification_status})} >
+                                               
+                                                {/* // <TouchableOpacity onPress={() => this.props.navigation.navigate("NotificationDeta", {project:item.project, allData:item, purchase: item.request, stat: item.payment, notistat: item.notification_status})} > */}
                                                 <View style={{ marginBottom: this.state.selectedAll ? (index === this.state.all.length - 1 ? 20 : 0) : (this.state.selectedApproved ? (index === this.state.approved.length - 1 ? 20 : 0) : (index === this.state.rejected.length - 1 ? 20 : 0)) }}>
                                                     <View style={[MainFlowStyles.cardStyle, { marginBottom: 20, marginHorizontal: 5, marginTop: index === 0 ? 20 : 0, flex: 1, borderColor: item.payment == "Rejected" ? 'red' : item.payment == "Approved" ? 'green': 'grey', borderWidth:2 }]}>
                                                         <View style={{ padding: 10 }}>

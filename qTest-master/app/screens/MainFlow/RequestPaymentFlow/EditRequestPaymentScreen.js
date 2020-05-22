@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, TouchableOpacity,Dimensions, StyleSheet, Button, Constants,Modal, FlatList, Text, TouchableO, TextInput, KeyboardAvoidingView, Picker, AsyncStorage , ScrollView, ToastAndroid, Alert} from 'react-native';
 import Header from '../../../components/Header';
 import MainFlowStyles from '../../../Styles/MainFlowStyles'
+import { SERVER_URL } from '../../../utils/config';
 var n = 0;
 var value = 0;
 const rs = 0;
@@ -78,7 +79,7 @@ class EditRequestPayment extends Component {
         var thisdata = []
         var arr = []
         
-        fetch('http://efund.alliedco.pk/api/project', {
+        fetch(`${SERVER_URL}/api/project`, {
             method: 'Get',
             headers: {
                 'Accept': 'application/json',
@@ -120,7 +121,8 @@ class EditRequestPayment extends Component {
     get_Detailed() {
         var arr = [];
         var arry = [];
-        fetch('http://efund.alliedco.pk/api/purchase/get-purchase/'+this.state.purchaseID, {
+       console.log('purchase id', this.state.purchaseID)
+        fetch(`${SERVER_URL}/api/purchase/get-purchase/`+this.state.purchaseID, {
           method: 'Get',
           headers: {
             Accept: 'application/json',
@@ -138,7 +140,7 @@ class EditRequestPayment extends Component {
             });
             this.get_notification();
              this.newObjInInitialArr();
-            console.log("Hello josn",json)
+            console.log("all josn",json)
             console.log("Hello detail",this.state.newDetail)
             console.log("stat", this.state.stat) 
             console.log("purchase id", this.state.data_project) 
@@ -157,7 +159,7 @@ class EditRequestPayment extends Component {
       get_notification() {
         var arr = [];
         var arry = [];
-        fetch('http://efund.alliedco.pk/api/project/'+this.state.data_project, {
+        fetch(`${SERVER_URL}/api/project/`+this.state.data_project, {
           method: 'Get',
           headers: {
             Accept: 'application/json',
@@ -210,7 +212,7 @@ class EditRequestPayment extends Component {
 
         }
         else {
-            fetch('http://efund.alliedco.pk/api/purchase/post', {
+            fetch(`${SERVER_URL}/api/purchase/post`, {
                 method: 'Post',
                 headers: {
                     Accept: 'application/json',
@@ -262,7 +264,7 @@ class EditRequestPayment extends Component {
         console.log('body', this.state.data_project);
         console.log('body', this.state.project_id);
         
-        fetch('http://efund.alliedco.pk/api/purchase/' + this.state.purchase_id, {
+        fetch(`${SERVER_URL}/api/purchase/` + this.state.purchase_id, {
             method: 'PATCH',
             headers: {
                 'Accept': 'application/json',

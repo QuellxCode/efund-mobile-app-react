@@ -22,6 +22,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Bill from '../../../components/Bill';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MainFlowStyles from '../../../Styles/MainFlowStyles';
+import { SERVER_URL } from '../../../utils/config';
 
 var n = 0;
 var value = 0;
@@ -75,7 +76,7 @@ class RequestPayment extends Component {
     }
     var thisdata = [];
     var arr = [];
-    fetch('http://efund.alliedco.pk/api/project', {
+    fetch(`${SERVER_URL}/api/project`, {
       method: 'Get',
       headers: {
         Accept: 'application/json',
@@ -140,7 +141,7 @@ class RequestPayment extends Component {
     if (data.details[0].item == '') {
       console.log('nt call a api');
     } else {
-      fetch('http://efund.alliedco.pk/api/purchase/post', {
+      fetch(`${SERVER_URL}/api/purchase/post`, {
         method: 'Post',
         headers: {
           Accept: 'application/json',

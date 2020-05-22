@@ -7,6 +7,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Input, Button } from 'react-native-elements';
+import { SERVER_URL } from '../../utils/config';
 
 class Settings extends Component {
     constructor(props) {
@@ -54,7 +55,7 @@ class Settings extends Component {
       };
       _getCash(){
         var New = this.state.User;
-        fetch("http://efund.alliedco.pk/api/user/profile",{
+        fetch(`${SERVER_URL}/api/user/profile`,{
       method:"PATCH",
         headers: {
           'Accept': 'application/json',

@@ -23,7 +23,7 @@ import EditableForm from "../screens/MainFlow/Editableform";
 import EditRequestPaymentScreen from '../screens/MainFlow/RequestPaymentFlow/EditRequestPaymentScreen';
 import EditPage from '../screens/MainFlow/RequestPaymentFlow/EditPage';
 import Clearpayorder from '../screens/MainFlow/Clearpayorder';
-
+import DirectorNotification from '../screens/MainFlow/DirectorNotification';
 const AppNavigator = createSwitchNavigator({
     loginFlow: createStackNavigator({
         Login: LoginScreen
@@ -60,9 +60,12 @@ const AppNavigator = createSwitchNavigator({
         notify: createStackNavigator({
             Notification: NotificationNew,
             NotificationDeta: NotificationDeta,
+            DirectorNotification: DirectorNotification,
             // EditableForm: EditableForm,
             EditRequestPaymentScreen:EditRequestPaymentScreen,
-            EditPage: EditPage
+            EditPage: EditPage,
+            
+            
         },
         {
             initialRouteName: 'Notification',
