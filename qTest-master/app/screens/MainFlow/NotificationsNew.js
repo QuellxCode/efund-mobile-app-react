@@ -91,10 +91,10 @@ class NotificationsNewScreen extends Component {
 
           dataCheck(){
             for(let i=0; i<this.state.all.length; i++){
-                if(this.state.all[i].payment == "Rejected"){
+                if(this.state.all[i].status == 2){
                     this.state.rejected.push(this.state.all[i])
                 }
-                else if(this.state.all[i].payment == "Approved"){
+                else if(this.state.all[i].status == 1 || this.state.all[i].status == 3 ){
                     this.state.approved.push(this.state.all[i])
                 }
             }
@@ -294,10 +294,7 @@ class NotificationsNewScreen extends Component {
                                                     <Text> {this.split(item.date)}</Text>
                                                 </View>
 
-                                                {/* <View style={{ width: (width - 50) / 3, alignItems: 'center' }}>
-                                                    <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Bill {item.bNumber}</Text>
-                                                </View> */}
-
+                                             
                                                 <View style={{ width: (width - 40) / 2, alignItems: 'flex-end', marginLeft:'10%' }}>
                                                     <Text style={{ fontSize: 16 }}>Refrence ID: {item.purchaserName}</Text>
                                                 </View>
@@ -312,19 +309,11 @@ class NotificationsNewScreen extends Component {
 
                                                 <View style={{ width: (width - 40) / 2, alignItems: 'flex-end', marginLeft:'10%' }}>
                                                     <Text style={{ fontSize: 14 }}>{item.notification_status}</Text>
-                                            {/* <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.message}</Text> */}
-
+                                         
                                                 </View>
                                             </View>
                                         </View>
-                                        {/* <View style={{ borderBottomColor: '#FF3301', borderBottomWidth: 1 }} />
-                                        <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center' }}>
-                                            <Text style={{ color: '#FF3301', fontWeight: 'bold', fontSize: 16, marginRight: 10 }}>Show Details</Text>
-                                            <View style={{ justifyContent: 'flex-end', marginBottom: 4 }}>
-                                                <FontAwesome name='chevron-down' size={12} color='#FF3301' />
-                                            </View>
-                                        </View> */}
-                                    </View>
+                                      </View>
                                 </View>
                                 </TouchableOpacity>
                           }
@@ -385,7 +374,7 @@ class NotificationsNewScreen extends Component {
                                         keyExtractor={(item, index) => index.toString()}
                                         showsVerticalScrollIndicator={false}
                                         renderItem={({ item, index }) => item.type !== 'final' && 
-                                                <TouchableOpacity onPress={() => item.message[0] === 'Your request has been accepted bySupervisor' ? Alert.alert('Your Request has been Accepted') : this.props.navigation.navigate("EditRequestPaymentScreen", {project:item.project, allData:item, purchase: item.request, stat: item.payment})} >
+                                            <TouchableOpacity onPress={() =>  this.props.navigation.navigate("EditRequestPaymentScreen", {project:item.project, allData:item, purchase: item.request, stat: item.payment})} >
                                                 <View style={{ marginBottom: this.state.selectedAll ? (index === this.state.all.length - 1 ? 20 : 0) : (this.state.selectedApproved ? (index === this.state.approved.length - 1 ? 20 : 0) : (index === this.state.rejected.length - 1 ? 20 : 0)) }}>
                                                     <View style={[MainFlowStyles.cardStyle, { marginBottom: 20, marginHorizontal: 5, marginTop: index === 0 ? 20 : 0, flex: 1, borderColor: item.payment == "Rejected" ? 'red' : item.payment == "Approved" ? 'green': 'grey', borderWidth:2 }]}>
                                                         <View style={{ padding: 10 }}>
@@ -397,28 +386,19 @@ class NotificationsNewScreen extends Component {
                                                                     <Text> {this.split(item.date)} </Text>
                                                                 </View>
                 
-                                                                {/* <View style={{ width: (width - 50) / 3, alignItems: 'center' }}>
-                                                                    <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Bill {item.bNumber}</Text>
-                                                                </View> */}
-                
+                                                               
                                                                 <View style={{ width: (width - 40) / 2, alignItems: 'flex-end', marginLeft:'10%' }}>
                                                                     <Text style={{ fontSize: 16 }}>Refrence ID: {item.purchaserName}</Text>
                                                                 </View>
                                                             </View>
                                                             <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Bill {index + 1}</Text>
-                                                            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.message}</Text>
+                                                            <Text style={{ fontWeight: 'bold', fontSize: 16 }}> {item.status == 0 ? "Request sent for approval. Please wait!": 
+                                                            item.status == 1 ? "Your request has accepted by Supervisor.": item.status == 2 ? item.message : item.status == 3 ? "Your request has accepted by Director." : '' }</Text>
+                                                           
                                                         </View>
-                                                        {/* <View style={{ borderBottomColor: '#FF3301', borderBottomWidth: 1 }} />
-                                                        <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center' }}>
-                                                            <Text style={{ color: '#FF3301', fontWeight: 'bold', fontSize: 16, marginRight: 10 }}>Show Details</Text>
-                                                            <View style={{ justifyContent: 'flex-end', marginBottom: 4 }}>
-                                                                <FontAwesome name='chevron-down' size={12} color='#FF3301' />
-                                                            </View>
-                                                        </View> */}
-                                                    </View>
+                                                                                                           </View>
                                                 </View>
                                       </TouchableOpacity>
-                                                // </TouchableOpacity>
                         }
                                     />
                                 </View>
@@ -482,7 +462,6 @@ class NotificationsNewScreen extends Component {
                                                 
                                                  <TouchableOpacity onPress={() => this.props.navigation.navigate( item.type === 'final' ? "DirectorNotification" : "NotificationDeta" , {project:item.project, allData:item, purchase: item.request, stat: item.payment, notistat: item.notification_status})} >
                                                
-                                                {/* // <TouchableOpacity onPress={() => this.props.navigation.navigate("NotificationDeta", {project:item.project, allData:item, purchase: item.request, stat: item.payment, notistat: item.notification_status})} > */}
                                                 <View style={{ marginBottom: this.state.selectedAll ? (index === this.state.all.length - 1 ? 20 : 0) : (this.state.selectedApproved ? (index === this.state.approved.length - 1 ? 20 : 0) : (index === this.state.rejected.length - 1 ? 20 : 0)) }}>
                                                     <View style={[MainFlowStyles.cardStyle, { marginBottom: 20, marginHorizontal: 5, marginTop: index === 0 ? 20 : 0, flex: 1, borderColor: item.payment == "Rejected" ? 'red' : item.payment == "Approved" ? 'green': 'grey', borderWidth:2 }]}>
                                                         <View style={{ padding: 10 }}>
@@ -494,10 +473,7 @@ class NotificationsNewScreen extends Component {
                                                                     <Text> {this.split(item.date)} </Text>
                                                                 </View>
                 
-                                                                {/* <View style={{ width: (width - 50) / 3, alignItems: 'center' }}>
-                                                                    <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Bill {item.bNumber}</Text>
-                                                                </View> */}
-                
+                                                               
                                                                 <View style={{ width: (width - 40) / 2, alignItems: 'flex-end', marginLeft:'10%' }}>
                                                                     <Text style={{ fontSize: 16 }}>Refrence ID: {item.purchaserName}</Text>
                                                                 </View>
@@ -514,13 +490,7 @@ class NotificationsNewScreen extends Component {
                                                 </View>
                                             </View>
                                                         </View>
-                                                        {/* <View style={{ borderBottomColor: '#FF3301', borderBottomWidth: 1 }} />
-                                                        <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center' }}>
-                                                            <Text style={{ color: '#FF3301', fontWeight: 'bold', fontSize: 16, marginRight: 10 }}>Show Details</Text>
-                                                            <View style={{ justifyContent: 'flex-end', marginBottom: 4 }}>
-                                                                <FontAwesome name='chevron-down' size={12} color='#FF3301' />
-                                                            </View>
-                                                        </View> */}
+                                                       
                                                     </View>
                                                 </View>
                                                 </TouchableOpacity>
