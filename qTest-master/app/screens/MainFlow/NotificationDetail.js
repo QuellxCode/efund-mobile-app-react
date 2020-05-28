@@ -12,7 +12,6 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 import Header from '../../components/Header';
-import RNFetchBlob from 'rn-fetch-blob';
 import {Button, Input} from 'react-native-elements';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
