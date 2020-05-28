@@ -28,6 +28,8 @@ import {
 } from 'react-native-responsive-dimensions';
 import {SERVER_URL} from '../../utils/config';
 // import RNPickerSelect from 'react-native-picker-select';
+// import Moment from 'react-moment';
+import Moment from 'moment';
 
 const {width, height} = Dimensions.get('window');
 
@@ -40,8 +42,18 @@ const DirectorNotification = props => {
    const [user, setUser] = useState('')
    const [message, setMessage] = useState('')
    const [allData, setAllDate] = useState(props.navigation.state.params.allData !== undefined ? props.navigation.state.params.allData : '' )
-  // console.log('alldata', allData)
+  const [date, setDate] = useState(allData.message[0].issue_date)
+   // console.log('alldata', allData)
   
+   useEffect(() =>{
+    if(date !== ''){
+      const newdate = Moment(date).format('DD-MM-YYYY')     
+      setDate(newdate)
+      console.log('date', date)
+       
+    }
+   },[])
+   
   const screenHeight = Math.round(Dimensions.get('window').height) / 2;
   // const value =  AsyncStorage.getItem('User');
   // const val = JSON.parse(value);
@@ -61,7 +73,8 @@ const getUser = async () =>{
 
 useEffect(()  =>   {
     getUser();
-},[]) 
+    console.log('date', date)
+}) 
 
 // for director accept notification
   const director_accept = () => {
@@ -393,10 +406,15 @@ useEffect(()  =>   {
                     }
                   
                     leftIconContainerStyle={{marginLeft: 0}}
-                    value={allData.message[0].issue_date}
+                   name="date"
+                    value={
+                      date   
+                                      }
+                    
+                    
                     disabled
                   />
-                  <View  style={styles.btn}>
+                   <View  style={styles.btn}>
                  
                   <Button
                     title="Approved"
