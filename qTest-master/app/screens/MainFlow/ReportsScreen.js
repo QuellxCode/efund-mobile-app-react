@@ -600,10 +600,10 @@ class ReportsScreen extends Component {
                             }}>
                             <Text style={{fontSize: 12}}>Purchaser</Text>
                             <Text style={{marginLeft: 7, fontSize: 12}}>
-                              Supervioser
+                              Supervisor
                             </Text>
                             <Text style={{marginLeft: 7, fontSize: 12}}>
-                              Manager
+                              Director
                             </Text>
                             <Text style={{marginLeft: 7, fontSize: 12}}>
                               Accountant
