@@ -374,7 +374,7 @@ class NotificationsNewScreen extends Component {
                                         keyExtractor={(item, index) => index.toString()}
                                         showsVerticalScrollIndicator={false}
                                         renderItem={({ item, index }) => item.type !== 'final' && 
-                                            <TouchableOpacity onPress={() =>  this.props.navigation.navigate("EditRequestPaymentScreen", {project:item.project, allData:item, purchase: item.request, stat: item.payment})} >
+                                            <TouchableOpacity onPress={() => item.status == 5 ? Alert.alert('Amount Add to Wallet'): this.props.navigation.navigate("EditRequestPaymentScreen", {project:item.project, allData:item, purchase: item.request, stat: item.payment})} >
                                                 <View style={{ marginBottom: this.state.selectedAll ? (index === this.state.all.length - 1 ? 20 : 0) : (this.state.selectedApproved ? (index === this.state.approved.length - 1 ? 20 : 0) : (index === this.state.rejected.length - 1 ? 20 : 0)) }}>
                                                     <View style={[MainFlowStyles.cardStyle, { marginBottom: 20, marginHorizontal: 5, marginTop: index === 0 ? 20 : 0, flex: 1, borderColor: item.payment == "Rejected" ? 'red' : item.payment == "Approved" ? 'green': 'grey', borderWidth:2 }]}>
                                                         <View style={{ padding: 10 }}>
@@ -393,7 +393,7 @@ class NotificationsNewScreen extends Component {
                                                             </View>
                                                             <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Bill {index + 1}</Text>
                                                             <Text style={{ fontWeight: 'bold', fontSize: 16 }}> {item.status == 0 ? "Request sent for approval. Please wait!": 
-                                                            item.status == 1 ? "Your request has accepted by Supervisor.": item.status == 2 ? item.message : item.status == 3 ? "Your request has accepted by Director." : '' }</Text>
+                                                            item.status == 1 ? "Your request has accepted by Supervisor.": item.status == 2 ? item.message : item.status == 3 ? "Your request has accepted by Director." : item.status == 5 ? item.message : '' }</Text>
                                                            
                                                         </View>
                                                                                                            </View>

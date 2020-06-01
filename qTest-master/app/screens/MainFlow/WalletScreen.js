@@ -25,6 +25,8 @@ class Wallet extends Component {
             state: false,
             refreshing: false,
             wallet: [],
+            newAmount: 0
+            
         };
     }
 
@@ -42,6 +44,22 @@ class Wallet extends Component {
 
     componentDidMount() {
       this._retrieveData();
+      // fetch(`${SERVER_URL}/api/wallet/`,{
+      //   method:"GET",
+      //     headers: {
+      //       'Accept': 'application/json',
+      //      'Content-Type': 'application/json',
+      //      'X-Auth-Token': this.state.User.token,
+      //    },
+      //   })
+      //   .then(response => response.json())
+      //   .then((responseJson)=> {
+      //     this.setState({
+      //       newAmount: responseJson.amount,
+      //      })
+      //      console.log('new amount is', responseJson)
+      //     })
+      //    .catch(error=>console.log(error))
     }
     _retrieveData = async () => {
       try {
@@ -109,7 +127,7 @@ method:"GET",
   this.setState({
     wallet: responseJson.transactions,
    })
-   console.log(this.state.wallet)
+   console.log('transactuo',this.state.wallet)
   })
  .catch(error=>console.log(error))
    }
@@ -130,7 +148,7 @@ method:"GET",
     refreshing: false,
     amount: 0
    })
-   console.log(this.state.showAmount)
+   console.log('amounttt',this.state.showAmount)
   })
  .catch(error=>console.log(error))
    }
