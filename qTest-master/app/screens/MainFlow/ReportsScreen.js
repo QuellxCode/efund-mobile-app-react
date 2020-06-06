@@ -508,7 +508,7 @@ class ReportsScreen extends Component {
                       ]}>
                       <View style={styles.currentStatusContainer}>
                         <Text style={styles.currentStatusTextStyle}>
-                          Current Status:{item.notify_status}
+                          Current Status: {item.notify_status}
                         </Text>
                       </View>
                       <View style={{padding: 10, alignItems: 'center'}}>
@@ -527,7 +527,7 @@ class ReportsScreen extends Component {
                                 borderRadius: 14 / 2,
                                 backgroundColor:
                                   // item.notify_status === '1'||item.notify_status === '2'||item.notify_status === '3'
-                                  item.notify_status > '0' ? '#FF3301' : 'gray',
+                                  item.notify_status >'0'|| item.notify_status=='0' ? '#FF3301' : 'gray',
                               }}
                             />
                             <View
