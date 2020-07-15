@@ -124,15 +124,14 @@ const Purchaser = props => {
                 <View style={{ marginHorizontal: 20 }}>
                     <Text style={styles.welcomeTextStyle}>Welcome!</Text>
                     {/* TIMELINE */}
-                    <View style={[MainFlowStyles.cardStyle, { paddingBottom: 10, marginBottom: 20 }]}>
+                    {/* <View style={[MainFlowStyles.cardStyle, { paddingBottom: 10, marginBottom: 20 }]}>
                         <View style={styles.currentStatusContainer}>
                             <Text style={styles.currentStatusTextStyle}>Current Status</Text>
                         </View>
                         <View style={{ padding: 10, alignItems: 'center' }}>
                             <Timeline data={data} />
                         </View>
-                    </View>
-
+                    </View> */}
                     {/* Cards */}
                     <TwoColumnCard />
                 </View>
