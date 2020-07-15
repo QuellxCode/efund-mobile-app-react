@@ -1,7 +1,24 @@
 import React, { Component } from 'react';
 import { View, Text, FlatList, StyleSheet ,Dimensions,TouchableOpacity} from 'react-native';
-const{width, height} = Dimensions.get('window');
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+  setJSExceptionHandler,
+  setNativeExceptionHandler,
+} from 'react-native-exception-handler';
+
+const handleError = (error, isFatal) => {
+  // fetch
+  console.log(error, isFatal);
+  // alert(error.name);
+  alert('Something went wrong!');
+};
+
+setJSExceptionHandler((error, isFatal) => {
+  console.log('caught global error');
+  handleError(error, isFatal);
+}, true);
+const{width, height} = Dimensions.get('window');
+
 // import { initnotify, getToken,notify } from 'expo-push-notification-helper';
 
 const data = [

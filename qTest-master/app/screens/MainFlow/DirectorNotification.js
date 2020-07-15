@@ -30,7 +30,22 @@ import {SERVER_URL} from '../../utils/config';
 // import RNPickerSelect from 'react-native-picker-select';
 // import Moment from 'react-moment';
 import Moment from 'moment';
+import {
+  setJSExceptionHandler,
+  setNativeExceptionHandler,
+} from 'react-native-exception-handler';
 
+const handleError = (error, isFatal) => {
+  // fetch
+  console.log(error, isFatal);
+  // alert(error.name);
+  alert('Something went wrong!');
+};
+
+setJSExceptionHandler((error, isFatal) => {
+  console.log('caught global error');
+  handleError(error, isFatal);
+}, true);
 const {width, height} = Dimensions.get('window');
 
 const DirectorNotification = props => {
@@ -52,6 +67,8 @@ const DirectorNotification = props => {
       console.log('date', date)
        
     }
+
+    get_notification_length();
    },[])
    
   const screenHeight = Math.round(Dimensions.get('window').height) / 2;
@@ -74,8 +91,9 @@ const getUser = async () =>{
 useEffect(()  =>   {
     getUser();
     console.log('date', date)
-    get_notification_length();
+    // get_notification_length();
 }) 
+
 
 // for director accept notification
   const director_accept = () => {
@@ -105,7 +123,7 @@ useEffect(()  =>   {
    
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
 
@@ -141,7 +159,7 @@ useEffect(()  =>   {
   
      })
      .catch(error => {
-       console.error(error);
+      handleError(error, false);
      });
  }
 
@@ -177,7 +195,7 @@ useEffect(()  =>   {
       
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
 
@@ -191,7 +209,8 @@ useEffect(()  =>   {
     } else {
       return (
         <View style={{flex: 1}}>
-          <Header  notificationLength={allNotification.length}/>
+          {/* <Header  /> */}
+          <Header  notificationLength={ allNotification.length > 0  ? allNotification.length : 0}/>
           <ScrollView>
           <Modal
                 animationType="fade"

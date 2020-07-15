@@ -11,7 +11,22 @@ import {
   } from 'react-native-responsive-dimensions';
 import { SERVER_URL } from '../../utils/config';
 import Moment from 'moment';
+import {
+  setJSExceptionHandler,
+  setNativeExceptionHandler,
+} from 'react-native-exception-handler';
 
+const handleError = (error, isFatal) => {
+  // fetch
+  console.log(error, isFatal);
+  // alert(error.name);
+  alert('Something went wrong!');
+};
+
+setJSExceptionHandler((error, isFatal) => {
+  console.log('caught global error');
+  handleError(error, isFatal);
+}, true);
 const {width, height} = Dimensions.get('window');
 console.disableYellowBox = true;
 
@@ -77,7 +92,7 @@ class Wallet extends Component {
       } catch (error) {
         console.log('error getting data')
       }
-      this.get_notification_length();
+      // this.get_notification_length();
     };
 
   _addCash(){
@@ -132,7 +147,7 @@ _getTransaction(){
    })
    console.log('transactuo',this.state.wallet[0].details)
   })
- .catch(error=>console.log(error))
+ .catch(error=>  handleError(error, false))
    }
 
 _getCash(){
@@ -153,7 +168,7 @@ method:"GET",
    })
    console.log('amounttt',this.state.showAmount)
   })
- .catch(error=>console.log(error))
+ .catch(error=>  handleError(error, false))
    }
 
    get_notification_length() {
@@ -189,6 +204,7 @@ method:"GET",
         }
       >
             <View style={{ flex: 1 }}>
+            {/* <Header /> */}
                 <Header notificationLength={this.state.allNotification.length} />
                 <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
                 <CustomModal isVisible={this.state.isVisible}>
@@ -292,7 +308,8 @@ method:"GET",
           }
         >
               <View style={{ flex: 1 }}>
-                  <Header notificationLength={this.state.allNotification.length} />
+              <Header notificationLength={this.state.allNotification.length > 0 ? this.state.allNotification.length : 0} />
+
                   <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
                   <CustomModal isVisible={this.state.isVisible}>
                   <View style={{ flex: 1 }}>

@@ -20,6 +20,22 @@ import {SERVER_URL} from '../../utils/config';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SliderBox } from "react-native-image-slider-box";
 import RNFetchBlob from 'rn-fetch-blob';
+import {
+  setJSExceptionHandler,
+  setNativeExceptionHandler,
+} from 'react-native-exception-handler';
+
+const handleError = (error, isFatal) => {
+  // fetch
+  console.log(error, isFatal);
+  // alert(error.name);
+  alert('Something went wrong!');
+};
+
+setJSExceptionHandler((error, isFatal) => {
+  console.log('caught global error');
+  handleError(error, isFatal);
+}, true);
 const {width, height} = Dimensions.get('window');
 class NotifierDetaler extends Component {
   constructor(props) {
@@ -81,6 +97,7 @@ class NotifierDetaler extends Component {
       }
     } catch (err) {
       console.warn(err);
+      handleError(err, false);
     }
   }
   async componentDidMount() {
@@ -110,9 +127,9 @@ class NotifierDetaler extends Component {
         );
       }
     } catch (error) {
-      console.log('error getting data');
+      handleError(error, false);
     }
-    this.get_notification_length();
+     this.get_notification_length();
   }
 
 
@@ -147,7 +164,7 @@ method:"GET",
    console.log("dsfaf",this.state.banks)
    this._getPayee();
   })
- .catch(error=>console.log(error))
+ .catch(error=>  handleError(error, false))
    }
 
 
@@ -170,7 +187,7 @@ method:"GET",
          console.log(this.state.cash)
          console.log(bankNo)
         })
-       .catch(error=>console.log(error))
+       .catch(error=>  handleError(error, false))
   }
 
 // ----------------------
@@ -242,7 +259,7 @@ method:"GET",
         this.get_Total();
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
 
@@ -302,7 +319,7 @@ method:"GET",
         this.get_Detailed();
       })
       .catch(error => {
-        console.log(error);
+        handleError(error, false);
       }, console.log('not'));
   }
 
@@ -332,7 +349,7 @@ method:"GET",
         this.setState({Isvisible: true});
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
   director_notification(id) {
@@ -349,7 +366,7 @@ method:"GET",
         this.setState({token: json.mobileToken});
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
   sup_accept() {
@@ -380,7 +397,7 @@ method:"GET",
         this.director_notification(this.state.notification_id);
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
   FlatListItemSeparator = () => {
@@ -418,7 +435,7 @@ method:"GET",
         this.onClickButtonB();
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
     this.setState({visible: false});
   }
@@ -495,7 +512,8 @@ method:"GET",
     if (this.state.User.roles == 'Supervisor') {
       return (
         <View style={{flex: 1}}>
-          <Header notificationLength={this.state.allNotification.length} />
+          {/* <Header /> */}
+          <Header notificationLength={this.state.allNotification.length > 0 ? this.state.allNotification.length : 0} />
           <View style={{flex: 1, marginHorizontal: 20, marginTop: 30}}>
             <View
               style={[
@@ -783,7 +801,7 @@ method:"GET",
                    <SliderBox
                       images={this.state.images}
                       sliderBoxHeight={300}
-                      parentWidth={352}
+                      parentWidth={325}
                       // sliderBoxWidth={100}
 
                       currentImageEmitter={index => this.setState({
@@ -834,7 +852,8 @@ method:"GET",
     } else {
       return (
         <View style={{flex: 1}}>
-          <Header  notificationLength={this.state.allNotification.length} />
+          {/* <Header  /> */}
+          <Header  notificationLength={this.state.allNotification.length > 0 ? this.state.allNotification.length : 0} />
           <View style={{flex: 1, marginHorizontal: 20, marginTop: 30}}>
             <View
               style={[
@@ -1158,7 +1177,7 @@ method:"GET",
                      <SliderBox
                       images={this.state.images}
                       sliderBoxHeight={300}
-                      parentWidth={352}
+                      parentWidth={325}
                       
                       currentImageEmitter={index => this.setState({
                         selectedImageIndex:index

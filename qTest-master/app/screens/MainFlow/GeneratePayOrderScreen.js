@@ -26,6 +26,22 @@ import {
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
 import {SERVER_URL} from '../../utils/config';
+import {
+  setJSExceptionHandler,
+  setNativeExceptionHandler,
+} from 'react-native-exception-handler';
+
+const handleError = (error, isFatal) => {
+  // fetch
+  console.log(error, isFatal);
+  // alert(error.name);
+  alert('Something went wrong!');
+};
+
+setJSExceptionHandler((error, isFatal) => {
+  console.log('caught global error');
+  handleError(error, isFatal);
+}, true);
 // import RNPickerSelect from 'react-native-picker-select';
 
 const {width, height} = Dimensions.get('window');
@@ -96,7 +112,7 @@ class GeneratePayOrderScreen extends Component {
     this._retrieveData();
     this._getPayee();
     this._getChartAccount();
-    this.get_notification_length()
+     this.get_notification_length()
     // this._getsubChartAccount();
   }
   // componentDidUpdate(prevProps, prevState) {
@@ -260,7 +276,7 @@ class GeneratePayOrderScreen extends Component {
         this._getPayee();
         this._getChartAccount();
       })
-      .catch(error => console.log(error));
+      .catch(error => handleError(error, false));
   }
 
   _getPayee() {
@@ -280,7 +296,7 @@ class GeneratePayOrderScreen extends Component {
         console.log(this.state.payee);
         this.set();
       })
-      .catch(error => console.log(error));
+      .catch(error => handleError(error, false));
   }
   _getChartAccount() {
     fetch(`${SERVER_URL}/api/chart/`, {
@@ -298,7 +314,7 @@ class GeneratePayOrderScreen extends Component {
         });
         this.set();
       })
-      .catch(error => console.log(error));
+      .catch(error => handleError(error, false));
   }
 
   getAmount(bankNo) {
@@ -320,7 +336,7 @@ class GeneratePayOrderScreen extends Component {
         console.log(this.state.cash);
         console.log(bankNo);
       })
-      .catch(error => console.log(error));
+      .catch(error =>handleError(error, false));
   }
 
   onValueChange(value) {
@@ -371,7 +387,7 @@ class GeneratePayOrderScreen extends Component {
           subChartAccount: responseJson.chart.items,
         });
       })
-      .catch(error => console.log(error));
+      .catch(error => handleError(error, false));
   }
 
   _getChartAccountName(id) {
@@ -394,7 +410,7 @@ class GeneratePayOrderScreen extends Component {
           subChartAccountName: responseJson.item_name
         });
       })
-      .catch(error => console.log(error));
+      .catch(error => handleError(error, false));
   }
 
   
@@ -431,7 +447,8 @@ class GeneratePayOrderScreen extends Component {
     } else {
       return (
         <View style={{flex: 1}}>
-          <Header notificationLength={this.state.allNotification.length} />
+          {/* <Header  /> */}
+          <Header notificationLength={this.state.allNotification.length > 0 ? this.state.allNotification.length :  0} />
           <ScrollView>
             {/* <CustomModal isVisible={this.state.isVisible}>
                 <View style={{ flex: 1 }}>

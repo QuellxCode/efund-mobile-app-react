@@ -12,6 +12,22 @@ import {Button, Input} from 'react-native-elements';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { SERVER_URL } from '../../utils/config';
+import {
+  setJSExceptionHandler,
+  setNativeExceptionHandler,
+} from 'react-native-exception-handler';
+
+const handleError = (error, isFatal) => {
+  // fetch
+  console.log(error, isFatal);
+  // alert(error.name);
+  alert('Something went wrong!');
+};
+
+setJSExceptionHandler((error, isFatal) => {
+  console.log('caught global error');
+  handleError(error, isFatal);
+}, true);
 const {width, height} = Dimensions.get('window');
 class NotifierDetal extends Component {
   constructor(props) {
@@ -59,7 +75,7 @@ class NotifierDetal extends Component {
     } catch (error) {
       console.log('error getting data');
     }
-  this.get_notification_length();
+   this.get_notification_length();
   }
 
   get_Detailed() {
@@ -89,7 +105,7 @@ class NotifierDetal extends Component {
         console.log('stat', this.state.stat);
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
 
@@ -134,7 +150,7 @@ class NotifierDetal extends Component {
         this.get_Detailed();
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
 
@@ -161,7 +177,7 @@ class NotifierDetal extends Component {
         this.setState({Isvisible: true});
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
   director_notification(id) {
@@ -178,7 +194,7 @@ class NotifierDetal extends Component {
         this.setState({token: json.mobileToken});
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
   sup_accept() {
@@ -208,7 +224,7 @@ class NotifierDetal extends Component {
         this.director_notification(this.state.notification_id);
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
   FlatListItemSeparator = () => {
@@ -245,7 +261,7 @@ class NotifierDetal extends Component {
         console.log('response:' + JSON.stringify(json));
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
     this.setState({visible: false});
   }
@@ -306,7 +322,8 @@ class NotifierDetal extends Component {
     if (this.state.User.roles == 'Supervisor') {
       return (
         <View style={{flex: 1}}>
-          <Header notificationLength={this.state.allNotification.length} />
+          {/* <Header /> */}
+          <Header notificationLength={this.state.allNotification.length > 0 ? this.state.allNotification.length : 0} />
           <View style={{flex: 1, marginHorizontal: 20, marginTop: 30}}>
             <View
               style={[
@@ -533,7 +550,7 @@ class NotifierDetal extends Component {
     } else {
       return (
         <View style={{flex: 1}}>
-          <Header notificationLength={this.state.allNotification.length}/>
+          <Header notificationLength={this.state.allNotification.length > 0 ? this.state.allNotification.length : 0}/>
           <View style={{flex: 1, marginHorizontal: 20, marginTop: 30}}>
             <View
               style={[

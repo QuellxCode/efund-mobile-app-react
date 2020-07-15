@@ -18,6 +18,22 @@ import PushNotification from 'react-native-push-notification';
 // import firebase from 'react-native-firebase';
 import {notificationManager} from '../../screens/MainFlow/RequestPaymentFlow/RemotePushController';
 import { SERVER_URL } from '../../utils/config';
+import {
+  setJSExceptionHandler,
+  setNativeExceptionHandler,
+} from 'react-native-exception-handler';
+
+const handleError = (error, isFatal) => {
+  // fetch
+  console.log(error, isFatal);
+  // alert(error.name);
+  alert('Something went wrong!');
+};
+
+setJSExceptionHandler((error, isFatal) => {
+  console.log('caught global error');
+  handleError(error, isFatal);
+}, true);
 const {width, height} = Dimensions.get('window');
 // const message = new firebase.messaging.RemoteMessage()
   // .setMessageId(
@@ -137,7 +153,7 @@ export default class Notification extends Component {
         this.setState({dada:arr})
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
   director_accept(item) {
@@ -161,7 +177,7 @@ export default class Notification extends Component {
         this.setState({Isvisible: true});
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
   director_notification(id) {
@@ -178,7 +194,7 @@ export default class Notification extends Component {
         this.setState({token: json.mobileToken});
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
   sup_accept(item) {
@@ -205,7 +221,7 @@ export default class Notification extends Component {
         this.director_notification(this.state.notification_id);
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
   FlatListItemSeparator = () => {
@@ -243,7 +259,7 @@ export default class Notification extends Component {
         console.log('response:' + JSON.stringify(json));
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
     this.setState({visible: false});
   }
@@ -259,7 +275,7 @@ return str
     if (this.state.User.roles == "Supervisor") {
       return (
         <View style={{ flex: 1 }}>
-          <Header notificationLength={this.state.data.length} />
+          <Header notificationLength={this.state.data.length > 0 ? this.state.data.length : 0} />
           <Text style={{ fontSize: 30, color: "red", alignSelf: "center" }}>
             Notifications
           </Text>

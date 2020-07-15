@@ -8,7 +8,22 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Input, Button } from 'react-native-elements';
 import { SERVER_URL } from '../../utils/config';
+import {
+  setJSExceptionHandler,
+  setNativeExceptionHandler,
+} from 'react-native-exception-handler';
 
+const handleError = (error, isFatal) => {
+  // fetch
+  console.log(error, isFatal);
+  // alert(error.name);
+  alert('Something went wrong!');
+};
+
+setJSExceptionHandler((error, isFatal) => {
+  console.log('caught global error');
+  handleError(error, isFatal);
+}, true);
 class Settings extends Component {
     constructor(props) {
         super(props);
@@ -82,7 +97,7 @@ class Settings extends Component {
           state: true
          })
         })
-       .catch(error=>console.log(error))
+       .catch(error=>  handleError(error, false))
          }
 
          get_notification_length() {
@@ -111,7 +126,8 @@ class Settings extends Component {
        // console.log(this.state);
         return (
             <View>
-                <Header notificationLength={this.state.allNotification.length} />
+                {/* <Header /> */}
+                <Header notificationLength={this.state.allNotification.length > 0 ? this.state.allNotification.length : 0} />
                 <ScrollView style={{ marginBottom: 40 }}>
                     <View style={{ margin: 20, marginTop: 1 }}>
                         <Text style={MainFlowStyles.headerTextStyle}>Settings</Text>

@@ -5,7 +5,23 @@ import MainFlowStyles from '../../Styles/MainFlowStyles';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { SERVER_URL } from '../../utils/config';
-import  moment  from 'moment'
+import  moment  from 'moment';
+import {
+    setJSExceptionHandler,
+    setNativeExceptionHandler,
+  } from 'react-native-exception-handler';
+  
+  const handleError = (error, isFatal) => {
+    // fetch
+    console.log(error, isFatal);
+    // alert(error.name);
+    alert('Something went wrong!');
+  };
+  
+  setJSExceptionHandler((error, isFatal) => {
+    console.log('caught global error');
+    handleError(error, isFatal);
+  }, true);
 const {width, height} = Dimensions.get('window');
 class NotificationsNewScreen extends Component {
     constructor(props) {
@@ -88,7 +104,7 @@ class NotificationsNewScreen extends Component {
                 this.dataCheck();
               })
               .catch(error => {
-                console.error(error);
+                handleError(error, false);
               });
           }
 
@@ -126,7 +142,7 @@ class NotificationsNewScreen extends Component {
                 this.setState({Isvisible: true});
               })
               .catch(error => {
-                console.error(error);
+                handleError(error, false);
               });
           }
           director_notification(id) {
@@ -143,7 +159,7 @@ class NotificationsNewScreen extends Component {
                 this.setState({token: json.mobileToken});
               })
               .catch(error => {
-                console.error(error);
+                handleError(error, false);
               });
           }
           sup_accept(item) {
@@ -170,7 +186,7 @@ class NotificationsNewScreen extends Component {
                 this.director_notification(this.state.notification_id);
               })
               .catch(error => {
-                console.error(error);
+                handleError(error, false);
               });
           }
           FlatListItemSeparator = () => {
@@ -208,7 +224,7 @@ class NotificationsNewScreen extends Component {
                 console.log('response:' + JSON.stringify(json));
               })
               .catch(error => {
-                console.error(error);
+                handleError(error, false);
               });
             this.setState({visible: false});
           }

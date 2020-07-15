@@ -42,6 +42,8 @@ target 'qTest' do
 
   pod 'rn-fetch-blob', :path => '../node_modules/rn-fetch-blob'
 
+  pod 'ReactNativeExceptionHandler', :path => '../node_modules/react-native-exception-handler'
+
   target 'qTestTests' do
     inherit! :search_paths
     # Pods for testing

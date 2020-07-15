@@ -7,7 +7,22 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { SERVER_URL } from '../../../utils/config';
 
 const { width, height } = Dimensions.get('window');
-
+import {
+    setJSExceptionHandler,
+    setNativeExceptionHandler,
+  } from 'react-native-exception-handler';
+  
+  const handleError = (error, isFatal) => {
+    // fetch
+    console.log(error, isFatal);
+    // alert(error.name);
+    alert('Something went wrong!');
+  };
+  
+  setJSExceptionHandler((error, isFatal) => {
+    console.log('caught global error');
+    handleError(error, isFatal);
+  }, true);
 class GenerateBillScreen extends Component {
     constructor(props) {
         super(props);
@@ -97,7 +112,7 @@ class GenerateBillScreen extends Component {
                     this.handlePress();
                 })
                 .catch(error => {
-                    console.error(error);
+                    handleError(error, false);
                 });
     }
 
@@ -119,7 +134,7 @@ class GenerateBillScreen extends Component {
                 // this.push_notification()
             })
             .catch(error => {
-                console.error(error);
+                handleError(error, false);
             });
     }
 
@@ -158,7 +173,7 @@ class GenerateBillScreen extends Component {
 
             })
             .catch(error => {
-                console.error(error);
+                handleError(error, false);
             });
     }
 
@@ -187,7 +202,8 @@ class GenerateBillScreen extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <Header notificationLength={this.state.allNotification.length} />
+                <Header notificationLength={this.state.allNotification.length > 0 ? this.state.allNotification.length : 0} />
+                {/* <Header  /> */}
                 <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
                     <View style={[MainFlowStyles.cardStyle, { paddingTop: 10, paddingBottom: 10, flex: 1 }]}>
                         <Text style={MainFlowStyles.headerTextStyle}>Billing</Text>

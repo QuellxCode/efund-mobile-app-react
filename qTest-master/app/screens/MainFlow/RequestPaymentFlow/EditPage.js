@@ -43,35 +43,35 @@ const EditPage = props => {
 
   useEffect(() =>{ 
   getUser();
-  // get_notification()
+  get_notification()
   }, [])
 
-//  const  get_notification =() => {
-//     var arr = [];
-//     var arry = [];
-//     fetch(`${SERVER_URL}/api/notification`, {
-//       method: 'Get',
-//       headers: {
-//         Accept: 'application/json',
-//         'Content-Type': 'application/json',
-//         'X-Auth-Token': user,
-//       },
-//     })
-//       .then(response => response.json())
-//       .then(json => {
-//         setAll(json.notification)
+ const  get_notification =() => {
+    var arr = [];
+    var arry = [];
+    fetch(`${SERVER_URL}/api/notification`, {
+      method: 'Get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token': user,
+      },
+    })
+      .then(response => response.json())
+      .then(json => {
+        setAll(json.notification)
       
-//       })
-//       .catch(error => {
-//         console.error(error);
-//       });
-//   }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
 
   return (
     <View style={{ flex: 1 }}>
-    <Header  />
+    {/* <Header  /> */}
    
-    {/* <Header notificationLength={all.length} /> */}
+    <Header notificationLength={ all.length > 0 ?  all.length : 0} />
     <Text style={{ fontWeight: 'bold', fontSize: 30, alignSelf: 'center', color: '#FF3301' }}>Edit Request</Text>
 
     <KeyboardAvoidingView behavior="padding" style={styles.container}>

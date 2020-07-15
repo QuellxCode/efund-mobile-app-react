@@ -17,6 +17,24 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import DocumentPicker from 'react-native-document-picker';
 import { SERVER_URL } from '../../utils/config';
 // import { ScrollView } from 'react-native-gesture-handler';
+
+import {
+  setJSExceptionHandler,
+  setNativeExceptionHandler,
+} from 'react-native-exception-handler';
+
+const handleError = (error, isFatal) => {
+  // fetch
+  console.log(error, isFatal);
+  // alert(error.name);
+  alert('Something went wrong!');
+};
+
+setJSExceptionHandler((error, isFatal) => {
+  console.log('caught global error');
+  handleError(error, isFatal);
+}, true);
+
 const {width, height} = Dimensions.get('window');
 const formdata = new FormData();
 class ClaimPaymentScreen extends Component {
@@ -125,7 +143,7 @@ class ClaimPaymentScreen extends Component {
         this.props.navigation.navigate('Home');
       })
       .catch(error => {
-        console.log(error);
+        handleError(error, false);
       });
   }
   submit() {
@@ -149,7 +167,7 @@ class ClaimPaymentScreen extends Component {
         this.setState({visible: true});
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
   async picker_1() {
@@ -224,7 +242,8 @@ class ClaimPaymentScreen extends Component {
     
     return (
       <View style={{flex:1}}>
-        <Header notificationLength={this.state.allNotification.length} />
+        <Header notificationLength={this.state.allNotification.length > 0 ? this.state.allNotification.length : 0} />
+        {/* <Header  /> */}
         <View>
           <View
             style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>

@@ -26,6 +26,23 @@ var value = 0;
 const rs = 0;
 const result = 0;
 const {width, height} = Dimensions.get('window');
+import {
+  setJSExceptionHandler,
+  setNativeExceptionHandler,
+} from 'react-native-exception-handler';
+
+const handleError = (error, isFatal) => {
+  // fetch
+  console.log(error, isFatal);
+  // alert(error.name);
+  alert('Something went wrong!');
+};
+
+setJSExceptionHandler((error, isFatal) => {
+  console.log('caught global error');
+  handleError(error, isFatal);
+}, true);
+
 class EditRequestPayment extends Component {
   constructor(props) {
     super(props);
@@ -127,7 +144,7 @@ class EditRequestPayment extends Component {
       })
 
       .catch(error => {
-        console.log(error);
+        handleError(error, false);
       });
 
       this.get_notification_length();
@@ -166,7 +183,7 @@ class EditRequestPayment extends Component {
         }
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
 
@@ -213,7 +230,7 @@ class EditRequestPayment extends Component {
         this.get_Detailed();
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
 
@@ -264,7 +281,7 @@ class EditRequestPayment extends Component {
           console.log('adasda', this.state.purchaseID);
         })
         .catch(error => {
-          console.error(error);
+          handleError(error, false);
         });
     }
   };
@@ -314,7 +331,7 @@ class EditRequestPayment extends Component {
         console.log(json);
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
     console.log('btn click');
     Alert.alert('Your request is updated Successfully!');
@@ -341,7 +358,8 @@ class EditRequestPayment extends Component {
     } else {
       return (
         <View style={{flex: 1}}>
-          <Header notificationLength={this.state.allNotification.length} />
+          <Header notificationLength={ this.state.allNotification.length > 0 ? this.state.allNotification.length : 0} />
+          {/* <Header  /> */}
           <Text
             style={{
               fontWeight: 'bold',

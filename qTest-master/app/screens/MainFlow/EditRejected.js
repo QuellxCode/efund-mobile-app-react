@@ -21,6 +21,22 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Bill from '../../components/Bill';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
+import {
+  setJSExceptionHandler,
+  setNativeExceptionHandler,
+} from 'react-native-exception-handler';
+
+const handleError = (error, isFatal) => {
+  // fetch
+  console.log(error, isFatal);
+  // alert(error.name);
+  alert('Something went wrong!');
+};
+
+setJSExceptionHandler((error, isFatal) => {
+  console.log('caught global error');
+  handleError(error, isFatal);
+}, true);
 class EditRejected extends Component {
   constructor(props) {
     super(props);
@@ -68,7 +84,7 @@ class EditRejected extends Component {
         this.setState({requetData: json.purchase.details});
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
 
       this.get_notification_length();
@@ -110,7 +126,8 @@ class EditRejected extends Component {
   render() {
     return (
       <View style={{flex: 1}}>
-        <Header notificationLength={this.state.allNotification.length} />
+        {/* <Header  /> */}
+        <Header notificationLength={this.state.allNotification.length > 0  ? this.state.allNotification.length : 0} />
         <View style={{flex: 1, marginHorizontal: 20, marginTop: 30}}>
           <View
             style={[

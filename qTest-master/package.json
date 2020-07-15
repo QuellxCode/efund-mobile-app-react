@@ -19,6 +19,7 @@
     "react-native-datepicker": "^1.7.2",
     "react-native-document-picker": "^3.3.3",
     "react-native-elements": "^1.2.7",
+    "react-native-exception-handler": "^2.10.8",
     "react-native-expandable-section-flatlist": "^1.2.2",
     "react-native-gesture-handler": "^1.5.6",
     "react-native-image-slider-box": "^1.0.12",

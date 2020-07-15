@@ -21,6 +21,22 @@ import DatePicker from 'react-native-datepicker';
 import moment from 'react-moment';
 import ExpanableList from 'react-native-expandable-section-flatlist';
 import { SERVER_URL } from '../../utils/config';
+import {
+  setJSExceptionHandler,
+  setNativeExceptionHandler,
+} from 'react-native-exception-handler';
+
+const handleError = (error, isFatal) => {
+  // fetch
+  console.log(error, isFatal);
+  // alert(error.name);
+  alert('Something went wrong!');
+};
+
+setJSExceptionHandler((error, isFatal) => {
+  console.log('caught global error');
+  handleError(error, isFatal);
+}, true);
 const {width, height} = Dimensions.get('window');
 
 class ReportsScreen extends Component {
@@ -117,7 +133,7 @@ class ReportsScreen extends Component {
     //console.log('dates', this.state.today);
     this.daily();
     this.weekly();
-    this.get_notification_length();
+     this.get_notification_length();
     // this.monthly();
   }
   daily() {
@@ -150,7 +166,7 @@ class ReportsScreen extends Component {
         // console.log('details', this.state.details.length);
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
   weekly(date1) {
@@ -175,7 +191,7 @@ class ReportsScreen extends Component {
         console.log('weeksss', this.state.weekly);
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
   monthly() {
@@ -193,7 +209,7 @@ class ReportsScreen extends Component {
         console.log('monthly', this.state.monthly);
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
   addDays(date) {
@@ -240,7 +256,8 @@ class ReportsScreen extends Component {
   render() {
     return (
       <View>
-        <Header notificationLength={this.state.allNotification.length}/>
+        {/* <Header/> */}
+        <Header notificationLength={this.state.allNotification.length > 0 ? this.state.allNotification.length : 0 }/>
         <View style={{margin: 10}}>
           <Text style={MainFlowStyles.headerTextStyle}>Reports</Text>
           <TouchableOpacity style={{flexDirection: 'row', marginBottom: 10, marginHorizontal:'20%'}}>

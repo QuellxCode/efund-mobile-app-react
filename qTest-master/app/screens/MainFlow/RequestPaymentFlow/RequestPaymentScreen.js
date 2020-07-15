@@ -25,7 +25,22 @@ import Bill from '../../../components/Bill';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MainFlowStyles from '../../../Styles/MainFlowStyles';
 import { SERVER_URL } from '../../../utils/config';
+import {
+  setJSExceptionHandler,
+  setNativeExceptionHandler,
+} from 'react-native-exception-handler';
 
+const handleError = (error, isFatal) => {
+  // fetch
+  console.log(error, isFatal);
+  // alert(error.name);
+  alert('Something went wrong!');
+};
+
+setJSExceptionHandler((error, isFatal) => {
+  console.log('caught global error');
+  handleError(error, isFatal);
+}, true);
 var n = 0;
 var value = 0;
 const rs = 0;
@@ -108,10 +123,10 @@ class RequestPayment extends Component {
       })
 
       .catch(error => {
-        console.log(error);
+        handleError(error, false);
       });
-
       this.get_notification_length();
+     
   }
   showLoader = () => {
     this.setState({spinner: true});
@@ -166,7 +181,7 @@ class RequestPayment extends Component {
           console.log('adasda', this.state.purchaseID);
         })
         .catch(error => {
-          console.error(error);
+          handleError(error, false);
         });
     }
   };
@@ -220,7 +235,8 @@ class RequestPayment extends Component {
     } else {
       return (
         <View style={{flex: 1}}>
-          <Header notificationLength={this.state.allNotification.length}/>
+          <Header notificationLength={this.state.allNotification.length > 0 ? this.state.allNotification.length : 0}/>
+          {/* <Header /> */}
           <Text
             style={{
               fontWeight: 'bold',

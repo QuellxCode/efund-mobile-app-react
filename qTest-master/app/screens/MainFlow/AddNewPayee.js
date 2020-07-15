@@ -18,7 +18,22 @@ import {
 import Header from '../../components/Header';
 import {SERVER_URL} from '../../utils/config';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {
+  setJSExceptionHandler,
+  setNativeExceptionHandler,
+} from 'react-native-exception-handler';
 
+const handleError = (error, isFatal) => {
+  // fetch
+  console.log(error, isFatal);
+  // alert(error.name);
+  alert('Something went wrong!');
+};
+
+setJSExceptionHandler((error, isFatal) => {
+  console.log('caught global error');
+  handleError(error, isFatal);
+}, true);
 const {width, height} = Dimensions.get('window');
 
 const AddNewPayee = props => {
@@ -60,7 +75,7 @@ const getUser = async () =>{
   
   useEffect(()  =>   {
       getUser();
-      get_notification_length();
+       get_notification_length();
     
   }) 
   
@@ -98,7 +113,7 @@ const getUser = async () =>{
             // props.navigation.navigate('GeneratePayOrder')
             setVisible(true)
              })
-         .catch(error=>console.log(error))
+         .catch(error=>handleError(error, false))
        
          
 
@@ -134,7 +149,8 @@ const getUser = async () =>{
    
   return (
     <View style={{ flex: 1 }}>
-    <Header notificationLength={allNotification.length} />
+    {/* <Header  /> */}
+    <Header notificationLength={ allNotification.length > 0 ? allNotification.length : 0}  />
     <Text style={{ fontWeight: 'bold', fontSize: 30, alignSelf: 'center', color: '#FF3301' }}>Add Payee</Text>
 
     <KeyboardAvoidingView behavior="padding" style={styles.container}>

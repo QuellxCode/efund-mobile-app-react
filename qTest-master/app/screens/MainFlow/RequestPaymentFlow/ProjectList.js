@@ -9,7 +9,22 @@ import { Input, Button } from 'react-native-elements';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Projects from '../../../components/Projects';
 import { SERVER_URL } from '../../../utils/config';
+import {
+  setJSExceptionHandler,
+  setNativeExceptionHandler,
+} from 'react-native-exception-handler';
 
+const handleError = (error, isFatal) => {
+  // fetch
+  console.log(error, isFatal);
+  // alert(error.name);
+  alert('Something went wrong!');
+};
+
+setJSExceptionHandler((error, isFatal) => {
+  console.log('caught global error');
+  handleError(error, isFatal);
+}, true);
 class ProjectList extends Component{
     constructor(){
         super();
@@ -59,7 +74,9 @@ class ProjectList extends Component{
     console.log(this.state.projects[0].project[0])
     this._setBeta()
    })
-  .catch(error=>console.log(error))
+  .catch(error=>
+    handleError(error, false)
+    )
     }
 
     _setBeta(){
@@ -94,7 +111,8 @@ class ProjectList extends Component{
          
          return(
             <View style={{ flex: 1 }}>
-            <Header notificationLength={this.state.allNotification.notificationLength} />
+            <Header notificationLength={this.state.allNotification.length > 0 ? this.state.allNotification.length : 0} />
+            {/* <Header notificationLength={this.state.allNotification.notificationLength} /> */}
                 <View style={MainFlowStyles.containerStyle}>
                     <Text style={MainFlowStyles.headerTextStyle}>Project List</Text>
                     <FlatList

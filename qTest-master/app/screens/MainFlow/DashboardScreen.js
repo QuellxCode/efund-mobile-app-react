@@ -10,6 +10,23 @@ import { notificationManager } from '../../NotificationManager';
 import Notification from "../../screens/MainFlow/Notification"
 import { withNavigation } from 'react-navigation';
 import { SERVER_URL } from '../../utils/config';
+import {
+    setJSExceptionHandler,
+    setNativeExceptionHandler,
+  } from 'react-native-exception-handler';
+  
+  const handleError = (error, isFatal) => {
+    // fetch
+    console.log(error, isFatal);
+    // alert(error.name);
+    alert('Something went wrong!');
+  };
+  
+  setJSExceptionHandler((error, isFatal) => {
+    console.log('caught global error');
+    handleError(error, isFatal);
+  }, true);
+
 const Purchaser = props => {
     const data = [
         { id: 1, name: 'Purchaser', select: true },
@@ -56,7 +73,7 @@ const Purchaser = props => {
                 setUser(val)
             }
         } catch (error) {
-            console.log('error getting data')
+            handleError(error, false);
         }
     };
 
@@ -82,7 +99,7 @@ const Purchaser = props => {
                 )
 
                 .catch(error => {
-                    console.error(error);
+                    handleError(error, false);
                 });
 
             
@@ -116,7 +133,7 @@ const Purchaser = props => {
 
     return (
         <View>
-            <Header />
+            <Header notificationLength={notification.length > 0 ? notification.length : 0} />
             <ScrollView
                 style={{ paddingBottom: 30, marginBottom: 40 }}
                 showsVerticalScrollIndicator={false}
@@ -188,7 +205,7 @@ const Supervisor = props => {
                 setUser(val)
             }
         } catch (error) {
-            console.log('error getting data')
+            handleError(error, false);
         }
     };
 
@@ -214,7 +231,7 @@ const Supervisor = props => {
                  )
  
                  .catch(error => {
-                     console.error(error);
+                    handleError(error, false);
                  });
  
          }  
@@ -292,7 +309,7 @@ const Supervisor = props => {
    
     return (
         <View>
-            <Header />
+            <Header notificationLength={length} />
             
             <ScrollView
                 style={{ paddingBottom: 30, marginBottom: 40 }}
@@ -368,7 +385,7 @@ const Director = props => {
                 setUser(val)
             }
         } catch (error) {
-            console.log('error getting data')
+            handleError(error, false);
         }
     };
 
@@ -394,7 +411,7 @@ const Director = props => {
                  )
  
                  .catch(error => {
-                     console.error(error);
+                    handleError(error, false);
                  });
  
          }  
@@ -422,7 +439,7 @@ const Director = props => {
     return (
 
         <View>
-            <Header />
+            <Header notificationLength={notification.length > 0 ? notification.length : 0} />
             <ScrollView
                 style={{ paddingBottom: 30, marginBottom: 40 }}
                 showsVerticalScrollIndicator={false}
@@ -453,7 +470,9 @@ const DashboardScreen = ({navigation}) => {
                 setUser(val)
             }
         } catch (error) {
-            console.log('error getting data')
+            // handleError(error, false);
+            console.log('error', error)
+
         }
     };
 
@@ -480,7 +499,7 @@ const DashboardScreen = ({navigation}) => {
           
           })
           .catch(error => {
-            console.error(error);
+            handleError(error, false);
           });
       }
     if (user != undefined && user != null) {
@@ -496,7 +515,7 @@ const DashboardScreen = ({navigation}) => {
     }
     return (
         <View>
-            <Header notificationLength={allNotification.length} />
+            <Header notificationLength={allNotification.length > 0 ? allNotification.length : 0} />
         </View>
     )
 

@@ -23,6 +23,22 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 const {width, height} = Dimensions.get('window');
 import CustomButton from '../../components/CustomButton';
 import { SERVER_URL } from '../../utils/config';
+import {
+  setJSExceptionHandler,
+  setNativeExceptionHandler,
+} from 'react-native-exception-handler';
+
+const handleError = (error, isFatal) => {
+  // fetch
+  console.log(error, isFatal);
+  // alert(error.name);
+  alert('Something went wrong!');
+};
+
+setJSExceptionHandler((error, isFatal) => {
+  console.log('caught global error');
+  handleError(error, isFatal);
+}, true);
 var n = 1;
 export default class ClaimDropDown extends Component {
   constructor(props) {
@@ -93,7 +109,7 @@ export default class ClaimDropDown extends Component {
         });
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   };
   claim_ctg() {
@@ -125,7 +141,7 @@ export default class ClaimDropDown extends Component {
         //console.log('<aRa>', JSON.stringify(this.state.CategoryCtg));
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
   async componentDidMount() {
@@ -139,7 +155,7 @@ export default class ClaimDropDown extends Component {
         console.log(this.state.User);
       }
     } catch (error) {
-      console.log('error getting data');
+      handleError(error, false);
     }
     var thisdata = [];
     fetch(`${SERVER_URL}/api/project`, {
@@ -166,7 +182,7 @@ export default class ClaimDropDown extends Component {
       })
 
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
     this.claim_ctg();
     this._getChartAccount()
@@ -190,7 +206,7 @@ export default class ClaimDropDown extends Component {
         });
         // this.set();
       })
-      .catch(error => console.log(error));
+      .catch(error => handleError(error, false));
   }
 
   _getsubChartAccount(id) {
@@ -210,7 +226,7 @@ export default class ClaimDropDown extends Component {
           subChartAccount: responseJson.chart.items,
         });
       })
-      .catch(error => console.log(error));
+      .catch(error =>handleError(error, false));
   }
 
   _getChartAccountName(id) {
@@ -235,7 +251,7 @@ export default class ClaimDropDown extends Component {
         console.log('chart account name', responseJson.chart.name)
         console.log('sub chart account name', responseJson.item_name)
       })
-      .catch(error => console.log(error));
+      .catch(error => handleError(error, false));
   }
 
 
@@ -433,7 +449,8 @@ export default class ClaimDropDown extends Component {
     
     return (
       <View style={{flex: 1}}>
-        <Header notificationLength={this.state.allNotification.length} />
+        <Header notificationLength={this.state.allNotification.length > 0 ? this.state.allNotification.length : 0} />
+        {/* <Header  /> */}
         <Text
           style={{
             fontWeight: 'bold',
