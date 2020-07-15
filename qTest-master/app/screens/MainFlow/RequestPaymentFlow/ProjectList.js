@@ -16,11 +16,13 @@ class ProjectList extends Component{
         this.state={
             User: [],
             projects: [],
-            data:[]
+            data:[],
+            allNotification:[]
         }
     }
     componentDidMount() {
         this._retrieveData();
+        this.get_notification_length()
       }
       _retrieveData = async () => {
         try {
@@ -66,12 +68,33 @@ class ProjectList extends Component{
       this.setState({ data: b });
       console.log(this.state.data)
     }
+    get_notification_length ()  {
+      var arr = [];
+      var arry = [];
+      fetch(`${SERVER_URL}/api/notification`, {
+        method: 'Get',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'X-Auth-Token':this.state.User.token,
+        },
+      })
+        .then(response => response.json())
+        .then(json => {
+          this.setState({allNotification:json.notification})
+        
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
 
+    
      render(){
          
          return(
             <View style={{ flex: 1 }}>
-            <Header />
+            <Header notificationLength={this.state.allNotification.notificationLength} />
                 <View style={MainFlowStyles.containerStyle}>
                     <Text style={MainFlowStyles.headerTextStyle}>Project List</Text>
                     <FlatList

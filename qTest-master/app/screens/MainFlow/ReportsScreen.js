@@ -37,7 +37,7 @@ class ReportsScreen extends Component {
       selectedWeekly: false,
       selectedMonthly: false,
       date: '',
-      today: '',
+      today: new Date(),
       next: '',
       nextdate: '',
       details: '',
@@ -46,6 +46,7 @@ class ReportsScreen extends Component {
       daily: [],
       weekly: [],
       monthly: [],
+      allNotification:[],
       weeklyBills: [
         {date: 'Jan 01, 2020', bNumber: '01', status: 'Pending'},
         {date: 'Jan 01, 2020', bNumber: '02', status: 'Rejected'},
@@ -97,10 +98,11 @@ class ReportsScreen extends Component {
     var date = new Date().getDate(); //Current Date
     var month = new Date().getMonth() + 1; //Current Month
     var year = new Date().getFullYear(); //Current Year
-    that.setState({
-       today: year + '-' + 0 + month + '-' + date,
-      // today: new Date()
-    });
+    // that.setState({
+    //   //  today: year + '-' + 0 + month + '-' + date,
+    //    today: new Date()
+    // });
+    console.log('date', this.state.today)
     try {
       const value = await AsyncStorage.getItem('User');
       const val = JSON.parse(value);
@@ -115,6 +117,7 @@ class ReportsScreen extends Component {
     //console.log('dates', this.state.today);
     this.daily();
     this.weekly();
+    this.get_notification_length();
     // this.monthly();
   }
   daily() {
@@ -211,10 +214,33 @@ class ReportsScreen extends Component {
   details(item) {
     console.log('fuc', JSON.parse(item));
   }
+
+
+  get_notification_length() {
+    var arr = [];
+    var arry = [];
+    fetch(`${SERVER_URL}/api/notification`, {
+      method: 'Get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token':this.state.User.token,
+      },
+    })
+      .then(response => response.json())
+      .then(json => {
+        this.setState({allNotification: json.notification})
+      
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
   render() {
     return (
       <View>
-        <Header />
+        <Header notificationLength={this.state.allNotification.length}/>
         <View style={{margin: 10}}>
           <Text style={MainFlowStyles.headerTextStyle}>Reports</Text>
           <TouchableOpacity style={{flexDirection: 'row', marginBottom: 10, marginHorizontal:'20%'}}>
@@ -477,7 +503,7 @@ class ReportsScreen extends Component {
                             width: (width - 50) / 3,
                             alignItems: 'flex-end',
                           }}>
-                          <Text
+                          {/* <Text
                             style={{
                               color:
                                 item.payment_status === 'Approved'
@@ -488,7 +514,7 @@ class ReportsScreen extends Component {
                               fontSize: 14,
                             }}>
                             {item.payment_status}
-                          </Text>
+                          </Text> */}
                         </View>
                       </View>
                     </View>
@@ -506,11 +532,11 @@ class ReportsScreen extends Component {
                         MainFlowStyles.cardStyle,
                         {paddingBottom: 10, marginBottom: 20},
                       ]}>
-                      <View style={styles.currentStatusContainer}>
+                      {/* <View style={styles.currentStatusContainer}>
                         <Text style={styles.currentStatusTextStyle}>
                           Current Status:{item.notify_status}
                         </Text>
-                      </View>
+                      </View> */}
                       <View style={{padding: 10, alignItems: 'center'}}>
                         <View style={{width: 70}}>
                           <View
@@ -525,9 +551,10 @@ class ReportsScreen extends Component {
                                 width: 14,
                                 height: 14,
                                 borderRadius: 14 / 2,
-                                backgroundColor:
-                                  // item.notify_status === '1'||item.notify_status === '2'||item.notify_status === '3'
-                                  item.notify_status > '0' ? '#FF3301' : 'gray',
+                                backgroundColor:item.notify_status > 0 || item.notify_status == 0  ? '#FF3301' : 'gray',
+                                // backgroundColor:
+                                //   // item.notify_status === '1'||item.notify_status === '2'||item.notify_status === '3'
+                                //   item.notify_status > '0' ? '#FF3301' : 'gray',
                               }}
                             />
                             <View
@@ -542,11 +569,10 @@ class ReportsScreen extends Component {
                                 width: 14,
                                 height: 14,
                                 borderRadius: 14 / 2,
-                                backgroundColor:
-                                  item.notify_status > '1'
-                                    ? //  item.notify_status === '0'||item.notify_status === '3'||item.notify_status === '2'
-                                      '#FF3301'
-                                    : 'gray',
+                                backgroundColor:item.notify_status > 1 || item.notify_status == 1  ? '#FF3301' : 'gray',
+                               //  item.notify_status === '0'||item.notify_status === '3'||item.notify_status === '2'
+                                      
+                                    
                                 // : item.notify_status === '1'
                                 // ? '#FF3301'
                                 // : item.notify_status === '2'
@@ -566,10 +592,11 @@ class ReportsScreen extends Component {
                                 width: 14,
                                 height: 14,
                                 borderRadius: 14 / 2,
-                                backgroundColor:
-                                  // item.notify_status === '3'||item.notify_status === '1'||item.notify_status === '0'
-                                  // item.notify_status > '0'&&  item.notify_status > '1'&&  item.notify_status > '2'
-                                  item.notify_status > '2' ? '#FF3301' : 'gray',
+                                backgroundColor:item.notify_status > 2 || item.notify_status == 2  ? '#FF3301' : 'gray',
+                                // backgroundColor:
+                                //   // item.notify_status === '3'||item.notify_status === '1'||item.notify_status === '0'
+                                //   // item.notify_status > '0'&&  item.notify_status > '1'&&  item.notify_status > '2'
+                                //   item.notify_status > '2' ? '#FF3301' : 'gray',
                               }}
                             />
                             <View
@@ -584,10 +611,11 @@ class ReportsScreen extends Component {
                                 width: 14,
                                 height: 14,
                                 borderRadius: 14 / 2,
-                                backgroundColor:
-                                  // item.notify_status === '2'||item.notify_status === '1'||item.notify_status === '0'
-                                  //item.notify_status > '0'&&  item.notify_status > '1'&&  item.notify_status > '2'&&  item.notify_status > '3'
-                                  item.notify_status > '3' ? '#FF3301' : 'gray',
+                                backgroundColor:item.notify_status > 3 || item.notify_status == 3  ? '#FF3301' : 'gray',
+                                // backgroundColor:
+                                //   // item.notify_status === '2'||item.notify_status === '1'||item.notify_status === '0'
+                                //   //item.notify_status > '0'&&  item.notify_status > '1'&&  item.notify_status > '2'&&  item.notify_status > '3'
+                                //   item.notify_status > '3' ? '#FF3301' : 'gray',
                               }}
                             />
                           </View>

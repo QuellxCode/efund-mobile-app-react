@@ -10,6 +10,7 @@ import {
     responsiveFontSize,
   } from 'react-native-responsive-dimensions';
 import { SERVER_URL } from '../../utils/config';
+import Moment from 'moment';
 
 const {width, height} = Dimensions.get('window');
 console.disableYellowBox = true;
@@ -25,7 +26,8 @@ class Wallet extends Component {
             state: false,
             refreshing: false,
             wallet: [],
-            newAmount: 0
+            newAmount: 0,
+            allNotification:[]
             
         };
     }
@@ -75,6 +77,7 @@ class Wallet extends Component {
       } catch (error) {
         console.log('error getting data')
       }
+      this.get_notification_length();
     };
 
   _addCash(){
@@ -114,8 +117,8 @@ class Wallet extends Component {
 }
 
 _getTransaction(){
-  fetch(`${SERVER_URL}/api/wallet/transaction`,{
-method:"GET",
+  fetch(`${SERVER_URL}/api/wallet/transaction-listing`,{
+  method:"GET",
   headers: {
     'Accept': 'application/json',
    'Content-Type': 'application/json',
@@ -125,9 +128,9 @@ method:"GET",
 .then(response => response.json())
 .then((responseJson)=> {
   this.setState({
-    wallet: responseJson.transactions,
+    wallet: responseJson.history[0].details
    })
-   console.log('transactuo',this.state.wallet)
+   console.log('transactuo',this.state.wallet[0].details)
   })
  .catch(error=>console.log(error))
    }
@@ -153,6 +156,27 @@ method:"GET",
  .catch(error=>console.log(error))
    }
 
+   get_notification_length() {
+    var arr = [];
+    var arry = [];
+    fetch(`${SERVER_URL}/api/notification`, {
+      method: 'Get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token':this.state.User.token,
+      },
+    })
+      .then(response => response.json())
+      .then(json => {
+        this.setState({allNotification: json.notification})
+      
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
     render() {
       if(this.state.wallet == null ){
         return (
@@ -165,7 +189,7 @@ method:"GET",
         }
       >
             <View style={{ flex: 1 }}>
-                <Header />
+                <Header notificationLength={this.state.allNotification.length} />
                 <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
                 <CustomModal isVisible={this.state.isVisible}>
                 <View style={{ flex: 1 }}>
@@ -231,13 +255,13 @@ method:"GET",
                                 return (
                                     <View style={{ flexDirection: 'row', paddingBottom: 5, marginTop: 5, borderBottomColor: '#FFC1B2', borderBottomWidth: 1 }}>
                                         <View style={{ width: (width - 40) / 3, justifyContent: 'center' }}>
-                                            <Text style={{ fontSize: 12, marginLeft: 10 }}>{item.date}</Text>
+                                            <Text style={{ fontSize: 12, marginLeft: 10 }}>{Moment(item.date).format('DD-MM-YYYY')}</Text>
                                         </View>
                                         <View style={{ width: (width - 40) / 3, justifyContent: 'center' }}>
-                                            <Text style={{ fontSize: 12 }}>{item.transaction}</Text>
+                                            <Text style={{ fontSize: 12 }}>{item.credit !== 0 ? 'Credit' : 'Debit'}</Text>
                                         </View>
                                         <View style={{ width: (width - 40) / 3, alignItems: 'center', justifyContent: 'center' }}>
-                                            <Text style={{ fontSize: 12 }}>{item.amount}</Text>
+                                            <Text style={{ fontSize: 12 }}>{item.credit !== 0 ? item.credit : item.debit}</Text>
                                         </View>
                                     </View>
                                 );
@@ -268,7 +292,7 @@ method:"GET",
           }
         >
               <View style={{ flex: 1 }}>
-                  <Header />
+                  <Header notificationLength={this.state.allNotification.length} />
                   <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
                   <CustomModal isVisible={this.state.isVisible}>
                   <View style={{ flex: 1 }}>
@@ -334,13 +358,13 @@ method:"GET",
                                   return (
                                       <View style={{ flexDirection: 'row', paddingBottom: 5, marginTop: 5, borderBottomColor: '#FFC1B2', borderBottomWidth: 1 }}>
                                           <View style={{ width: (width - 40) / 3, justifyContent: 'center' }}>
-                                              <Text style={{ fontSize: 12, marginLeft: 10 }}>{item.date}</Text>
+                                              <Text style={{ fontSize: 12, marginLeft: 10 }}>{Moment(item.date).format('DD-MM-YYYY')}</Text>
                                           </View>
                                           <View style={{ width: (width - 40) / 3, justifyContent: 'center' }}>
-                                              <Text style={{ fontSize: 12 }}>{item.transaction}</Text>
+                                              <Text style={{ fontSize: 12 }}>{item.credit !== 0 ? 'Credit' : 'Debit'}</Text>
                                           </View>
                                           <View style={{ width: (width - 40) / 3, alignItems: 'center', justifyContent: 'center' }}>
-                                              <Text style={{ fontSize: 12 }}>{item.amount}</Text>
+                                              <Text style={{ fontSize: 12 }}>{item.credit !== 0 ? item.credit: item.debit}</Text>
                                           </View>
                                       </View>
                                   );

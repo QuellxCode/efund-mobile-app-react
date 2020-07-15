@@ -1,48 +1,3 @@
-// import React from 'react';
-// import { withNavigation } from 'react-navigation';
-// import { View, TouchableOpacity, Text, StyleSheet, Image,Modal } from 'react-native';
-// import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
-// const Header = ({ navigation }) => {
-//     return (
-//         <View style={styles.headerContainerStyle}>
-//             <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
-//                 <View style={{ width: 22, height: 30, justifyContent: 'center' }}>
-//                     <Image
-//                         source={require('../images/Menu.png')}
-//                         style={{ height: 24, width: 24 }}
-//                     />
-//                 </View>
-//             </TouchableOpacity>
-
-//             <Text style={styles.logoStyle}>E-Fund</Text>
-
-//             <TouchableOpacity
-//             onPress={()=>navigation.navigate("Notification")}
-//             >
-//                 <MaterialCommunityIcons name='bell' color='white' size={30} />
-//             </TouchableOpacity>
-//         </View>
-//     );
-// };
-
-// const styles = StyleSheet.create({
-//     headerContainerStyle: {
-//         flexDirection: 'row',
-//         backgroundColor: '#FF3301',
-//         justifyContent: 'space-between',
-//         padding: 10,
-//         //marginTop: 24
-//     },
-//     logoStyle: {
-//         color: 'white',
-//         fontSize: 20,
-//         textAlignVertical: 'center'
-//     }
-// });
-
-// export default withNavigation(Header);
-
 import React, {useState, useEffect} from 'react';
 import {withNavigation} from 'react-navigation';
 import {
@@ -53,15 +8,16 @@ import {
   Image,
   Modal,
   ShadowPropTypesIOS,
+  AsyncStorage
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon_FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-
-const Header = ({navigation}) => {
+import {SERVER_URL} from '../utils/config';
+const Header = ({navigation, notificationLength}) => {
 
   const [NotifyHide, setnewsNotifyHide] = useState(false);
   const [selected, setselected] = useState('.');
-
+  const [length, setLength] = useState(notificationLength)
   // useEffect(() => {
   //   if(NotifyHide == true){
   //       () => setselected(0); 
@@ -69,9 +25,9 @@ const Header = ({navigation}) => {
   //       () => setnewsNotifyHide(false);
   //   }
   // });
-
-
-  return (
+  
+ console.log('length', length )
+return (
     <View style={styles.headerContainerStyle}>
       <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
         <View style={{width: 22, height: 30, justifyContent: 'center'}}>
@@ -94,8 +50,10 @@ const Header = ({navigation}) => {
 
       <TouchableOpacity
         onPress={()=>{navigation.navigate("notify")}}
-        >
-            <Text style={{color:"white", position:'absolute', alignSelf:'flex-end', marginTop:-10}}>{selected}</Text>
+      >
+            <Text style={{color:"white", position:'absolute', alignSelf:'flex-end', marginTop:-10}}>{notificationLength}</Text>
+            
+            {/* <Text style={{color:"white", position:'absolute', alignSelf:'flex-end', marginTop:-10}}>{selected}</Text> */}
      <MaterialCommunityIcons name='bell' color='white' size={30} style={{marginRight:2}}/>
      
       </TouchableOpacity>

@@ -33,6 +33,7 @@ class EditRejected extends Component {
       title: '',
       cat: '',
       requetData: [],
+      allNotification:[]
     };
     this.list = React.createRef();
   }
@@ -69,6 +70,8 @@ class EditRejected extends Component {
       .catch(error => {
         console.error(error);
       });
+
+      this.get_notification_length();
   }
   activate_() {
     if (this.state.bills != []) {
@@ -83,10 +86,31 @@ class EditRejected extends Component {
     this.state.selProj = value;
     console.log(this.state.selProj);
   }
+
+  get_notification_length() {
+    var arr = [];
+    var arry = [];
+    fetch(`${SERVER_URL}/api/notification`, {
+      method: 'Get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token':this.state.User.token,
+      },
+    })
+      .then(response => response.json())
+      .then(json => {
+        this.setState({allNotification: json.notification})
+      
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
   render() {
     return (
       <View style={{flex: 1}}>
-        <Header />
+        <Header notificationLength={this.state.allNotification.length} />
         <View style={{flex: 1, marginHorizontal: 20, marginTop: 30}}>
           <View
             style={[

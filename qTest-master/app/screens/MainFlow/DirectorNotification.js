@@ -44,7 +44,7 @@ const DirectorNotification = props => {
    const [allData, setAllDate] = useState(props.navigation.state.params.allData !== undefined ? props.navigation.state.params.allData : '' )
   const [date, setDate] = useState(allData.message[0].issue_date)
    // console.log('alldata', allData)
-  
+  const [allNotification,setAllNotifcation] = useState('');
    useEffect(() =>{
     if(date !== ''){
       const newdate = Moment(date).format('DD-MM-YYYY')     
@@ -74,6 +74,7 @@ const getUser = async () =>{
 useEffect(()  =>   {
     getUser();
     console.log('date', date)
+    get_notification_length();
 }) 
 
 // for director accept notification
@@ -91,9 +92,10 @@ useEffect(()  =>   {
         project: allData.project,
         purchaserName: allData.purchaserName,
         purchaserID: allData.purchaserID,
-        request:allData.purchaserID,
+        request:allData.request,
         notification_status: 1,
-        type :allData.type 
+        type :allData.type ,
+        request_type: 'rq_print_check'
       }),
     })
       .then(response => response.json())
@@ -123,7 +125,7 @@ useEffect(()  =>   {
        project: allData.project,
        purchaserName: allData.purchaserName,
        purchaserID: allData.purchaserID,
-       request:allData.purchaserID,
+       request:allData.request,
        notification_status: 0,
        type :allData.type, 
        message: message
@@ -157,6 +159,28 @@ useEffect(()  =>   {
     setVisibleB(true);  
   }
 
+
+  const  get_notification_length =() => {
+    var arr = [];
+    var arry = [];
+    fetch(`${SERVER_URL}/api/notification`, {
+      method: 'Get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token':user,
+      },
+    })
+      .then(response => response.json())
+      .then(json => {
+        setAllNotifcation(json.notification)
+      
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
     if (show === true) {
       return (
         <ActivityIndicator
@@ -167,7 +191,7 @@ useEffect(()  =>   {
     } else {
       return (
         <View style={{flex: 1}}>
-          <Header />
+          <Header  notificationLength={allNotification.length}/>
           <ScrollView>
           <Modal
                 animationType="fade"
@@ -378,7 +402,7 @@ useEffect(()  =>   {
                       </View>
                     }
                     leftIconContainerStyle={{marginLeft: 0}}
-                    value={allData.message[0].amount}
+                    value={allData.message[0].amount.toString()}
                     disabled
                   />
                   

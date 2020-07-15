@@ -259,7 +259,7 @@ return str
     if (this.state.User.roles == "Supervisor") {
       return (
         <View style={{ flex: 1 }}>
-          <Header />
+          <Header notificationLength={this.state.data.length} />
           <Text style={{ fontSize: 30, color: "red", alignSelf: "center" }}>
             Notifications
           </Text>

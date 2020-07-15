@@ -22,7 +22,8 @@ class Settings extends Component {
             editPassword: false,
             phone: '+92-335-5199903',
             editPhone: false,
-            originalProfile: []
+            originalProfile: [],
+            allNotification:[]
         };
     }
 
@@ -35,6 +36,7 @@ class Settings extends Component {
 
     componentDidMount() {
         this._retrieveData();
+        this.get_notification_length();
       }
       _retrieveData = async () => {
         try {
@@ -83,11 +85,33 @@ class Settings extends Component {
        .catch(error=>console.log(error))
          }
 
+         get_notification_length() {
+            var arr = [];
+            var arry = [];
+            fetch(`${SERVER_URL}/api/notification`, {
+              method: 'Get',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-Auth-Token':this.state.User.token,
+              },
+            })
+              .then(response => response.json())
+              .then(json => {
+                this.setState({allNotification: json.notification})
+              
+              })
+              .catch(error => {
+                console.error(error);
+              });
+          }
+        
+
     render() {
        // console.log(this.state);
         return (
             <View>
-                <Header />
+                <Header notificationLength={this.state.allNotification.length} />
                 <ScrollView style={{ marginBottom: 40 }}>
                     <View style={{ margin: 20, marginTop: 1 }}>
                         <Text style={MainFlowStyles.headerTextStyle}>Settings</Text>

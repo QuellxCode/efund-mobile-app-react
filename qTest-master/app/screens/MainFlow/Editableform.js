@@ -38,6 +38,7 @@ class NotifierDetal extends Component {
       purchaseID: this.props.navigation.state.params.purchase,
       newDetail: [],
       stat: this.props.navigation.state.params.stat,
+      allNotification:[]
     };
   }
 
@@ -58,7 +59,9 @@ class NotifierDetal extends Component {
     } catch (error) {
       console.log('error getting data');
     }
+  this.get_notification_length();
   }
+
   get_Detailed() {
     var arr = [];
     var arry = [];
@@ -277,11 +280,33 @@ class NotifierDetal extends Component {
     this.setState({visibleB: true});
   };
 
+    get_notification_length() {
+    var arr = [];
+    var arry = [];
+    fetch(`${SERVER_URL}/api/notification`, {
+      method: 'Get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token':this.state.User.token,
+      },
+    })
+      .then(response => response.json())
+      .then(json => {
+        this.setState({allNotification: json.notification})
+      
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+
   render() {
     if (this.state.User.roles == 'Supervisor') {
       return (
         <View style={{flex: 1}}>
-          <Header />
+          <Header notificationLength={this.state.allNotification.length} />
           <View style={{flex: 1, marginHorizontal: 20, marginTop: 30}}>
             <View
               style={[
@@ -508,7 +533,7 @@ class NotifierDetal extends Component {
     } else {
       return (
         <View style={{flex: 1}}>
-          <Header />
+          <Header notificationLength={this.state.allNotification.length}/>
           <View style={{flex: 1, marginHorizontal: 20, marginTop: 30}}>
             <View
               style={[

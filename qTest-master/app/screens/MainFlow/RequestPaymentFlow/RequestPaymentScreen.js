@@ -15,6 +15,8 @@ import {
   AsyncStorage,
   ScrollView,
   ToastAndroid,
+  Dimensions
+  
 } from 'react-native';
 import Header from '../../../components/Header';
 import CustomButton from '../../../components/CustomButton';
@@ -59,6 +61,7 @@ class RequestPayment extends Component {
       proj: '',
       show: false,
       spinner:false,
+      allNotification:[]
     };
     this.list = React.createRef();
   }
@@ -107,6 +110,8 @@ class RequestPayment extends Component {
       .catch(error => {
         console.log(error);
       });
+
+      this.get_notification_length();
   }
   showLoader = () => {
     this.setState({spinner: true});
@@ -158,12 +163,6 @@ class RequestPayment extends Component {
             purchaseID: json.purchaseID,
             disabledB: false,
           });
-          // if(this.state.selProj == ''){
-          //   this.setState({disabledB: true})
-          // }
-          // else{
-          //   this.setState({disabledB: false})
-          // }
           console.log('adasda', this.state.purchaseID);
         })
         .catch(error => {
@@ -171,61 +170,7 @@ class RequestPayment extends Component {
         });
     }
   };
-  // render_1 = () => (
-  //     <KeyboardAvoidingView behavior="padding" >
-  //         <View style={[MainFlowStyles.cardStyle, { padding: 10, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20, marginHorizontal: 5 }]}>
-
-  //             <Text style={{ fontWeight: 'bold', fontSize: 16 }}></Text>
-  //             <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-  //                 <TextInput style={{ fontSize: 16 }}
-  //                     placeholder='Item'
-  //                     onChangeText={(title) => this.setState({ title })}
-  //                     ref={ref => this.ref = ref}
-  //                 ></TextInput>
-  //                 <View style={{ marginBottom: 2 }} />
-  //             </View>
-  //             <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-  //                 <TextInput style={{ fontSize: 16 }}
-  //                     placeholder='price'
-  //                     keyboardType={'numeric'}
-  //                     onChangeText={(price) => this.setState({ price })}
-  //                     ref={ref => this.ref = ref}
-
-  //                 ></TextInput>
-  //                 <View style={{ marginBottom: 2 }} />
-  //             </View>
-  //             <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-  //                 <TextInput style={{ fontSize: 16 }}
-  //                     placeholder='qty'
-  //                     keyboardType={'numeric'}
-  //                     onChangeText={(qty) => this.setState({ qty })}
-  //                     ref={ref => this.ref = ref}
-
-  //                 ></TextInput>
-  //                 <View style={{ marginBottom: 2 }} />
-  //             </View>
-  //             <View style={{ borderBottomColor: '#FFCBBE', borderBottomWidth: 1 }}>
-  //                 {/* <Text style={{ fontSize: 16 }}
-  //                    ref={ref => this.ref = ref}
-  //                 >
-  //                   {this.state.qty * this.state.price}
-
-  //                 </Text> */}
-  //                 <TextInput style={{ fontSize: 16 }}
-  //                     // placeholder='qty'
-  //                     // keyboardType={'numeric'}
-  //                     // onChangeText={(qty) => this.setState({ qty })}
-  //                      ref={ref => this.ref = ref}
-  //                     // value={this.state.price * this.state.qty}
-  //                     value={this.state.results}
-  //                 ></TextInput>
-
-  //                 <View style={{ marginBottom: 2 }} />
-  //             </View>
-  //         </View>
-  //     </KeyboardAvoidingView>
-  // )
-
+  
   activate_() {
     if (this.state.bills != []) {
       this.state.disabledB = false;
@@ -240,22 +185,42 @@ class RequestPayment extends Component {
     console.log(this.state.selProj);
   }
 
+  
+  get_notification_length ()  {
+    var arr = [];
+    var arry = [];
+    fetch(`${SERVER_URL}/api/notification`, {
+      method: 'Get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token':this.state.User.token,
+      },
+    })
+      .then(response => response.json())
+      .then(json => {
+        this.setState({allNotification:json.notification})
+      
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+  
+
   render() {
-    // const PickerItems = this.state.Category.map((element, index) => (
-    //     <Picker.Item
-    //         key={"pick" + element.project_name}
-    //         label={"" + "  " + element.project_name}
-    //         value={element.project_id}
-    //         prompt='Options'
-    //     />
-    // ));
+    const screenHeight = Math.round(Dimensions.get('window').height) / 2;
 
     if (this.state.show === false) {
-      return <View />;
+      return <ActivityIndicator
+          color="red"
+          style={{paddingVertical: screenHeight}}
+        />
     } else {
       return (
         <View style={{flex: 1}}>
-          <Header />
+          <Header notificationLength={this.state.allNotification.length}/>
           <Text
             style={{
               fontWeight: 'bold',
@@ -329,7 +294,7 @@ class RequestPayment extends Component {
             </Text>
             <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
               <TextInput
-                style={{fontSize: 16}}
+                style={{fontSize: 16, width:50}}
                 placeholder="Item"
                 onChangeText={title => this.setState({title})}
                 ref={ref => (this.ref = ref)}
@@ -339,7 +304,7 @@ class RequestPayment extends Component {
             </View>
             <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
               <TextInput
-                style={{fontSize: 16}}
+                style={{fontSize: 16,  width:40}}
                 placeholder="Qty"
                 keyboardType={'numeric'}
                 onChangeText={qty =>
@@ -355,7 +320,7 @@ class RequestPayment extends Component {
             </View>
             <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
               <TextInput
-                style={{fontSize: 16}}
+                style={{fontSize: 16, width:50}}
                 placeholder="Rate"
                 keyboardType={'numeric'}
                 onChangeText={price => this.setState({price})}
@@ -366,7 +331,7 @@ class RequestPayment extends Component {
             </View>
             <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
               <TextInput
-                style={{fontSize: 16}}
+                style={{fontSize: 16, width:50}}
                 placeholder="Total"
                 keyboardType={'numeric'}
                 defaultValue="Total"

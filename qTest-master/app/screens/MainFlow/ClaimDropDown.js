@@ -39,9 +39,13 @@ export default class ClaimDropDown extends Component {
       selectedId: '',
       User: [],
       bills: [],
+      chartAccount:[],
+      subChartAccount:[],
       qty: 0,
       price: 0,
       pkr: 0,
+      selectedChartAccountNo: '',
+      selectedSubChartAccountNo:'',
       title: '',
       ctg: '',
       orderss: [],
@@ -56,6 +60,10 @@ export default class ClaimDropDown extends Component {
       proj: '',
       show: false,
       totalC: 0,
+      chartAccoutName:'',
+      subChartAccountName:'',
+      allNotification:[]
+      
     };
     this.list = React.createRef();
   }
@@ -161,7 +169,98 @@ export default class ClaimDropDown extends Component {
         console.error(error);
       });
     this.claim_ctg();
+    this._getChartAccount()
+    this.get_notification_length();
   }
+
+
+  _getChartAccount() {
+    fetch(`${SERVER_URL}/api/chart/`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token': this.state.User.token,
+      },
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        this.setState({
+          chartAccount: responseJson.chart,
+        });
+        // this.set();
+      })
+      .catch(error => console.log(error));
+  }
+
+  _getsubChartAccount(id) {
+    
+    fetch(`${SERVER_URL}/api/chart/` + id, {
+      method: 'get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token': this.state.User.token,
+      },
+     
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        this.setState({
+          subChartAccount: responseJson.chart.items,
+        });
+      })
+      .catch(error => console.log(error));
+  }
+
+  _getChartAccountName(id) {
+    let body = {
+      item_id : this.state.selectedSubChartAccount
+    }
+    fetch(`${SERVER_URL}/api/chart/item/` + id, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token': this.state.User.token,
+      },
+      body: JSON.stringify(body)
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        this.setState({
+          chartAccoutName: responseJson.chart.name,
+          subChartAccountName: responseJson.item_name
+        });
+        console.log('chart account name', responseJson.chart.name)
+        console.log('sub chart account name', responseJson.item_name)
+      })
+      .catch(error => console.log(error));
+  }
+
+
+ get_notification_length() {
+    var arr = [];
+    var arry = [];
+    fetch(`${SERVER_URL}/api/notification`, {
+      method: 'Get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token':this.state.User.token,
+      },
+    })
+      .then(response => response.json())
+      .then(json => {
+        this.setState({allNotification:json.notification})
+      
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+
   render_1 = ({item}) => (
     <KeyboardAvoidingView>
       <View
@@ -233,6 +332,33 @@ export default class ClaimDropDown extends Component {
           <View style={{marginBottom: 2}} />
         </View>
         {/* <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
+          <View style={{flexDirection: 'row'}}>
+            <Picker
+              selectedValue={this.state.selectedId}
+              prompt="Select ctg"
+              style={{
+                width: 150,
+                alignSelf: 'flex-end',
+                zIndex: 5,
+                marginTop: 1,
+                borderWidth: 1,
+                color: '#FF3301',
+                fontSize: 12,
+              }}
+              onValueChange={(itemValue, itemIndex) => {
+                this.setState({selectedCtg: itemValue});
+                this.setState({selectedId: itemValue});
+                console.log(
+                  'selected:value of project' + this.state.selectedId,
+                );
+              }}>
+              {CtgItems}
+            </Picker>
+            <View style={{justifyContent: 'flex-end', marginBottom: 2}} />
+          </View>
+          <View style={{marginBottom: 2}} />
+        </View> */}
+        {/* <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
           <Text style={{fontSize: 16}}>
             {this.state.price * this.state.qty}
           </Text>
@@ -255,6 +381,33 @@ export default class ClaimDropDown extends Component {
       this.state.disabledB = false;
     }
   }
+  
+  onValueChangeC(value) {
+    this.setState({
+      selectedChartAccountNo: value,
+    });
+    this.state.selectedChartAccount = value;
+    this._getsubChartAccount(value);
+  }
+  onValueChangeSC(value) {
+    this.setState({
+      selectedSubChartAccountNo: value,
+    });
+    this.state.selectedSubChartAccount = value;
+    this._getChartAccountName(this.state.selectedChartAccount);
+  }
+
+  loadChartAccount() {
+    return this.state.chartAccount.map(item => (
+      <Picker.Item label={item.name} value={item._id} />
+    ));
+  }
+  loadSubChartAccount() {
+    console.log('-------', this.state.subChartAccount);
+    return this.state.subChartAccount.map(item => (
+      <Picker.Item label={item.item_name} value={item._id} />
+    ));
+  }
 
   render() {
     const PickerItems = this.state.Category.map((element, index) => (
@@ -265,7 +418,11 @@ export default class ClaimDropDown extends Component {
         prompt="Options"
       />
     ));
-    const CtgItems = this.state.CategoryCtg.map((element2, index) => (
+    // for sort category alphabatically
+    let obj=this.state.CategoryCtg;
+      let field='item_name';
+     let sortArr = obj.sort((a, b) => (a[field] || "").toString().localeCompare((b[field] || "").toString()));
+    const CtgItems = sortArr.map((element2, index) => (
       <Picker.Item
         key={'pick' + element2.item_name}
         label={'' + '    ' + element2.item_name}
@@ -273,335 +430,10 @@ export default class ClaimDropDown extends Component {
         prompt="Options"
       />
     ));
-    // return (
-    //   <View style={{flex: 1}}>
-    //     <Header />
-    //     <ScrollView>
-    //       <Text
-    //         style={{
-    //           fontWeight: 'bold',
-    //           fontSize: 30,
-    //           alignSelf: 'center',
-    //           color: '#FF3301',
-    //         }}>
-    //         Select Project
-    //       </Text>
-    //       <View
-    //         style={{
-    //           borderColor: '#FF3301',
-    //           borderWidth: 1,
-    //           width: 300,
-    //           height: 50,
-    //           borderRadius: 30,
-    //           justifyContent: 'center',
-    //           alignSelf: 'center',
-    //           marginTop: 10,
-    //         }}>
-    //         <Picker
-    //           selectedValue={this.state.selectedValue}
-    //           prompt="Select Project"
-    //           style={{
-    //             width: 250,
-    //             height: 60,
-    //             alignSelf: 'flex-end',
-    //             zIndex: 5,
-    //             marginTop: 1,
-    //             borderWidth: 1,
-    //             //flexDirection: "row-reverse",
-    //             color: '#FF3301',
-    //             fontSize: 12,
-    //           }}
-    //           // onValueChange={this..bind(this)}
-    //           onValueChange={(itemValue, itemIndex) => {
-    //             this.setState({selectedValue: itemValue});
-    //             this.setState({selectedProject: itemValue});
-    //             console.log(
-    //               'selected:value of project' + this.state.selectedValue,
-    //             );
-    //           }}>
-    //           {PickerItems}
-    //         </Picker>
-    //       </View>
-    //       <View
-    //         style={[
-    //           MainFlowStyles.cardStyle,
-    //           {
-    //             padding: 10,
-    //             flexDirection: 'row',
-    //             justifyContent: 'space-around',
-    //             marginBottom: 20,
-    //             marginHorizontal: 20,
-    //             marginTop: 10,
-    //           },
-    //         ]}>
-    //         <Text style={{fontWeight: 'bold', fontSize: 16}} />
-    //         <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
-    //           <TextInput
-    //             style={{fontSize: 16}}
-    //             placeholder="Item"
-    //             onChangeText={title => this.setState({title})}
-    //             ref={ref => (this.ref = ref)}
-    //           />
-    //           <View style={{marginBottom: 2}} />
-    //         </View>
-    //         <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
-    //           <TextInput
-    //             style={{fontSize: 16}}
-    //             placeholder="price"
-    //             keyboardType={'numeric'}
-    //             onChangeText={price => this.setState({price})}
-    //             ref={ref => (this.ref = ref)}
-    //           />
-    //           <View style={{marginBottom: 2}} />
-    //         </View>
-
-    //         <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
-    //           <TextInput
-    //             style={{fontSize: 16}}
-    //             placeholder="qty"
-    //             keyboardType={'numeric'}
-    //             onChangeText={qty => this.setState({qty})}
-    //             ref={ref => (this.ref = ref)}
-    //           />
-    //           <View style={{marginBottom: 2}} />
-    //         </View>
-    //         <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
-    //           <View style={{flexDirection: 'row'}}>
-    //             <Picker
-    //               selectedValue={this.state.selectedCtg}
-    //               prompt="Select Category"
-    //               style={{
-    //                 width: 50,
-    //                 alignSelf: 'flex-end',
-    //                 zIndex: 5,
-    //                 marginTop: 1,
-    //                 borderWidth: 1,
-    //                 color: '#FF3301',
-    //                 fontSize: 12,
-    //               }}
-    //               onValueChange={(itemValue, itemIndex) => {
-    //                 this.setState({selectedCtg: itemValue});
-    //                 this.setState({selectedId: itemValue});
-    //                 console.log('selected: catogry' + this.state.selectedCtg);
-    //               }}>
-    //               {CtgItems}
-    //             </Picker>
-    //             <View style={{justifyContent: 'flex-end', marginBottom: 2}} />
-    //           </View>
-    //           <View style={{marginBottom: 2}} />
-    //         </View>
-
-    //         {/* <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
-    //           <Text style={{fontSize: 16}}>
-    //             {this.state.price * this.state.qty}
-    //           </Text>
-    //           <View style={{marginBottom: 2}} />
-    //         </View> */}
-    //       </View>
-    //       <View style={{flex: 1, marginHorizontal: 20, marginTop: 10}}>
-    //         <FlatList
-    //           ref={this.list}
-    //           style={{flexGrow: 0}}
-    //           data={this.state.bills}
-    //           keyExtractor={(item, index) => index.toString()}
-    //           showsVerticalScrollIndicator={false}
-    //           onContentSizeChange={() =>
-    //             this.list.current.scrollToEnd({animated: false})
-    //           }
-    //           renderItem={({item, index}) => {
-    //             return (
-    //               <KeyboardAvoidingView>
-    //                 <View
-    //                   style={[
-    //                     MainFlowStyles.cardStyle,
-    //                     {
-    //                       padding: 10,
-    //                       flexDirection: 'row',
-    //                       justifyContent: 'space-around',
-    //                       marginBottom: 20,
-    //                       marginHorizontal: 3,
-    //                     },
-    //                   ]}>
-    //                   <Text style={{fontWeight: 'bold', fontSize: 16}} />
-    //                   <View
-    //                     style={{
-    //                       borderBottomColor: '#FFCBBE',
-    //                       borderBottomWidth: 1,
-    //                     }}>
-    //                     <TextInput
-    //                       style={{fontSize: 16}}
-    //                       placeholder="Item"
-    //                       onChangeText={title => this.setState({title})}
-    //                       ref={ref => (this.ref = ref)}
-    //                     />
-    //                     <View style={{marginBottom: 2}} />
-    //                   </View>
-    //                   <View
-    //                     style={{
-    //                       borderBottomColor: '#FFCBBE',
-    //                       borderBottomWidth: 1,
-    //                     }}>
-    //                     <TextInput
-    //                       style={{fontSize: 16}}
-    //                       placeholder="price"
-    //                       keyboardType={'numeric'}
-    //                       onChangeText={price => this.setState({price})}
-    //                       ref={ref => (this.ref = ref)}
-    //                     />
-    //                     <View style={{marginBottom: 2}} />
-    //                   </View>
-    //                   <View
-    //                     style={{
-    //                       borderBottomColor: '#FFCBBE',
-    //                       borderBottomWidth: 1,
-    //                     }}>
-    //                     <TextInput
-    //                       style={{fontSize: 16}}
-    //                       placeholder="qty"
-    //                       keyboardType={'numeric'}
-    //                       onChangeText={qty => this.setState({qty})}
-    //                       ref={ref => (this.ref = ref)}
-    //                     />
-    //                     <View style={{marginBottom: 2}} />
-    //                   </View>
-    //                   <View
-    //                     style={{
-    //                       borderBottomColor: '#FFCBBE',
-    //                       borderBottomWidth: 1,
-    //                     }}>
-    //                     <View style={{flexDirection: 'row'}}>
-    //                       <Picker
-    //                         selectedValue={this.state.selectedId}
-    //                         prompt="Select Category"
-    //                         style={{
-    //                           width: 50,
-    //                           alignSelf: 'flex-end',
-    //                           placeholder: 'qty',
-    //                           zIndex: 5,
-    //                           marginTop: 1,
-    //                           borderWidth: 1,
-    //                           color: '#FF3301',
-    //                           fontSize: 12,
-    //                         }}
-    //                         onValueChange={(itemValue, itemIndex) => {
-    //                           this.setState({selectedCtg: itemValue});
-    //                           this.setState({selectedId: itemValue});
-    //                           console.log(
-    //                             'selected: ctg' + this.state.selectedCtg,
-    //                           );
-    //                         }}>
-    //                         {CtgItems}
-    //                       </Picker>
-    //                       <View
-    //                         style={{
-    //                           justifyContent: 'flex-end',
-    //                           marginBottom: 2,
-    //                         }}
-    //                       />
-    //                     </View>
-    //                     <View style={{marginBottom: 2}} />
-    //                   </View>
-    //                   {/* <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
-    //       <Text style={{fontSize: 16}}>
-    //         {this.state.price * this.state.qty}
-    //       </Text>
-    //       <View style={{marginBottom: 2}} />
-    //     </View> */}
-    //                 </View>
-    //               </KeyboardAvoidingView>
-    //             );
-    //           }}
-    //         />
-    //         <TouchableOpacity
-    //           style={{
-    //             alignSelf: 'center',
-    //             alignContent: 'center',
-    //             backgroundColor: '#FF3301',
-    //             height: 40,
-    //             width: 100,
-    //             borderRadius: 20,
-    //             justifyContent: 'center',
-    //           }}
-    //           onPress={() => {
-    //             let b = this.state.bills;
-    //             var aa = this.state.title;
-    //             var ab = this.state.qty;
-    //             var ac = this.state.price;
-    //             var ae = this.state.pkr;
-    //             var result = ac * ab;
-    //             var cat = this.state.selectedCtg;
-    //             //this.claim_handlePress();
-    //             b.push({
-    //               item: aa,
-    //               price: ac,
-    //               qty: ab,
-    //               pkr: result,
-    //               category: cat,
-    //             });
-    //             this.setState({bills: b});
-    //           }}>
-    //           <Text
-    //             style={{
-    //               alignSelf: 'center',
-    //               color: '#FFF',
-    //               alignContent: 'center',
-    //               justifyContent: 'center',
-    //             }}>
-    //             Add New
-    //           </Text>
-    //         </TouchableOpacity>
-    //       </View>
-    //       <View
-    //         style={{marginHorizontal: 15, marginBottom: 20, marginTop: 250}}>
-    //         {/* <CustomButton
-    //         onPress={this.s}
-    //           text="Claim"
-    //           routeName="ClaimPayment"
-    //           data={this.state.bills}
-    //           data1={this.state.selectedValue}
-    //           data_ctg={this.state.ctg}
-    //         /> */}
-    //         <TouchableOpacity
-    //           style={{
-    //             backgroundColor: '#FF3301',
-    //             padding: 14,
-    //             borderRadius: 10,
-    //           }}
-    //           onPress={() => {
-    //             let b = this.state.bills;
-    //             var aa = this.state.title;
-    //             var ab = this.state.qty;
-    //             var ac = this.state.price;
-    //             var result = ac * ab;
-    //             var cat = this.state.selectedCtg;
-    //             this.claim_handlePress();
-    //             b.push({
-    //               item: aa,
-    //               price: ac,
-    //               qty: ab,
-    //               pkr: result,
-    //               category: cat,
-    //             });
-    //             this.setState({bills: b});
-    //           }}>
-    //           <Text
-    //             style={{
-    //               alignSelf: 'center',
-    //               color: '#FFF',
-    //               alignContent: 'center',
-    //               justifyContent: 'center',
-    //             }}>
-    //             Add Image
-    //           </Text>
-    //         </TouchableOpacity>
-    //       </View>
-    //     </ScrollView>
-    //   </View>
-    // );
-
+    
     return (
       <View style={{flex: 1}}>
-        <Header />
+        <Header notificationLength={this.state.allNotification.length} />
         <Text
           style={{
             fontWeight: 'bold',
@@ -648,6 +480,38 @@ export default class ClaimDropDown extends Component {
           </Picker>
         </View>
         <View
+          style={{
+            borderColor: '#FF3301',
+            borderWidth: 1,
+            width: 250,
+            height: 50,
+            borderRadius: 30,
+            justifyContent: 'center',
+            alignSelf: 'center',
+            marginTop: 10,
+          }}>
+          <Picker
+           selectedValue={this.state.selectedChartAccountNo}
+            style={{
+              width: 250,
+              height: 50,
+              alignSelf: 'center',
+              zIndex: 5,
+              marginTop: 1,
+              borderWidth: 1,
+              //flexDirection: "row-reverse",
+              color: '#FF3301',
+              fontSize: 12,
+            }}
+            // onValueChange={this..bind(this)}
+                    // onValueChange={(itemValue, itemIndex) =>
+                    //     this.setState({selectedBank: itemValue})}>
+              onValueChange={this.onValueChangeC.bind(this)}>
+               <Picker.Item label="Select a Category" value="" />
+                    {this.loadChartAccount()}
+          </Picker>
+        </View>
+        <View
           style={[
             MainFlowStyles.cardStyle,
             {
@@ -661,7 +525,7 @@ export default class ClaimDropDown extends Component {
           ]}>
           <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
             <TextInput
-              style={{fontSize: 16}}
+              style={{fontSize: 16, width: 50}}
               placeholder="Item"
               onChangeText={title => this.setState({title})}
               ref={ref => (this.ref = ref)}
@@ -672,7 +536,7 @@ export default class ClaimDropDown extends Component {
 
           <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
             <TextInput
-              style={{fontSize: 16}}
+              style={{fontSize: 16, width: 40}}
               placeholder="Qty"
               keyboardType={'numeric'}
               onChangeText={qty =>
@@ -685,7 +549,7 @@ export default class ClaimDropDown extends Component {
           </View>
           <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
             <TextInput
-              style={{fontSize: 16}}
+              style={{fontSize: 16, width: 40}}
               placeholder="Rate"
               keyboardType={'numeric'}
               onChangeText={price => this.setState({price})}
@@ -696,8 +560,8 @@ export default class ClaimDropDown extends Component {
           </View>
           <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
             <Picker
-              selectedValue={this.state.selectedCtg}
-              prompt="Select Category"
+              // selectedValue={this.state.selectedCtg}
+              // prompt="Select Category"
               style={{
                 width: 120,
                 alignSelf: 'center',
@@ -707,13 +571,13 @@ export default class ClaimDropDown extends Component {
                 color: '#FF3301',
                 fontSize: 12,
               }}
-              onValueChange={(itemValue, itemIndex) => {
-                this.setState({selectedCtg: itemValue});
-                this.setState({selectedId: itemValue});
-                console.log('selected: catogry' + this.state.selectedCtg);
-              }}>
-              {CtgItems}
-            </Picker>
+              selectedValue={this.state.selectedSubChartAccountNo}
+                    // onValueChange={(itemValue, itemIndex) =>
+                    //     this.setState({selectedBank: itemValue})}>
+                    onValueChange={this.onValueChangeSC.bind(this)}>
+                    <Picker.Item label="Select a Sub Category" value="" />
+                    {this.loadSubChartAccount()}          
+                      </Picker>
             <View style={{marginBottom: 2}} />
           </View>
           <View style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
@@ -765,7 +629,7 @@ export default class ClaimDropDown extends Component {
 
                 <View
                   style={{borderBottomColor: '#FFCBBE', borderBottomWidth: 1}}>
-                  <Text>{item.category}</Text>
+                  <Text>{item.subcategory}</Text>
 
                   <View style={{marginBottom: 2}} />
                 </View>
@@ -796,7 +660,9 @@ export default class ClaimDropDown extends Component {
                 if (
                   this.state.item == '' ||
                   this.state.price == 0 ||
-                  this.state.qty == 0
+                  this.state.qty == 0 ||
+                  this.state.selectedChartAccountNo == ''||
+                  this.state.selectedSubChartAccountNo == ''
                 ) {
                   console.log('empty');
                   ToastAndroid.show('Add an Item', ToastAndroid.SHORT);
@@ -820,7 +686,8 @@ export default class ClaimDropDown extends Component {
                     price: ac,
                     qty: ab,
                     pkr: result,
-                    category: cat,
+                    category: this.state.chartAccoutName,
+                    subcategory:this.state.subChartAccountName
                   });
                   this.setState({
                     bills: b,
@@ -828,6 +695,9 @@ export default class ClaimDropDown extends Component {
                     qty: '',
                     price: '',
                     selectedCtg: '',
+                    selectedSubChartAccountNo:'',
+                    selectedChartAccountNo:''
+                    
                   });
                   this.activate_();
                 }

@@ -5,6 +5,7 @@ import MainFlowStyles from '../../Styles/MainFlowStyles';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { SERVER_URL } from '../../utils/config';
+import  moment  from 'moment'
 const {width, height} = Dimensions.get('window');
 class NotificationsNewScreen extends Component {
     constructor(props) {
@@ -53,6 +54,8 @@ class NotificationsNewScreen extends Component {
         } catch (error) {
           console.log('error getting data');
         }
+
+        console.log('notifcation data------------', this.state.all)
     }
 
         get_notification() {
@@ -233,7 +236,7 @@ class NotificationsNewScreen extends Component {
         if (this.state.User.roles == 'Supervisor') {
         return (
             <View>
-                <Header />
+                <Header notificationLength={this.state.all.length} />
                 <View style={{ margin: 10 }}>
                     <Text style={MainFlowStyles.headerTextStyle}>Notifications</Text>
 
@@ -282,30 +285,41 @@ class NotificationsNewScreen extends Component {
                         keyExtractor={(item, index) => index.toString()}
                         showsVerticalScrollIndicator={false}
                         renderItem={({ item, index }) => item.type !== 'final' && 
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate("NotificationDeta", {project:item.project, allData:item, purchase: item.request, stat: item.payment, notistat: item.notification_status})} >
+                                <TouchableOpacity onPress={() =>  item.status == 5 ? Alert.alert('Amount Add to Wallet') : item.status == 2 ? Alert.alert('Your accepted request is rejected by director!') : this.props.navigation.navigate("NotificationDeta", {project:item.project, allData:item, purchase: item.request, stat: item.payment, notistat: item.notification_status})} >
                                 <View style={{ marginBottom: this.state.selectedAll ? (index === this.state.all.length - 1 ? 20 : 0) : (this.state.selectedApproved ? (index === this.state.approved.length - 1 ? 20 : 0) : (index === this.state.rejected.length - 1 ? 20 : 0)) }}>
                                     <View style={[MainFlowStyles.cardStyle, { marginBottom: 20, marginHorizontal: 5, marginTop: index === 0 ? 20 : 0, flex: 1, borderColor: item.payment == "Rejected" ? 'red' : item.payment == "Approved" ? 'green': 'grey', borderWidth:2 }]}>
                                         <View style={{ padding: 10 }}>
                                             <View style={{ flexDirection: 'row' }}>
-                                                <View style={{ flexDirection: 'row', width: (width - 50) / 3 }}>
+                                                <View style={{ flexDirection: 'row', width: (width - 50) / 3  }}>
                                                     <View>
                                                         <AntDesign name='calendar' size={20} color='#FF3301' />
                                                     </View>
-                                                    <Text> {this.split(item.date)}</Text>
-                                                </View>
+                                                    <View>
+                                                    <Text > {this.split(item.date)} </Text>
+                                                   
+                                                    <Text > {moment(item.date).utc().format('hh:mm A')} </Text> 
+                                                    </View>
+
+                                            </View>
 
                                              
                                                 <View style={{ width: (width - 40) / 2, alignItems: 'flex-end', marginLeft:'10%' }}>
-                                                    <Text style={{ fontSize: 16 }}>Refrence ID: {item.purchaserName}</Text>
+                                                    <Text style={{ fontSize: 16 }}> Refrence ID: {item.purchaserName}</Text>
                                                 </View>
                                             </View>
                                             <View style={{paddingTop:5}}/>
-                                            <View style={{ flexDirection: 'row' }}>
-                                                <View style={{ flexDirection: 'row', width: (width - 50) / 3 }}>
+                                            <View style={{ flexDirection: 'column' }}>
+                                                {/* <View style={{ flexDirection: 'row', width: (width - 50) / 3 }}> */}
                                                    
-                                                <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Bill {index + 1}</Text>
+                                                <Text style={{ fontWeight: 'bold', fontSize: 16 , marginLeft:4}}>Bill {index + 1}</Text>
+                                                {item.purchaser_name !== undefined && <Text style={{ fontWeight: 'bold', fontSize: 16 , marginLeft:4}}>Purchaser: {item.purchaser_name}</Text>} 
+                                              {item.supervisor_name !== undefined && <Text style={{ fontWeight: 'bold', fontSize: 16 , marginLeft:4}}>Supervisor: {item.supervisor_name}</Text>} 
+                                              {item.director_name !== undefined && <Text style={{ fontWeight: 'bold', fontSize: 16 , marginLeft:4}}>Director: {item.director_name}</Text>} 
+        
+                                                <Text style={{ fontWeight: 'bold', fontSize: 16 }}> {item.status == 0 ? "Request for approval. Please Check!": 
+                                                            item.status == 1 ? "Your request has accepted by Supervisor.": item.status == 2 ? item.message : item.status == 3 ? "Your request has accepted by Director." : item.status == 5 ? item.message : '' }</Text>
 
-                                                </View>
+                                                {/* </View> */}
 
                                                 <View style={{ width: (width - 40) / 2, alignItems: 'flex-end', marginLeft:'10%' }}>
                                                     <Text style={{ fontSize: 14 }}>{item.notification_status}</Text>
@@ -325,7 +339,7 @@ class NotificationsNewScreen extends Component {
                     else if (this.state.User.roles == 'Purchaser') {
                         return (
                             <View>
-                                <Header />
+                                <Header notificationLength={this.state.all.length} />
                                 <View style={{ margin: 10 }}>
                                     <Text style={MainFlowStyles.headerTextStyle}>Notifications</Text>
                 
@@ -374,7 +388,7 @@ class NotificationsNewScreen extends Component {
                                         keyExtractor={(item, index) => index.toString()}
                                         showsVerticalScrollIndicator={false}
                                         renderItem={({ item, index }) => item.type !== 'final' && 
-                                            <TouchableOpacity onPress={() => item.status == 5 ? Alert.alert('Amount Add to Wallet'): this.props.navigation.navigate("EditRequestPaymentScreen", {project:item.project, allData:item, purchase: item.request, stat: item.payment})} >
+                                            <TouchableOpacity onPress={() => item.status == 11 ? Alert.alert(item.message[0]): item.status == 10 ? Alert.alert(item.message[0]): item.status == 5 ? Alert.alert('Amount Add to Wallet'): item.status == 3 ? Alert.alert('Your Requested is accepted by Director') : this.props.navigation.navigate("EditRequestPaymentScreen", {project:item.project, allData:item, purchase: item.request, stat: item.payment})} >
                                                 <View style={{ marginBottom: this.state.selectedAll ? (index === this.state.all.length - 1 ? 20 : 0) : (this.state.selectedApproved ? (index === this.state.approved.length - 1 ? 20 : 0) : (index === this.state.rejected.length - 1 ? 20 : 0)) }}>
                                                     <View style={[MainFlowStyles.cardStyle, { marginBottom: 20, marginHorizontal: 5, marginTop: index === 0 ? 20 : 0, flex: 1, borderColor: item.payment == "Rejected" ? 'red' : item.payment == "Approved" ? 'green': 'grey', borderWidth:2 }]}>
                                                         <View style={{ padding: 10 }}>
@@ -383,20 +397,30 @@ class NotificationsNewScreen extends Component {
                                                                     <View>
                                                                         <AntDesign name='calendar' size={20} color='#FF3301' />
                                                                     </View>
-                                                                    <Text> {this.split(item.date)} </Text>
+                                                                    <View >
+                                                                    <Text > {this.split(item.date)}  </Text>
+                                                                    <Text > {moment(item.date).utc().format('hh:mm A')} </Text>
+                                                                    </View>
                                                                 </View>
                 
                                                                
                                                                 <View style={{ width: (width - 40) / 2, alignItems: 'flex-end', marginLeft:'10%' }}>
-                                                                    <Text style={{ fontSize: 16 }}>Refrence ID: {item.purchaserName}</Text>
+                                                                    <Text style={{ fontSize: 16 }}> Refrence ID: {item.purchaserName}</Text>
                                                                 </View>
                                                             </View>
-                                                            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Bill {index + 1}</Text>
+                                                            <Text style={{ fontWeight: 'bold', fontSize: 16 , marginLeft:4 }}>Bill {index + 1}</Text>
+                                                            {item.purchaser_name !== undefined && <Text style={{ fontWeight: 'bold', fontSize: 16 , marginLeft:4}}>Purchaser: {item.purchaser_name}</Text>} 
+                                                           {item.supervisor_name !== undefined && <Text style={{ fontWeight: 'bold', fontSize: 16 , marginLeft:4}}>Supervisor: {item.supervisor_name}</Text>} 
+                                                               {item.director_name !== undefined && <Text style={{ fontWeight: 'bold', fontSize: 16 , marginLeft:4}}>Director: {item.director_name}</Text>} 
+        
                                                             <Text style={{ fontWeight: 'bold', fontSize: 16 }}> {item.status == 0 ? "Request sent for approval. Please wait!": 
-                                                            item.status == 1 ? "Your request has accepted by Supervisor.": item.status == 2 ? item.message : item.status == 3 ? "Your request has accepted by Director." : item.status == 5 ? item.message : '' }</Text>
-                                                           
+                                                           item.status == 10 ? item.message[0] : item.status == 11 ? item.message[0] : item.status == 1 ? "Your request has accepted by Supervisor.": item.status == 2 ? item.message : item.status == 3 ? "Your request has accepted by Director." : item.status == 5 ? item.message : '' }</Text>
+                                                            <View style={{ width: (width - 40) / 2, alignItems: 'flex-end', marginLeft:'10%' }}>
+                                                       <Text style={{ fontSize: 14 }}>{item.notification_status}</Text>
+                                         
+                                                    </View>
                                                         </View>
-                                                                                                           </View>
+                                                     </View>
                                                 </View>
                                       </TouchableOpacity>
                         }
@@ -409,7 +433,7 @@ class NotificationsNewScreen extends Component {
                     else{
                         return (
                             <View>
-                                <Header />
+                                <Header notificationLength={this.state.all.length} />
                                 <View style={{ margin: 10 }}>
                                     <Text style={MainFlowStyles.headerTextStyle}>Notifications</Text>
                 
@@ -460,7 +484,7 @@ class NotificationsNewScreen extends Component {
                                         renderItem={({ item, index }) => {
                                             return (
                                                 
-                                                 <TouchableOpacity onPress={() => this.props.navigation.navigate( item.type === 'final' ? "DirectorNotification" : "NotificationDeta" , {project:item.project, allData:item, purchase: item.request, stat: item.payment, notistat: item.notification_status})} >
+                                                 <TouchableOpacity onPress={() => item.status == 11 ? Alert.alert(item.message[0]): item.status == 10 ? Alert.alert(item.message[0]): this.props.navigation.navigate( item.type === 'final' ? "DirectorNotification" : "NotificationDeta" , {project:item.project, allData:item, purchase: item.request, stat: item.payment, notistat: item.notification_status})} >
                                                
                                                 <View style={{ marginBottom: this.state.selectedAll ? (index === this.state.all.length - 1 ? 20 : 0) : (this.state.selectedApproved ? (index === this.state.approved.length - 1 ? 20 : 0) : (index === this.state.rejected.length - 1 ? 20 : 0)) }}>
                                                     <View style={[MainFlowStyles.cardStyle, { marginBottom: 20, marginHorizontal: 5, marginTop: index === 0 ? 20 : 0, flex: 1, borderColor: item.payment == "Rejected" ? 'red' : item.payment == "Approved" ? 'green': 'grey', borderWidth:2 }]}>
@@ -470,25 +494,36 @@ class NotificationsNewScreen extends Component {
                                                                     <View>
                                                                         <AntDesign name='calendar' size={20} color='#FF3301' />
                                                                     </View>
-                                                                    <Text> {this.split(item.date)} </Text>
-                                                                </View>
+                                                                    <View>
+                                                                    <Text > {this.split(item.date)}  </Text>
+                                                                    <Text >  {moment(item.date).utc().format('hh:mm A')} </Text>
+                                                                    </View>
+                                                                    </View>
                 
                                                                
                                                                 <View style={{ width: (width - 40) / 2, alignItems: 'flex-end', marginLeft:'10%' }}>
-                                                                    <Text style={{ fontSize: 16 }}>Refrence ID: {item.purchaserName}</Text>
+                                                                    <Text style={{ fontSize: 16 }}> Refrence ID: {item.purchaserName}</Text>
                                                                 </View>
                                                             </View>
                                                             <View style={{paddingTop:5}}/>
-                                            <View style={{ flexDirection: 'row' }}>
+                                            {/* <View style={{ flexDirection: 'row' }}>
                                                 <View style={{ flexDirection: 'row', width: (width - 50) / 3 }}>
-                                                   
-                                                <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Bill {index + 1}</Text>
-                                                </View>
+                                                    */}
+                                              <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Bill {index + 1}</Text>
+                                              {item.notification_status === 'wallet' && <Text style={{ fontWeight: 'bold', fontSize: 16 , marginLeft:4}}>{item.message[0]}</Text>} 
+                                             
+                                              {item.purchaser_name !== undefined && <Text style={{ fontWeight: 'bold', fontSize: 16 , marginLeft:4}}>Purchaser: {item.purchaser_name}</Text>} 
+                                              {item.supervisor_name !== undefined && <Text style={{ fontWeight: 'bold', fontSize: 16 , marginLeft:4}}>Supervisor: {item.supervisor_name}</Text>} 
+                                              {item.director_name !== undefined && <Text style={{ fontWeight: 'bold', fontSize: 16 , marginLeft:4}}>Director: {item.director_name}</Text>} 
+        
+                                                {/* </View> */}
 
-                                                <View style={{ width: (width - 40) / 2, alignItems: 'flex-end', marginLeft:'10%' }}>
-                                                    <Text style={{ fontSize: 14 }}>{item.notification_status}</Text>
+                                                <View style={{ width: (width - 40) / 2, alignItems: 'flex-end' , marginLeft:'8%'}}>
+                                                    {/* <Text style={{ fontSize: 14 }}>{item.notification_status}</Text> */}
+                                                    {item.notification_status !== 'wallet' && <Text style={{ fontSize: 14 }}>{item.notification_status}</Text>}
+                                                    {item.notification_status === 'wallet' && <Text style={{ fontSize: 14 }}>Request: {item.notification_status}</Text>}
                                                 </View>
-                                            </View>
+                                            {/* </View> */}
                                                         </View>
                                                        
                                                     </View>

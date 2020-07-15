@@ -7,6 +7,8 @@ import {
   AsyncStorage,
   Modal,
   Dimensions,
+  StyleSheet,
+  ScrollView
 } from 'react-native';
 import Header from '../../components/Header';
 import CustomButton from '../../components/CustomButton';
@@ -14,6 +16,7 @@ import {Button} from 'react-native-elements';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import DocumentPicker from 'react-native-document-picker';
 import { SERVER_URL } from '../../utils/config';
+// import { ScrollView } from 'react-native-gesture-handler';
 const {width, height} = Dimensions.get('window');
 const formdata = new FormData();
 class ClaimPaymentScreen extends Component {
@@ -31,6 +34,8 @@ class ClaimPaymentScreen extends Component {
       visible: false,
       Loader: false,
       IsLoader:false,
+      images:[],
+      allNotification:[]
     };
   }
   //var array2=[{"details[item_name]":"Aaa","details[item_quantity]":"5","details[item_price]":"55","details[total_price]":"55"}]
@@ -63,6 +68,7 @@ class ClaimPaymentScreen extends Component {
     }
     console.log('userID:', this.state.ID);
     this.picker_1();
+    this.get_notification_length();
   }
   //var arrey = JSON.stringify(this.state.data_);
   // for (var i = 1; i < arrey.length; i++) {
@@ -85,7 +91,9 @@ class ClaimPaymentScreen extends Component {
     if (this.state.chek == false) {
       return {uri: null};
     } else {
-      return {uri: this.state.image};
+      // return {uri: this.state.image};
+       return this.state.images;
+      
     }
   }
   notification_send(){
@@ -123,8 +131,7 @@ class ClaimPaymentScreen extends Component {
   submit() {
      this.showLoader(); // Once You Call the API Action loading will be true
     console.log('taa', this.state.ID);
-    fetch(
-      `${SERVER_URL}/api/purchase/claimimage/` + this.state.ID,
+    fetch(`${SERVER_URL}/api/purchase/claimimage/` + this.state.ID,
       {
         method: 'Post',
         headers: {
@@ -147,18 +154,41 @@ class ClaimPaymentScreen extends Component {
   }
   async picker_1() {
     try {
-      const res = await DocumentPicker.pick({
+      const res = await DocumentPicker.pickMultiple({
         type: [DocumentPicker.types.images],
       });
+      console.log('res image ', res)
+      let arr = [
+        {
+          image:''
+        }
+      ]
+      for(let i=0; i< res.length ; i++){
+        arr.push({image:res[i].uri})
+      }
+      let newArr = arr.shift();
+      console.log('image arr', newArr)
+      console.log('new image arr', arr)
       this.setState({
-        image: res.uri,
+        // image: res.uri,
+        images: arr,
         chek: true,
       });
-      formdata.append('file', {
-        uri: this.state.image,
-        type: 'image/jpeg',
-        name: 'image${moment()}',
+    //   for (const key of Object.keys(this.state.images)) {
+    //     formdata.append('file', this.state.images[key])
+    // }
+    this.state.images.forEach((item, i) => {
+      formdata.append("file", {
+        uri: item.image,
+        type: "image/jpeg",
+        name: item.filename || `image${i}`,
       });
+    });
+      // formdata.append('file', {
+      //   uri: this.state.images[1].image,
+      //   type: 'image/jpeg',
+      //   name: 'image${moment()}',
+      // });
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
       } else {
@@ -166,14 +196,39 @@ class ClaimPaymentScreen extends Component {
       }
     }
   }
+
+
+  get_notification_length() {
+    var arr = [];
+    var arry = [];
+    fetch(`${SERVER_URL}/api/notification`, {
+      method: 'Get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token':this.state.User.token,
+      },
+    })
+      .then(response => response.json())
+      .then(json => {
+        this.setState({allNotification:json.notification})
+      
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+  
   render() {
+    
     return (
-      <View>
-        <Header />
-        <View style={{marginHorizontal: 15, marginBottom: 20, marginTop: 10}}>
+      <View style={{flex:1}}>
+        <Header notificationLength={this.state.allNotification.length} />
+        <View>
           <View
             style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            {this.state.Loader==true && <ActivityIndicator color={'red'} />}
+            {this.state.Loader === true && <ActivityIndicator color={'red'} />}
           </View>
          
           {/* <Button
@@ -189,12 +244,25 @@ class ClaimPaymentScreen extends Component {
             }}
             onPress={() => this.picker_1()}
           /> */}
-          <Image
-            style={{width: '40%', height: '40%'}}
-            source={this.displayuri()}
-          />
-          <Button
+          <ScrollView style={{height: '90%', marginTop: -50}}>
+           <View style={styles.container}>
+           {this.state.images.length > 0 ? this.state.images.map((item, index) =>
+         
+           <Image
+             style={styles.tinyLogo}
+             source={{uri: item.image}}
+           />
+           ) : null} 
+         
+            </View>
+            </ScrollView>
+            
+
+        </View>
+        <View style={styles.bottom}>  
+           <Button
             title="Submit Claim"
+            style={styles.button}
             buttonStyle={{
               backgroundColor: '#FF3301',
               padding: 4,
@@ -206,8 +274,9 @@ class ClaimPaymentScreen extends Component {
             }}
             onPress={() => this.submit()}
           />
-        </View>
-        <Modal
+          </View>
+
+                <Modal
           animationType="fade"
           transparent={true}
           visible={this.state.visible}>
@@ -259,5 +328,39 @@ class ClaimPaymentScreen extends Component {
     );
   }
 }
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex:1,
+    // height:'80%',
+    // paddingTop: 50,
+    // margin: 10,
+    alignContent:'center',
+    alignItems:'center'
+    
+  },
+  tinyLogo: {
+    width: 350,
+    height: 350,
+    margin:5,
+    
+    
+  },
+  logo: {
+    width: 66,
+    height: 58,
+  },
+  bottom: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    marginBottom: 15
+  },
+  button: {
+    position: 'absolute',
+    bottom:0
+  }
+});
+
 
 export default ClaimPaymentScreen;

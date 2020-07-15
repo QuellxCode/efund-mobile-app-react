@@ -78,6 +78,7 @@ class EditRequestPayment extends Component {
       stat: this.props.navigation.state.params.stat,
       newArrayDetail: [],
       purchase_id: '',
+      allNotification:[]
     };
     this.list = React.createRef();
   }
@@ -128,6 +129,8 @@ class EditRequestPayment extends Component {
       .catch(error => {
         console.log(error);
       });
+
+      this.get_notification_length();
   }
 
   get_Detailed() {
@@ -166,6 +169,28 @@ class EditRequestPayment extends Component {
         console.error(error);
       });
   }
+
+    get_notification_length ()  {
+    var arr = [];
+    var arry = [];
+    fetch(`${SERVER_URL}/api/notification`, {
+      method: 'Get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token':this.state.User.token,
+      },
+    })
+      .then(response => response.json())
+      .then(json => {
+        this.setState({allNotification:json.notification})
+      
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
 
   get_notification() {
     var arr = [];
@@ -316,7 +341,7 @@ class EditRequestPayment extends Component {
     } else {
       return (
         <View style={{flex: 1}}>
-          <Header />
+          <Header notificationLength={this.state.allNotification.length} />
           <Text
             style={{
               fontWeight: 'bold',

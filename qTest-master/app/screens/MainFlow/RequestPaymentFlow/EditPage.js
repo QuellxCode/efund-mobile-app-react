@@ -12,11 +12,14 @@ import {
   Alert,
 } from 'react-native';
 import Header from '../../../components/Header';
+import {SERVER_URL} from '../../../utils/config';
 
 const EditPage = props => {
   const [name, setName] = useState('');
   const [qty, setQty] = useState('');
   const [price, setPrice] = useState('');
+  const [all, setAll] = useState('');
+  const [user, setUser] = useState('');
   let localNotify = null;
 
   const [allBillInfo, setAllBillInfo] = useState();
@@ -24,9 +27,51 @@ const EditPage = props => {
   const item = props.navigation.getParam('detail')
   const id = item._id
   console.log('item====', id)
+  const getUser = async () =>{
+   
+    try {
+        const value = await AsyncStorage.getItem('User');
+         const val = JSON.parse(value)
+         if (val !== null) {
+           setUser(val.token)
+        }
+      } catch (error) {
+        console.log('error getting data')
+      }
+  }
+  
+
+  useEffect(() =>{ 
+  getUser();
+  // get_notification()
+  }, [])
+
+//  const  get_notification =() => {
+//     var arr = [];
+//     var arry = [];
+//     fetch(`${SERVER_URL}/api/notification`, {
+//       method: 'Get',
+//       headers: {
+//         Accept: 'application/json',
+//         'Content-Type': 'application/json',
+//         'X-Auth-Token': user,
+//       },
+//     })
+//       .then(response => response.json())
+//       .then(json => {
+//         setAll(json.notification)
+      
+//       })
+//       .catch(error => {
+//         console.error(error);
+//       });
+//   }
+
   return (
     <View style={{ flex: 1 }}>
-    <Header />
+    <Header  />
+   
+    {/* <Header notificationLength={all.length} /> */}
     <Text style={{ fontWeight: 'bold', fontSize: 30, alignSelf: 'center', color: '#FF3301' }}>Edit Request</Text>
 
     <KeyboardAvoidingView behavior="padding" style={styles.container}>

@@ -25,11 +25,13 @@ class GenerateBillScreen extends Component {
             total: 0,
             totall: this.props.navigation.state.params.total,
             purchaseID: '',
+            allNotification:[]
         }
     }
 
     async componentDidMount() {
         this.retrieveData(); 
+        this.get_notification_length();
     }
     retrieveData = async () => {
         try {
@@ -159,10 +161,33 @@ class GenerateBillScreen extends Component {
                 console.error(error);
             });
     }
+
+
+    get_notification_length ()  {
+        var arr = [];
+        var arry = [];
+        fetch(`${SERVER_URL}/api/notification`, {
+          method: 'Get',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'X-Auth-Token':this.state.User.token,
+          },
+        })
+          .then(response => response.json())
+          .then(json => {
+            this.setState({allNotification:json.notification})
+          
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
+    
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <Header />
+                <Header notificationLength={this.state.allNotification.length} />
                 <View style={{ flex: 1, marginHorizontal: 20, marginTop: 30 }}>
                     <View style={[MainFlowStyles.cardStyle, { paddingTop: 10, paddingBottom: 10, flex: 1 }]}>
                         <Text style={MainFlowStyles.headerTextStyle}>Billing</Text>

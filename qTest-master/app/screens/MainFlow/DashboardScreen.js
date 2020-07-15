@@ -444,6 +444,7 @@ const Director = props => {
 const DashboardScreen = ({navigation}) => {
    
     const [user, setUser] = useState();
+    const [allNotification, setAllNotifcation] = useState('');
    
     const retrieveData = async () => {
         try {
@@ -459,8 +460,30 @@ const DashboardScreen = ({navigation}) => {
 
     useEffect(() => {
         retrieveData();
+        get_notification_length();
     }, [])
         
+ 
+   const  get_notification_length =() => {
+        var arr = [];
+        var arry = [];
+        fetch(`${SERVER_URL}/api/notification`, {
+          method: 'Get',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'X-Auth-Token':user,
+          },
+        })
+          .then(response => response.json())
+          .then(json => {
+            setAllNotifcation(json.notification)
+          
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
     if (user != undefined && user != null) {
         if (user.roles ==="Purchaser") {
           return  <Purchaser navigation={navigation}/>
@@ -474,7 +497,7 @@ const DashboardScreen = ({navigation}) => {
     }
     return (
         <View>
-            <Header />
+            <Header notificationLength={allNotification.length} />
         </View>
     )
 

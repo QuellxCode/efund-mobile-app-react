@@ -10,12 +10,16 @@ import {
   Alert,
   ActivityIndicator,
   PermissionsAndroid,
+  Picker
 } from 'react-native';
 import Header from '../../components/Header';
 import {Button, Input} from 'react-native-elements';
 import MainFlowStyles from '../../Styles/MainFlowStyles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { SERVER_URL } from '../../utils/config';
+import {SERVER_URL} from '../../utils/config';
+import { ScrollView } from 'react-native-gesture-handler';
+import { SliderBox } from "react-native-image-slider-box";
+import RNFetchBlob from 'rn-fetch-blob';
 const {width, height} = Dimensions.get('window');
 class NotifierDetaler extends Component {
   constructor(props) {
@@ -36,6 +40,7 @@ class NotifierDetaler extends Component {
       Requestvisible: false,
       total: 0,
       imagePath: '',
+      images: [],
       // totall: this.props.navigation.state.params.total,
       all: [],
       specif: [],
@@ -45,32 +50,41 @@ class NotifierDetaler extends Component {
       newDetail: [],
       stat: this.props.navigation.state.params.stat,
       notifystat: this.props.navigation.state.params.notistat,
-      spinner : false,
-      imageUrl:"",
+      spinner: false,
+      imageUrl: '',
       grandTotal: 0,
-      pname:[]
+      pname: [],
+      selectedBankNo:'',
+      selectedBank:'',
+      banks: [],
+      cash: 0,
+      bankSelected: false,
+      selectedImageIndex:0,
+      allNotification:[]
+
     };
   }
-async request_storage_runtime_permission() {
-  try {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-      {
-        'title': 'ReactNativeCode Storage Permission',
-        'message': 'ReactNativeCode App needs access to your storage to download Photos.'
+  async request_storage_runtime_permission() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'ReactNativeCode Storage Permission',
+          message:
+            'ReactNativeCode App needs access to your storage to download Photos.',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('Storage Permission Granted.');
+      } else {
+        console.log('Storage Permission Not Granted');
       }
-    )
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      console.log("Storage Permission Granted.");
+    } catch (err) {
+      console.warn(err);
     }
-    else {
-      console.log("Storage Permission Not Granted");
-    }
-  } catch (err) {
-    console.warn(err)
   }
-}
   async componentDidMount() {
+    
     this.request_storage_runtime_permission();
     try {
       const value = await AsyncStorage.getItem('User');
@@ -81,60 +95,147 @@ async request_storage_runtime_permission() {
         });
         console.log('userIdii', this.state.User.user_id);
         this.get_notification();
-        console.log('project id', this.state.data_project, '\n', 'purchase id', this.state.purchaseID, '\n', 'status', this.state.notifystat, '\n', this.state.stat)
+        this._getBanks();
+        console.log(
+          'project id',
+          this.state.data_project,
+          '\n',
+          'purchase id',
+          this.state.purchaseID,
+          '\n',
+          'status',
+          this.state.notifystat,
+          '\n',
+          this.state.stat,
+        );
       }
     } catch (error) {
       console.log('error getting data');
     }
+    this.get_notification_length();
   }
+
+
+// -----------------
+  onValueChange (value) {
+    this.setState({
+      selectedBankNo : value
+    });
+    this.state.selectedBank = value
+    console.log('bank id',this.state.selectedBank)
+    var bankNo = value;
+    this.getAmount(bankNo);
+    this.setState({
+         bankSelected: true
+    })
+}   
+
+_getBanks(){
+  fetch(`${SERVER_URL}/api/bankAccount/`,{
+method:"GET",
+  headers: {
+    'Accept': 'application/json',
+   'Content-Type': 'application/json',
+   'X-Auth-Token': this.state.User.token,
+ },
+})
+.then(response => response.json())
+.then((responseJson)=> {
+  this.setState({
+      banks: responseJson.account
+   })
+   console.log("dsfaf",this.state.banks)
+   this._getPayee();
+  })
+ .catch(error=>console.log(error))
+   }
+
+
+   getAmount(bankNo){
+    console.log("hello tak cash")
+    fetch(`${SERVER_URL}/api/bankAccount/account-bal/`+bankNo,{
+      method:"GET",
+        headers: {
+          'Accept': 'application/json',
+         'Content-Type': 'application/json',
+         'X-Auth-Token': this.state.User.token,
+       },
+      })
+      .then(response => response.json())
+      .then((responseJson)=> {
+        this.setState({
+            cash: responseJson.account.amount,
+            // account_no: responseJson.account.account_no
+         })
+         console.log(this.state.cash)
+         console.log(bankNo)
+        })
+       .catch(error=>console.log(error))
+  }
+
+// ----------------------
   downloadImage = () => {
-    console.log("dounloaded imade",this.state.imagePath)
+    console.log('dounloaded imade', this.state.imagePath);
+    console.log('dounloaded imade in', this.state.selectedImageIndex);
+    console.log('dounloaded imade in', this.state.selectedImageIndex);
+    
     var date = new Date();
-    var image_URL =`${SERVER_URL}/uploads/`+this.state.imagePath;
+    // var image_URL = `${SERVER_URL}/uploads/` + this.state.images[this.state.selectedImageIndex];
+    var image_URL = this.state.images[this.state.selectedImageIndex];
     var ext = this.getExtention(image_URL);
-    ext = "." + ext[0];
-    const { config, fs } = RNFetchBlob;
-    let PictureDir = fs.dirs.PictureDir
+    ext = '.' + ext[0];
+    const {config, fs} = RNFetchBlob;
+    let PictureDir = fs.dirs.PictureDir;
     let options = {
       fileCache: true,
       addAndroidDownloads: {
         useDownloadManager: true,
         notification: true,
-        path: PictureDir + "/image_" + Math.floor(date.getTime()
-          + date.getSeconds() / 2) + ext,
-        description: 'Image'
-      }
-    }
-    config(options).fetch('GET', image_URL).then((res) => {
-      Alert.alert("Image Downloaded Successfully.");
-    });
-  }
-   getExtention = (filename) => {
-    return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename) :
-      undefined;
-  }
- 
+        path:
+          PictureDir +
+          '/image_' +
+          Math.floor(date.getTime() + date.getSeconds() / 2) +
+          ext,
+        description: 'Image',
+      },
+    };
+    config(options)
+      .fetch('GET', image_URL)
+      .then(res => {
+        Alert.alert('Image Downloaded Successfully.');
+      });
+  };
+  getExtention = filename => {
+    return /[.]/.exec(filename) ? /[^.]+$/.exec(filename) : undefined;
+  };
+
   get_Detailed() {
     var arr = [];
     var arry = [];
-    fetch(
-      `${SERVER_URL}/api/purchase/get-purchase/` + this.state.purchaseID,
-      {
-        method: 'Get',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          'X-Auth-Token': this.state.User.token,
-        },
+    fetch(`${SERVER_URL}/api/purchase/get-purchase/` + this.state.purchaseID, {
+      method: 'Get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token': this.state.User.token,
       },
-    )
+    })
       .then(response => response.json())
       .then(json => {
+       let arr=[];
+        if(json.purchase.file.length > 0)
+        {
+          for(let i=0 ; i< json.purchase.file.length; i++){
+            arr.push('http://efundapp.herokuapp.com/uploads/'+json.purchase.file[i])
+          }
+
+        }
+        console.log('image arr ----', arr)
         this.setState({
           newDetail: json.purchase.details,
-          imagePath: json.purchase.file,
+          images: arr,
           // stat: json.purchase.payment_status,
-          pname:json
+          pname: json,
         });
         console.log('Image Path', this.state.imagePath);
         console.log('Image Path ', json);
@@ -145,33 +246,35 @@ async request_storage_runtime_permission() {
       });
   }
 
-get_Total(){
-    for(let i=0; i<this.state.newDetail.length; i++){
+  get_Total() {
+    for (let i = 0; i < this.state.newDetail.length; i++) {
       var tol = this.state.newDetail[i].qty * this.state.newDetail[i].price;
       this.state.grandTotal = this.state.grandTotal + tol;
+    }
+    var g = this.state.grandTotal;
+    console.log('totals', this.state.grandTotal);
+    this.setState({
+      grandTotal: g,
+    });
   }
-  var g = this.state.grandTotal;
-  console.log("totals", this.state.grandTotal)
-  this.setState({
-    grandTotal: g
-  })
-}
 
+  loadBanks() {
+    return this.state.banks.map(bank => (
+       <Picker.Item label={`${bank.account_name}/${bank.name}`} value={bank._id} />
+    ))
+  }
   get_notification() {
     var arr = [];
     var arry = [];
-    console.log("fhfjtytk")
-    fetch(
-      `${SERVER_URL}/api/project/` + this.state.data_project,
-      {
-        method: 'Get',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          'X-Auth-Token': this.state.User.token,
-        },
+    console.log('fhfjtytk');
+    fetch(`${SERVER_URL}/api/project/` + this.state.data_project, {
+      method: 'Get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token': this.state.User.token,
       },
-    )
+    })
       .then(response => response.json())
       .then(json => {
         this.setState({
@@ -200,7 +303,7 @@ get_Total(){
       })
       .catch(error => {
         console.log(error);
-      }, console.log("not"));
+      }, console.log('not'));
   }
 
   director_accept() {
@@ -220,6 +323,8 @@ get_Total(){
         purchaserID: this.state.data_.purchaserID,
         request: this.state.purchaseID,
         notification_status: this.state.notifystat,
+        bank_id: this.state.selectedBank,
+        request_type: this.state.notifystat === 'ClaimRequest' ? 'ClaimRequest' : 'RequestPayment'
       }),
     })
       .then(response => response.json())
@@ -290,7 +395,7 @@ get_Total(){
     );
   };
   reject_ok() {
-    console.log(this.state.description)
+    console.log(this.state.description);
     fetch(`${SERVER_URL}/api/purchase/reject-notification`, {
       method: 'Post',
       headers: {
@@ -341,7 +446,7 @@ get_Total(){
     this.props.navigation.navigate('Home');
   }
 
-  onClickReject(){
+  onClickReject() {
     this.setState({
       visibleB: true,
     });
@@ -354,17 +459,43 @@ get_Total(){
     this.setState({visibleB: true});
   };
   onClickButtonImg = async () => {
-    <ActivityIndicator size="large" color="#0000ff" />
+    <ActivityIndicator size="large" color="#0000ff" />;
     this.setState({visibleImg: false});
   };
-showLoader = () => { this.setState({ spinner:true }); };
-hideLoader = () => { this.setState({ spinner:false }); };
+  showLoader = () => {
+    this.setState({spinner: true});
+  };
+  hideLoader = () => {
+    this.setState({spinner: false});
+  };
+
+
+  get_notification_length() {
+    var arr = [];
+    var arry = [];
+    fetch(`${SERVER_URL}/api/notification`, {
+      method: 'Get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token':this.state.User.token,
+      },
+    })
+      .then(response => response.json())
+      .then(json => {
+        this.setState({allNotification: json.notification})
+      
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
 
   render() {
     if (this.state.User.roles == 'Supervisor') {
       return (
         <View style={{flex: 1}}>
-          <Header />
+          <Header notificationLength={this.state.allNotification.length} />
           <View style={{flex: 1, marginHorizontal: 20, marginTop: 30}}>
             <View
               style={[
@@ -433,8 +564,18 @@ hideLoader = () => { this.setState({ spinner:false }); };
                   );
                 }}
               />
-              <Text style={{alignSelf:'flex-end', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth:1, marginRight:'10%'}}>Grand Total: {this.state.grandTotal}</Text>
-              
+              <Text
+                style={{
+                  alignSelf: 'flex-end',
+                  paddingBottom: 20,
+                  marginTop: 20,
+                  borderBottomColor: '#FFC1B2',
+                  borderBottomWidth: 1,
+                  marginRight: '10%',
+                }}>
+                Grand Total: {this.state.grandTotal}
+              </Text>
+
               <Text
                 style={{
                   alignSelf: 'flex-end',
@@ -450,7 +591,8 @@ hideLoader = () => { this.setState({ spinner:false }); };
             </View>
           </View>
           {this.state.notifystat == 'ClaimRequest' && (
-            <View style={{alignSelf: 'center', padding: 20,flexDirection:'row'}}>
+            <View
+              style={{alignSelf: 'center', padding: 20, flexDirection: 'row'}}>
               <Button
                 buttonStyle={{
                   backgroundColor: '#FF3301',
@@ -458,7 +600,7 @@ hideLoader = () => { this.setState({ spinner:false }); };
                   borderRadius: 10,
                 }}
                 onPress={() => {
-                  this.setState({visibleImg: true,spinner:true});
+                  this.setState({visibleImg: true, spinner: true});
                 }}
                 title="View Claim"
               />
@@ -610,7 +752,7 @@ hideLoader = () => { this.setState({ spinner:false }); };
                 transparent={true}
                 visible={this.state.visibleImg}>
                 {/* {this.state.spinner==true && (<ActivityIndicator size="large" color="#0000ff" />)} */}
-                      {/* <ActivityIndicator animating={this.state.showLoader} size="small" color="#00ff00" /> */}
+                {/* <ActivityIndicator animating={this.state.showLoader} size="small" color="#00ff00" /> */}
 
                 <View
                   style={{
@@ -623,21 +765,45 @@ hideLoader = () => { this.setState({ spinner:false }); };
                     style={{
                       backgroundColor: 'white',
                       paddingTop: 0,
-                      borderRadius: 20,
-                      width: width * 0.8,
+                      // borderRadius: 20,
+                      borderBottomLeftRadius: 20,
+                    borderBottomRightRadius: 20,
+                      // width: 300,
+                      width: width * 0.9,
+
                     }}>
                     {/* <View style={{alignSelf: 'center', padding: 20}}>
                     </View> */}
-                    <Image
+                    <View
+                    style={{
+                      width: 300,
+                      borderRadius: 20,
+                    }}
+                    >
+                   <SliderBox
+                      images={this.state.images}
+                      sliderBoxHeight={300}
+                      parentWidth={352}
+                      // sliderBoxWidth={100}
+
+                      currentImageEmitter={index => this.setState({
+                        selectedImageIndex:index
+                      })}
+                      dotColor="#FFEE58"
+                      inactiveDotColor="#90A4AE"
+                     />
+                     </View>
+                    {/* <Image
                       source={{
-                        
-                         uri:'http://efundapp.herokuapp.com/uploads/'+this.state.imagePath,
-                       
+                        uri:
+                          'http://efundapp.herokuapp.com/uploads/' +
+                          this.state.imagePath,
+
                         // uri:'http://efund.alliedco.pk/uploads'+this.state.imagePath,
                       }}
-                      style={{height: 450, width: 250,alignSelf:'center'}}
-                    />
-                     <Button
+                      style={{height: 450, width: 250, alignSelf: 'center'}}
+                    /> */}
+                    <Button
                       title="Download"
                       buttonStyle={{
                         backgroundColor: '#FF3301',
@@ -651,7 +817,7 @@ hideLoader = () => { this.setState({ spinner:false }); };
                       buttonStyle={{
                         backgroundColor: '#FF3301',
                         padding: 14,
-                        marginTop:1,
+                        marginTop: 1,
                         borderRadius: 0,
                         borderBottomLeftRadius: 10,
                         borderBottomRightRadius: 10,
@@ -668,7 +834,7 @@ hideLoader = () => { this.setState({ spinner:false }); };
     } else {
       return (
         <View style={{flex: 1}}>
-          <Header />
+          <Header  notificationLength={this.state.allNotification.length} />
           <View style={{flex: 1, marginHorizontal: 20, marginTop: 30}}>
             <View
               style={[
@@ -684,6 +850,36 @@ hideLoader = () => { this.setState({ spinner:false }); };
                 }}>
                 {this.state.specif.project_name}
               </Text>
+              <View
+            style={{
+              borderColor: '#FF3301',
+              borderWidth: 1,
+              width: 170,
+              height: 50,
+              borderRadius: 30,
+              justifyContent: 'center',
+              alignSelf: 'center',
+              
+            }}>
+              {/* <Text>Select Bank:</Text> */}
+              <Picker
+                selectedValue={this.state.selectedBankNo}
+              // onValueChange={(itemValue, itemIndex) =>
+              //     this.setState({selectedBank: itemValue})}>
+               onValueChange={this.onValueChange.bind(this)}
+              >
+                 <Picker.Item label="Select a Bank" value="" /> 
+                {this.loadBanks()}
+              
+              </Picker>
+              </View>
+
+              <View style={{ justifyContent: 'center',
+              alignSelf: 'center', marginTop:'2%'}}>            
+                  <Text style={{marginLeft:'3%'}}>Amount in Bank: {this.state.cash}</Text>
+             
+                           
+              </View>
 
               <View
                 style={{
@@ -737,7 +933,17 @@ hideLoader = () => { this.setState({ spinner:false }); };
                   );
                 }}
               />
-               <Text style={{alignSelf:'flex-end', paddingBottom: 20, marginTop: 20, borderBottomColor: '#FFC1B2', borderBottomWidth:1, marginRight:'10%'}}>Grand Total: {this.state.grandTotal}</Text>
+              <Text
+                style={{
+                  alignSelf: 'flex-end',
+                  paddingBottom: 20,
+                  marginTop: 20,
+                  borderBottomColor: '#FFC1B2',
+                  borderBottomWidth: 1,
+                  marginRight: '10%',
+                }}>
+                Grand Total: {this.state.grandTotal}
+              </Text>
               <Text
                 style={{
                   alignSelf: 'flex-end',
@@ -749,6 +955,8 @@ hideLoader = () => { this.setState({ spinner:false }); };
                 }}>
                 {this.state.totall}
               </Text>
+              {/* <View style={{width:'70%', marginLeft:'5%'}}> */}
+              
             </View>
           </View>
           {this.state.notifystat == 'ClaimRequest' && (
@@ -766,7 +974,6 @@ hideLoader = () => { this.setState({ spinner:false }); };
               />
             </View>
           )}
-          
 
           {this.state.stat == 0 && (
             <View>
@@ -780,6 +987,7 @@ hideLoader = () => { this.setState({ spinner:false }); };
                 }}>
                 <Button
                   title="Accept"
+                  disabled={ this.state.bankSelected === false}
                   buttonStyle={{
                     backgroundColor: '#FF3301',
                     padding: 14,
@@ -923,18 +1131,43 @@ hideLoader = () => { this.setState({ spinner:false }); };
                     style={{
                       backgroundColor: 'white',
                       paddingTop: 0,
-                      borderRadius: 20,
-                      width: width * 0.8,
+                      // borderRadius: 20,
+                      borderBottomLeftRadius: 20,
+                      borderBottomRightRadius: 20,
+                      width: width * 0.9,
+                      // width: 300,
+
                     }}>
+                       <View
+                    style={{
+                      width: 300,
+                      borderRadius: 20,
+                    }}
+                    >
                     {/* <View style={{alignSelf: 'center', padding: 20}}>
                     </View> */}
-                    <Image
+                    
+                    {/* <Image
                       source={{
-                      uri:'http://efundapp.herokuapp.com/uploads/'+this.state.imagePath,
+                        uri:
+                          'http://efundapp.herokuapp.com/uploads/' +
+                          this.state.imagePath,
                       }}
-                      style={{height: 450, width: 250,alignSelf:'center'}}
-                    />
-                      <Button
+                      style={{height: 450, width: 250, alignSelf: 'center'}}
+                    /> */}
+                     <SliderBox
+                      images={this.state.images}
+                      sliderBoxHeight={300}
+                      parentWidth={352}
+                      
+                      currentImageEmitter={index => this.setState({
+                        selectedImageIndex:index
+                      })}
+                      dotColor="#FFEE58"
+                      inactiveDotColor="#90A4AE"
+                     />
+                    </View>
+                    <Button
                       title="Download"
                       buttonStyle={{
                         backgroundColor: '#FF3301',
@@ -949,7 +1182,7 @@ hideLoader = () => { this.setState({ spinner:false }); };
                         backgroundColor: '#FF3301',
                         padding: 14,
                         borderRadius: 0,
-                        marginTop:1,
+                        marginTop: 1,
                         borderBottomLeftRadius: 10,
                         borderBottomRightRadius: 10,
                       }}
