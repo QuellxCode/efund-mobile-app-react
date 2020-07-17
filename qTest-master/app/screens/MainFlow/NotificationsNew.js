@@ -252,7 +252,7 @@ class NotificationsNewScreen extends Component {
         if (this.state.User.roles == 'Supervisor') {
         return (
             <View>
-                <Header notificationLength={this.state.all.length} />
+                <Header notificationLength={this.state.all.length > 0 ? this.state.all.length : 0} />
                 <View style={{ margin: 10 }}>
                     <Text style={MainFlowStyles.headerTextStyle}>Notifications</Text>
 
@@ -355,7 +355,7 @@ class NotificationsNewScreen extends Component {
                     else if (this.state.User.roles == 'Purchaser') {
                         return (
                             <View>
-                                <Header notificationLength={this.state.all.length} />
+                                <Header notificationLength={this.state.all.length > 0 ? this.state.all.length : 0 } />
                                 <View style={{ margin: 10 }}>
                                     <Text style={MainFlowStyles.headerTextStyle}>Notifications</Text>
                 
@@ -449,7 +449,7 @@ class NotificationsNewScreen extends Component {
                     else{
                         return (
                             <View>
-                                <Header notificationLength={this.state.all.length} />
+                                <Header notificationLength={this.state.all.length > 0 ? this.state.all.length : 0} />
                                 <View style={{ margin: 10 }}>
                                     <Text style={MainFlowStyles.headerTextStyle}>Notifications</Text>
                 

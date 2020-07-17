@@ -133,7 +133,7 @@ const Purchaser = props => {
 
     return (
         <View>
-            <Header notificationLength={notification.length > 0 ? notification.length : 0} />
+            <Header notificationLength={notification != null && notification != undefined && notification.length > 0 ? notification.length : 0} />
             <ScrollView
                 style={{ paddingBottom: 30, marginBottom: 40 }}
                 showsVerticalScrollIndicator={false}
@@ -173,7 +173,7 @@ const Supervisor = props => {
     const [user, setUser] = useState();
     let localNotify = null;
     let length = '';
-    if (notification != null && notification != undefined) {
+    if (notification != null && notification != undefined  && notification.length > 1) {
         length = notification.length;
 
     }
@@ -309,7 +309,7 @@ const Supervisor = props => {
    
     return (
         <View>
-            <Header notificationLength={length} />
+            <Header notificationLength={notification != undefined && notification != null && notification.length > 0 ?  notification.length : 0} />
             
             <ScrollView
                 style={{ paddingBottom: 30, marginBottom: 40 }}
@@ -439,7 +439,7 @@ const Director = props => {
     return (
 
         <View>
-            <Header notificationLength={notification.length > 0 ? notification.length : 0} />
+            <Header notificationLength={notification != undefined && notification != null && notification.length > 0 ? notification.length : 0} />
             <ScrollView
                 style={{ paddingBottom: 30, marginBottom: 40 }}
                 showsVerticalScrollIndicator={false}
