@@ -13,6 +13,24 @@ import {
 } from 'react-native';
 import Header from '../../../components/Header';
 import {SERVER_URL} from '../../../utils/config';
+import {
+  setJSExceptionHandler,
+  setNativeExceptionHandler,
+} from 'react-native-exception-handler';
+
+const handleError = (error, isFatal) => {
+  // fetch
+  console.log(error, isFatal);
+  // alert(error.name);
+  // alert('Something went wrong!');
+};
+
+setJSExceptionHandler((error, isFatal) => {
+  console.log('caught global error');
+  handleError(error, isFatal);
+}, true);
+
+
 
 const EditPage = props => {
   const [name, setName] = useState('');
@@ -63,7 +81,7 @@ const EditPage = props => {
       
       })
       .catch(error => {
-        console.error(error);
+        handleError(error, false);
       });
   }
 

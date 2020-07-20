@@ -19,7 +19,7 @@ import {
     // fetch
     console.log(error, isFatal);
     // alert(error.name);
-    alert('Something went wrong!');
+    // alert('Something went wrong!');
   };
   
   setJSExceptionHandler((error, isFatal) => {
